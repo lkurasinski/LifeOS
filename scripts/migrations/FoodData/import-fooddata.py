@@ -136,22 +136,42 @@ def insert_foods(conn, foods_data: List[Dict], nutrition_ids: Dict[str, str]):
         fdc_id = food.get("fdcId")
         description = food.get("description")
         category = food.get("foodCategory", {}).get("description")
+        scientific_name = food.get("scientificName")
 
         if not fdc_id or not description:
             continue
 
         # Insert food
         food_query = """
-            INSERT INTO foods (id, fdc_id, name_en, category, is_custom, created_at, updated_at)
-            VALUES (gen_random_uuid(), %s, %s, %s, false, NOW(), NOW())
+            INSERT INTO foods (
+                id,
+                fdc_id,
+                name_en,
+                scientific_name,
+                category,
+                is_custom,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                gen_random_uuid(),
+                %s,  -- fdc_id
+                %s,  -- name_en (description)
+                %s,  -- scientific_name
+                %s,  -- category
+                false,
+                NOW(),
+                NOW()
+            )
             ON CONFLICT (fdc_id) DO UPDATE SET
                 name_en = EXCLUDED.name_en,
-                category = EXCLUDED.category
+                category = EXCLUDED.category,
+                scientific_name = EXCLUDED.scientific_name
             RETURNING id
         """
 
         try:
-            cursor.execute(food_query, (fdc_id, description, category))
+            cursor.execute(food_query, (fdc_id, description, scientific_name, category))
             food_id_row = cursor.fetchone()
             if not food_id_row:
                 continue

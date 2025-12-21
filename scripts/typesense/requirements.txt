@@ -1,0 +1,4 @@
+# Python dependencies for Typesense indexing scripts
+typesense>=0.21.0
+psycopg2-binary>=2.9.0
+python-dotenv>=1.0.0
