@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lifeos-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: lifeos
+      POSTGRES_PASSWORD: lifeos_dev_password
+      POSTGRES_DB: lifeos
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U lifeos']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  typesense:
+    image: typesense/typesense:27.1
+    container_name: lifeos-typesense
+    restart: unless-stopped
+    ports:
+      - '8108:8108'
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: xyz123_dev_key
+      TYPESENSE_ENABLE_CORS: 'true'
+    volumes:
+      - typesense_data:/data
+    command: '--data-dir /data --api-key=xyz123_dev_key --enable-cors'
+
+volumes:
+  postgres_data:
+    name: lifeos_postgres_data
+  typesense_data:
+    name: lifeos_typesense_data

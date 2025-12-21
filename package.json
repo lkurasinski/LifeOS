@@ -1,0 +1,27 @@
+{
+  "name": "lifeos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LifeOS - Personal life management system",
+  "scripts": {
+    "dev": "pnpm --filter vault dev",
+    "build": "pnpm --filter vault build",
+    "preview": "pnpm --filter vault preview",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "db:studio": "pnpm --filter @lifeos/db studio",
+    "db:migrate": "pnpm --filter @lifeos/db migrate"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.3.0",
+    "prettier-plugin-svelte": "^3.2.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

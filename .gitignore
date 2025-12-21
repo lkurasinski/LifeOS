@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.svelte-kit/
+.vercel/
+.netlify/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Prisma
+**/prisma/migrations/
+**/node_modules/.prisma/
+
+# Test
+coverage/
+.nyc_output/
+
+# Temporary
+.tmp/
+temp/
+*.tmp
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Large data files
+db/openfoodfacts-products.jsonl.gz
+db/food-data/dist/*.jsonl
+scripts/*.jsonl
+scripts/*.ndjson
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Typesense data
+typesense-data/
+oss/

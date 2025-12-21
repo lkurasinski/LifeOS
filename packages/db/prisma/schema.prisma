@@ -1,0 +1,183 @@
+// This is your Prisma schema file for LifeOS Vault (Cookbook)
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USERS & AUTH
+// ============================================
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String?
+  locale       String   @default("pl")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // recipes Recipe[]
+  foods   Food[] // Custom foods created by user
+
+  @@map("users")
+}
+
+// ============================================
+// NUTRITION (katalog składników odżywczych)
+// ============================================
+
+model Nutrition {
+  id     String  @id @default(uuid())
+  namePl String?  @map("name_pl")
+  nameEn String @map("name_en")
+  unit   String // g, mg, µg, kcal, kJ
+
+  foodNutritions FoodNutrition[]
+
+  @@unique([nameEn, unit])
+  @@map("nutrition")
+}
+
+// ============================================
+// FOOD (produkty spożywcze)
+// ============================================
+
+model Food {
+  id             String   @id @default(uuid())
+  fdcId          Int?     @unique @map("fdc_id") // z USDA FoodData Central
+  namePl         String?  @map("name_pl")
+  nameEn         String   @map("name_en")
+  scientificName String?  @map("scientific_name")
+  category       String?
+  isCustom       Boolean  @default(false) @map("is_custom") // czy user-created
+  userId         String?  @map("user_id") // tylko dla custom
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user               User?               @relation(fields: [userId], references: [id])
+  nutritionValues    FoodNutrition[]     // Wartości odżywcze per 100g
+  // recipeIngredients  RecipeIngredient[]
+
+  @@index([namePl])
+  @@index([nameEn])
+  @@index([fdcId])
+  @@map("foods")
+}
+
+// ============================================
+// FOOD NUTRITION (wartości odżywcze per 100g)
+// ============================================
+
+model FoodNutrition {
+  id          String @id @default(uuid())
+  foodId      String @map("food_id")
+  nutritionId String @map("nutrition_id")
+  value       Float  // wartość per 100g w jednostce z Nutrition.unit
+
+  food      Food      @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  nutrition Nutrition @relation(fields: [nutritionId], references: [id])
+
+  @@unique([foodId, nutritionId])
+  @@map("food_nutrition")
+}
+
+// ============================================
+// RECIPES (przepisy)
+// ============================================
+
+// model Recipe {
+//   id              String   @id @default(uuid())
+//   userId          String   @map("user_id")
+//   title           String
+//   titleEn         String?  @map("title_en")
+//   description     String?
+//   descriptionEn   String?  @map("description_en")
+//   servings        Int      @default(1)
+//   prepTimeMinutes Int?     @map("prep_time_minutes")
+//   cookTimeMinutes Int?     @map("cook_time_minutes")
+//   difficulty      String?  // easy, medium, hard
+//   isPublic        Boolean  @default(false) @map("is_public")
+//   imageUrl        String?  @map("image_url")
+//
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @updatedAt @map("updated_at")
+//
+//   user         User               @relation(fields: [userId], references: [id])
+//   ingredients  RecipeIngredient[] // Lista składników (Food + ilość)
+//   instructions Instruction[]
+//   tags         RecipeTag[]
+//
+//   @@index([userId])
+//   @@index([isPublic])
+//   @@map("recipes")
+// }
+
+// ============================================
+// RECIPE INGREDIENTS (składniki w przepisie)
+// ============================================
+
+// model RecipeIngredient {
+//   id          String  @id @default(uuid())
+//   recipeId    String  @map("recipe_id")
+//   foodId      String  @map("food_id")
+//   amountGrams Float   @map("amount_grams") // zawsze w gramach
+//   amountMl    Float?  @map("amount_ml") // opcjonalnie dla płynów
+//   notes       String? // np. "posiekany", "ugotowany"
+//   order       Int     @default(0)
+//
+//   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+//   food   Food   @relation(fields: [foodId], references: [id])
+//
+//   @@unique([recipeId, foodId])
+//   @@map("recipe_ingredients")
+// }
+
+// ============================================
+// INSTRUCTIONS (kroki przepisu)
+// ============================================
+
+// model Instruction {
+//   id         String  @id @default(uuid())
+//   recipeId   String  @map("recipe_id")
+//   stepNumber Int     @map("step_number")
+//   text       String
+//   textEn     String? @map("text_en")
+//
+//   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+//
+//   @@unique([recipeId, stepNumber])
+//   @@map("instructions")
+// }
+
+// ============================================
+// TAGS (kategorie, tagi)
+// ============================================
+
+// model Tag {
+//   id     String  @id @default(uuid())
+//   name   String  @unique
+//   nameEn String? @map("name_en")
+//
+//   recipes RecipeTag[]
+//
+//   @@map("tags")
+// }
+//
+// model RecipeTag {
+//   recipeId String @map("recipe_id")
+//   tagId    String @map("tag_id")
+//
+//   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+//   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+//
+//   @@id([recipeId, tagId])
+//   @@map("recipe_tags")
+// }
