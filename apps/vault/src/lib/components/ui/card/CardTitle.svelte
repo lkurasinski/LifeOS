@@ -6,12 +6,13 @@
 		class?: string;
 	}
 
-	let { class: className, ...restProps }: Props = $props();
+	let { class: className,children, ...restProps }: Props = $props();
 </script>
 
 <h3
 	class={cn('text-2xl font-semibold leading-none tracking-tight', className)}
 	{...restProps}
 >
-	<slot />
+	{@render children?.()}
+
 </h3>

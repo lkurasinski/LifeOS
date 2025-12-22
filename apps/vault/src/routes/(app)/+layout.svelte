@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
+	import { Toaster } from '$lib/components/ui/sonner';
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();
@@ -11,3 +12,5 @@
 		{@render children()}
 	</main>
 </div>
+
+<Toaster />

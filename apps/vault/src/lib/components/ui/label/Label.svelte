@@ -6,7 +6,7 @@
 		class?: string;
 	}
 
-	let { class: className, ...restProps }: Props = $props();
+	let { class: className, children, ...restProps }: Props = $props();
 </script>
 
 <label
@@ -16,5 +16,6 @@
 	)}
 	{...restProps}
 >
-	<slot />
+	{@render children?.()}
+
 </label>

@@ -6,9 +6,9 @@
 		class?: string;
 	}
 
-	let { class: className, ...restProps }: Props = $props();
+	let { class: className, children,...restProps }: Props = $props();
 </script>
 
 <div class={cn('flex items-center p-6 pt-0', className)} {...restProps}>
-	<slot />
+	{@render children?.()}
 </div>

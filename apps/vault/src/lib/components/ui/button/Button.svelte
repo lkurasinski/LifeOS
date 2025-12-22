@@ -6,6 +6,7 @@
 		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		class?: string;
+
 	}
 
 	let {
@@ -13,6 +14,7 @@
 		size = 'default',
 		class: className,
 		type = 'button',
+		children,
 		...restProps
 	}: Props = $props();
 
@@ -43,5 +45,5 @@
 	)}
 	{...restProps}
 >
-	<slot />
+	{@render children?.()}
 </button>
