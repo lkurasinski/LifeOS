@@ -8,8 +8,46 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import type { PageData } from './$types';
+	import {FoodAutocomplete} from '$lib/components/ui/ingredient-select';
 
-	let { data }: { data: PageData } = $props();
+	type Ingredient = {
+		foodId: string;
+		label: string;
+		amountGrams: number;
+	};
+
+	let ingredients: Ingredient[] = [];
+
+	function handleSelectFood(e: CustomEvent<{ id: string; name_pl?: string; name_en: string }>) {
+		const item = e.detail;
+		ingredients = [
+			...ingredients,
+			{
+				foodId: item.id,
+				label: item.name_pl ?? item.name_en,
+				amountGrams: 0
+			}
+		];
+	}
+
+	async function submit() {
+		const payload = {
+			titlePl: 'New recipe',
+			servings: 1,
+			ingredients: ingredients.map((i, idx) => ({
+				foodId: i.foodId,
+				amountGrams: i.amountGrams,
+				order: idx
+			})),
+			instructions: [{ stepNumber: 1, textPl: 'Step 1' }]
+		};
+
+		await fetch('/api/recipes', {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify(payload)
+		});
+	}
 </script>
 
 <div class="space-y-6">
@@ -40,4 +78,30 @@
 			</CardContent>
 		</Card>
 	</div>
+
+
+
+
+	<form on:submit|preventDefault={submit}>
+		<FoodAutocomplete on:select={handleSelectFood} />
+
+		{#each ingredients as ing, i}
+			<div class="mt-2 flex gap-2 items-center">
+				<span class="w-64 truncate">{ing.label}</span>
+				<input
+						type="number"
+						min="0"
+						step="1"
+						bind:value={ing.amountGrams}
+						class="w-24 border px-2 py-1 text-right"
+						placeholder="g"
+				/>
+			</div>
+		{/each}
+
+		<button type="submit" class="mt-4 border px-3 py-2 rounded-md">
+			Save recipe
+		</button>
+	</form>
+
 </div>
