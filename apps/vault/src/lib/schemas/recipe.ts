@@ -33,10 +33,10 @@ export const recipeFormSchema = z.object({
 		.nullable()
 		.optional(),
 	difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
-	isPublic: z.boolean().default(false),
+	isPublic: z.boolean().default(true),
 	imageUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
 	ingredients: z.array(recipeIngredientSchema).min(1, 'At least one ingredient is required'),
-	instructions: z.array(recipeInstructionSchema).min(1, 'At least one instruction is required'),
+	instructions: z.array(recipeInstructionSchema),
 	tags: z.array(z.string()).optional()
 });
 

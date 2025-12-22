@@ -8,6 +8,7 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import NewRecipeForm from '$lib/components/NewRecipeForm.svelte';
+	import MultiStepRecipeForm from '$lib/components/MultiStepRecipeForm.svelte';
 	import TestDrawer from '$lib/components/TestDrawer.svelte';
 	import type { PageData } from './$types';
 
@@ -15,6 +16,7 @@
 
 	let isFormOpen = $state(false);
 	let isTestOpen = $state(false);
+	let isMultiStepOpen = $state(false);
 
 	function handleRecipeCreated() {
 		// Reload the page data to show the new recipe
@@ -26,14 +28,11 @@
 	<div class="flex items-center justify-between">
 		<div>
 			<h1 class="text-3xl font-bold tracking-tight">My Recipes</h1>
-			<p class="text-muted-foreground">
-				Manage your personal collection of recipes
-			</p>
+			<p class="text-muted-foreground">Manage your personal collection of recipes</p>
 		</div>
 		<div class="flex gap-2">
-			<Button onclick={() => (isTestOpen = true)} variant="outline">
-				Test Drawer
-			</Button>
+			<Button onclick={() => (isTestOpen = true)} variant="outline">Test Drawer</Button>
+			<Button onclick={() => (isMultiStepOpen = true)} variant="outline">Test Drawer2</Button>
 			<Button onclick={() => (isFormOpen = true)}>
 				<span class="mr-2">+</span>
 				New Recipe
@@ -59,3 +58,4 @@
 
 <TestDrawer bind:open={isTestOpen} />
 <NewRecipeForm bind:open={isFormOpen} onSuccess={handleRecipeCreated} />
+<MultiStepRecipeForm bind:open={isMultiStepOpen} onSuccess={handleRecipeCreated} />
