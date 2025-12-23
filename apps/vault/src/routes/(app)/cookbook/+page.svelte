@@ -8,7 +8,7 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import NewRecipeForm from '$lib/components/NewRecipeForm.svelte';
-	import MultiStepRecipeForm from '$lib/components/MultiStepRecipeForm.svelte';
+	import MultiStepRecipeForm from '$lib/domain/cookbook/create-recipe/MultiStepRecipeForm.svelte';
 	import TestDrawer from '$lib/components/TestDrawer.svelte';
 	import type { PageData } from './$types';
 
