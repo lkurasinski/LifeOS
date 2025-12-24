@@ -2,13 +2,19 @@
 	import { cn } from '$lib/utils';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
+	interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'onkeydown'> {
 		value?: number | null;
 		class?: string;
+		onkeydown?: (event: KeyboardEvent) => void;
 	}
 
 	// bindowalna wartość liczbowo-logiczna na zewnątrz
-	let { value = $bindable<number | null>(null), class: className, ...restProps }: Props = $props();
+	let {
+		value = $bindable<number | null>(null),
+		class: className,
+		onkeydown,
+		...restProps
+	}: Props = $props();
 
 	// wewnętrzny string dla inputa – pochodna od value
 	let internalValue = $derived(value == null ? '' : String(value));
@@ -42,6 +48,7 @@
 	type="text"
 	bind:value={internalValue}
 	oninput={handleInput}
+	onkeydown={(e) => onkeydown?.(e)}
 	class={cn(
 		'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
 		className

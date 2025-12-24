@@ -11,12 +11,13 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select';
 	import Step2 from './Step2.svelte';
-	import IngredientSelect from '$lib/components/ui/ingredient-select/IngredientSelect.svelte';
-	import { InputNumber } from '$lib/components/ui/input-number';
-	import { fly, slide, scale, fade } from 'svelte/transition';
-	import { cubicOut, elasticOut } from 'svelte/easing';
+	import Step3 from './Step3.svelte';
+	import { fly, slide, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { useSearchParams } from 'runed/kit';
+	import { browser } from '$app/environment';
+	import { z } from 'zod';
 
 	type FoodOption = {
 		id: string;
@@ -50,16 +51,53 @@
 		validationMethod: 'submit-only'
 	});
 
-	let currentStep = $state(1);
-	let stepHistory = $state([1]);
-	let currentStepErrors = $state<string[]>([]);
+	const stepParamsSchema = z.object({
+		step: z.coerce.number().min(1).max(3).default(1)
+	});
 
+	const searchParams = browser ? useSearchParams(stepParamsSchema, { pushHistory: true }) : null;
+
+	let currentStepErrors = $state<string[]>([]);
 	let titlePlValue = $state('');
 	let selectedFood = $state<FoodOption | null>(null);
-	let ingredientAmount = $state(0);
-	let ingredientUnit = $state<RecipeIngredient['unit']>('gram');
-	let ingredientNotes = $state('');
 	let ingredients = $state<RecipeIngredient[]>([]);
+
+	const currentStep = $derived.by(() => {
+		if (!open || !searchParams) return 1;
+		return searchParams.step;
+	});
+
+	const stepTitle = $derived.by(() => {
+		switch (currentStep) {
+			case 1:
+				return 'Recipe Title';
+			case 2:
+				return 'Select Ingredient';
+			case 3:
+				return 'Add Ingredient Details';
+			default:
+				return 'Recipe Form';
+		}
+	});
+
+	const ingredientCountText = $derived(
+		ingredients.length > 0
+			? `• ${ingredients.length} ingredient${ingredients.length > 1 ? 's' : ''} added`
+			: ''
+	);
+
+	const showBackButton = $derived(currentStep > 1 && currentStep < 3);
+	const showNextButton = $derived(currentStep < 3);
+
+	function setStep(step: number) {
+		if (!searchParams) return;
+		searchParams.step = step;
+	}
+
+	function clearStepFromUrl() {
+		if (!searchParams) return;
+		searchParams.reset();
+	}
 
 	function validateCurrentStep(): string[] {
 		const errors: string[] = [];
@@ -79,6 +117,7 @@
 				}
 				break;
 			case 3:
+				// Validation happens in Step3
 				break;
 		}
 
@@ -91,19 +130,10 @@
 				$form.titlePl = titlePlValue;
 				break;
 			case 2:
+				// Data saved via binding
 				break;
 			case 3:
-				if (selectedFood) {
-					const newIngredient: RecipeIngredient = {
-						foodName: selectedFood.name_en,
-						foodId: selectedFood.id,
-						amount: ingredientAmount || 0,
-						unit: ingredientUnit,
-						notes: ingredientNotes || undefined
-					};
-					ingredients = [...ingredients, newIngredient];
-					$form.ingredients = ingredients;
-				}
+				// Data saved via binding in Step3
 				break;
 		}
 	}
@@ -117,43 +147,38 @@
 		}
 
 		saveCurrentStepData();
-
-		stepHistory = [...stepHistory, currentStep + 1];
-		currentStep = currentStep + 1;
 		currentStepErrors = [];
+		setStep(currentStep + 1);
 	}
 
 	function goBack() {
-		if (stepHistory.length <= 1) return;
+		if (currentStep <= 1) return;
 
-		const newHistory = stepHistory.slice(0, -1);
-		const previousStep = newHistory[newHistory.length - 1];
-
-		stepHistory = newHistory;
-		currentStep = previousStep;
 		currentStepErrors = [];
+		history.back();
 	}
 
-	function removeIngredient(index: number) {
-		ingredients = ingredients.filter((_, i) => i !== index);
-		$form.ingredients = ingredients;
+	function addAnotherIngredient() {
+		selectedFood = null;
+		currentStepErrors = [];
+		setStep(2);
 	}
 
 	async function finishAddingIngredients() {
-		if (selectedFood) {
-			saveCurrentStepData();
-		}
-
+		console.log('dupa');
 		if (ingredients.length === 0) {
 			toast.error('Please add at least one ingredient');
 			return;
 		}
 
+		$form.ingredients = ingredients;
 		await handleSubmit();
 	}
 
 	async function handleSubmit() {
 		$submitting = true;
+
+		console.log('submitting...');
 
 		try {
 			const response = await fetch('/api/recipes', {
@@ -181,33 +206,33 @@
 	}
 
 	function resetForm() {
-		currentStep = 1;
-		stepHistory = [1];
 		currentStepErrors = [];
 		titlePlValue = '';
 		selectedFood = null;
-		ingredientAmount = 0;
-		ingredientUnit = 'gram';
-		ingredientNotes = '';
 		ingredients = [];
 		$form = initialData;
+		clearStepFromUrl();
 	}
+
+	$effect(() => {
+		if (!open) {
+			clearStepFromUrl();
+		}
+	});
 
 	function handleKeydown(event: KeyboardEvent) {
 		if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
 			event.preventDefault();
-			if (currentStep === 3) {
-				finishAddingIngredients();
-			} else {
+			if (showNextButton) {
 				goToNextStep();
 			}
 		}
 
 		if (event.key === 'Escape') {
 			event.preventDefault();
-			if (currentStep > 1) {
+			if (showBackButton) {
 				goBack();
-			} else {
+			} else if (showNextButton) {
 				open = false;
 				resetForm();
 			}
@@ -215,20 +240,14 @@
 	}
 </script>
 
-<Drawer.Root bind:open>
+<Drawer.Root bind:open onClose={() => resetForm()}>
 	<Drawer.Content class="max-h-[90vh]" onkeydown={handleKeydown}>
 		<div class="mx-auto w-full max-w-3xl">
 			<Drawer.Header>
 				<Drawer.Title>
 					{#key currentStep}
 						<div in:fly={{ y: -10, duration: 300, easing: cubicOut }}>
-							{#if currentStep === 1}
-								Recipe Title
-							{:else if currentStep === 2}
-								Select Ingredient
-							{:else}
-								Ingredient Details
-							{/if}
+							{stepTitle}
 						</div>
 					{/key}
 				</Drawer.Title>
@@ -236,9 +255,7 @@
 					{#key currentStep}
 						<div in:fade={{ duration: 200 }}>
 							Step {currentStep} of 3
-							{#if ingredients.length > 0}
-								• {ingredients.length} ingredient{ingredients.length > 1 ? 's' : ''} added
-							{/if}
+							{ingredientCountText}
 						</div>
 					{/key}
 				</Drawer.Description>
@@ -288,95 +305,23 @@
 							in:fly={{ x: 20, duration: 400, easing: cubicOut }}
 							out:fly={{ x: -20, duration: 300, easing: cubicOut }}
 						>
-							<Step2 />
-
-							{#if selectedFood}
-								<p
-									class="text-sm text-muted-foreground"
-									transition:slide={{ duration: 200, easing: cubicOut }}
-								>
-									Selected: {selectedFood.name_pl ?? selectedFood.name_en}
-								</p>
-							{/if}
-							<div class="space-y-8"></div>
+							<Step2 bind:selectedFood {ingredients} onSelect={goToNextStep} />
 						</div>
 					{/if}
 
 					{#if currentStep === 3}
 						<div
-							class="space-y-4"
 							in:fly={{ x: 20, duration: 400, easing: cubicOut }}
 							out:fly={{ x: -20, duration: 300, easing: cubicOut }}
 						>
-							<div class="grid gap-3 sm:grid-cols-3">
-								<div class="space-y-2">
-									<Label for="amount">Amount</Label>
-									<InputNumber
-										id="amount"
-										min="0"
-										step="0.1"
-										bind:value={ingredientAmount}
-										placeholder="100"
-									/>
-								</div>
-
-								<div class="space-y-2">
-									<Label for="unit">Unit</Label>
-									<Select.Root type="single" name="unit" bind:value={ingredientUnit}>
-										<Select.Trigger class="w-full">
-											{ingredientUnit === 'gram' ? 'Grams (g)' : 'Milliliters (ml)'}
-										</Select.Trigger>
-										<Select.Content>
-											<Select.Group>
-												<Select.Label>Unit</Select.Label>
-												<Select.Item value="gram" label="Grams (g)">Grams (g)</Select.Item>
-												<Select.Item value="ml" label="Milliliters (ml)">
-													Milliliters (ml)
-												</Select.Item>
-											</Select.Group>
-										</Select.Content>
-									</Select.Root>
-								</div>
-
-								<div class="space-y-2">
-									<Label for="notes">Notes</Label>
-									<Input
-										id="notes"
-										type="text"
-										bind:value={ingredientNotes}
-										placeholder="e.g., diced"
-									/>
-								</div>
-							</div>
-
-							{#if ingredients.length > 0}
-								<div class="space-y-2" in:fade={{ duration: 300 }}>
-									<h4 class="text-sm font-semibold">Added Ingredients</h4>
-									{#each ingredients as ingredient, index (ingredient.foodId + index)}
-										<div
-											class="flex items-center justify-between p-3 border rounded-lg bg-background"
-											in:fly={{ x: -20, duration: 300, delay: index * 50, easing: cubicOut }}
-											out:scale={{ duration: 200, easing: cubicOut }}
-										>
-											<div class="flex-1">
-												<p class="font-medium">Ingredient #{index + 1}</p>
-												<p class="text-sm text-muted-foreground">
-													{ingredient.amount}
-													{ingredient.unit}
-													{#if ingredient.notes}• {ingredient.notes}{/if}
-												</p>
-											</div>
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												onclick={() => removeIngredient(index)}
-											>
-												Remove
-											</Button>
-										</div>
-									{/each}
-								</div>
+							{#if selectedFood}
+								<Step3
+									{selectedFood}
+									bind:ingredients
+									submitting={$submitting}
+									onAddAnother={addAnotherIngredient}
+									onFinish={finishAddingIngredients}
+								/>
 							{/if}
 						</div>
 					{/if}
@@ -384,37 +329,14 @@
 			</form>
 
 			<Drawer.Footer class="flex gap-2">
-				{#if currentStep > 1}
+				{#if showBackButton}
 					<div in:fly={{ x: -20, duration: 300, easing: cubicOut }} out:fade={{ duration: 150 }}>
 						<Button type="button" variant="outline" onclick={goBack}>Back</Button>
 					</div>
 				{/if}
 
 				{#key currentStep}
-					{#if currentStep === 3}
-						<div
-							class="flex gap-2 flex-1"
-							in:fly={{ y: 10, duration: 300, easing: cubicOut }}
-							out:fade={{ duration: 150 }}
-						>
-							<Button
-								type="button"
-								variant="secondary"
-								onclick={addAnotherIngredient}
-								class="flex-1"
-							>
-								Add Another Ingredient
-							</Button>
-							<Button
-								type="button"
-								onclick={finishAddingIngredients}
-								disabled={$submitting}
-								class="flex-1"
-							>
-								{$submitting ? 'Creating...' : 'Finish & Create Recipe'}
-							</Button>
-						</div>
-					{:else}
+					{#if showNextButton}
 						<div
 							class="flex-1"
 							in:fly={{ y: 10, duration: 300, easing: cubicOut }}
@@ -425,25 +347,29 @@
 					{/if}
 				{/key}
 
-				<Button
-					variant="outline"
-					onclick={() => {
-						open = false;
-						resetForm();
-					}}
-				>
-					Cancel
-				</Button>
+				{#if showNextButton}
+					<Button
+						variant="outline"
+						onclick={() => {
+							open = false;
+							resetForm();
+						}}
+					>
+						Cancel
+					</Button>
+				{/if}
 			</Drawer.Footer>
 
-			{#key currentStep}
-				<p
-					class="px-4 pb-2 text-xs text-muted-foreground text-center"
-					in:fade={{ duration: 200, delay: 100 }}
-				>
-					Press Cmd/Ctrl + Enter to {currentStep === 3 ? 'finish' : 'continue'}
-				</p>
-			{/key}
+			{#if showNextButton}
+				{#key currentStep}
+					<p
+						class="px-4 pb-2 text-xs text-muted-foreground text-center"
+						in:fade={{ duration: 200, delay: 100 }}
+					>
+						Press Cmd/Ctrl + Enter to continue
+					</p>
+				{/key}
+			{/if}
 		</div>
 	</Drawer.Content>
 </Drawer.Root>

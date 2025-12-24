@@ -1,8 +1,9 @@
 <script lang="ts">
 	import * as Command from '$lib/components/ui/command';
+	import { Label } from '$lib/components/ui/label';
 	import { resource } from 'runed';
-
-	import { createEventDispatcher } from 'svelte';
+	import type { RecipeIngredient } from '$lib/schemas/recipe';
+	import IngredientsList from './IngredientsList.svelte';
 
 	type FoodOption = {
 		id: string;
@@ -11,27 +12,34 @@
 		category?: string;
 	};
 
-	let placeholder = 'Search ingredient...';
+	let {
+		selectedFood = $bindable<FoodOption | null>(null),
+		ingredients = [],
+		onSelect
+	}: {
+		selectedFood?: FoodOption | null;
+		ingredients?: RecipeIngredient[];
+		onSelect?: () => void;
+	} = $props();
+
+	let query = $state('');
 	let minChars = 2;
 	let perPage = 10;
 
-	const dispatch = createEventDispatcher<{ select: FoodOption }>();
-
-	let query = $state('');
-
 	const searchResource = resource(
 		() => query,
-		async (q, prevId, { data, refetching, onCleanup, signal }) => {
+		async (q) => {
 			if (q.length < minChars) {
-				return;
+				return { items: [] };
 			}
 			try {
 				const response = await fetch(
 					`/api/foods/search?q=${encodeURIComponent(q)}&per_page=${perPage}`
 				);
-				return response.json();
-			} catch {
-				console.error(e);
+				return await response.json();
+			} catch (error) {
+				console.error(error);
+				return { items: [] };
 			}
 		},
 		{
@@ -39,53 +47,55 @@
 		}
 	);
 
-	// The current value of the resource
-	searchResource.current;
-	// Whether the resource is currently loading
-	searchResource.loading;
-	// Error if the fetch failed
-	searchResource.error;
-	searchResource.refetch();
-
 	function selectOption(option: FoodOption) {
+		selectedFood = option;
 		query = option.name_pl ?? option.name_en;
-		dispatch('select', option);
-	}
-
-	function addAnotherIngredient() {
-		saveCurrentStepData();
-
-		selectedFood = null;
-		ingredientAmount = 0;
-		ingredientUnit = 'gram';
-		ingredientNotes = '';
-
-		stepHistory = [...stepHistory, 2];
-		currentStep = 2;
-		currentStepErrors = [];
+		onSelect?.();
 	}
 </script>
 
-<Command.Root shouldFilter={false} class="rounded-lg border shadow-md md:min-w-[450px]">
-	<Command.Input bind:value={query} placeholder="Search ingredient..." />
+<div class="space-y-2">
+	<Label>Search for ingredient</Label>
+	<Command.Root shouldFilter={false} class="rounded-lg border shadow-md">
+		<Command.Input bind:value={query} placeholder="Type to search ingredients..." />
+		<Command.List>
+			{#if searchResource.loading}
+				<!--				<Command.Loading>Searching...</Command.Loading>-->
+			{:else if query.length >= minChars && (searchResource.current?.items ?? []).length === 0}
+				<Command.Empty>No results found.</Command.Empty>
+			{/if}
+			{#if (searchResource.current?.items ?? []).length > 0}
+				<Command.Group heading="Select ingredient">
+					{#each searchResource.current?.items ?? [] as option}
+						<Command.Item value={option.id} onSelect={() => selectOption(option)}>
+							<div class="flex flex-col">
+								<span class="font-medium">{option.name_pl ?? option.name_en}</span>
+								<div class="text-xs text-muted-foreground">
+									{#if option.name_pl && option.name_en}
+										{option.name_en}
+									{/if}
+									{#if option.category}
+										· {option.category}
+									{/if}
+								</div>
+							</div>
+						</Command.Item>
+					{/each}
+				</Command.Group>
+			{/if}
+		</Command.List>
+	</Command.Root>
 
-	<Command.List>
-		<Command.Empty>No results found.</Command.Empty>
-		{#if searchResource.loading}<Command.Loading>Loading</Command.Loading>{/if}
-		<Command.Group heading="Suggestions">
-			{#each searchResource.current?.items ?? [] as option}
-				<Command.Item onSelect={() => selectOption(option)}>
-					<span>{option.name_pl ?? option.name_en}</span>
-					<div class="text-xs text-muted-foreground">
-						{#if option.name_pl && option.name_en}
-							{option.name_en}
-						{/if}
-						{#if option.category}
-							· {option.category}
-						{/if}
-					</div>
-				</Command.Item>
-			{/each}
-		</Command.Group>
-	</Command.List>
-</Command.Root>
+	{#if selectedFood}
+		<p class="text-sm text-muted-foreground mt-2">
+			Selected: {selectedFood.name_pl ?? selectedFood.name_en}
+		</p>
+	{/if}
+
+	<!-- Display already added ingredients -->
+	{#if ingredients.length > 0}
+		<div class="mt-4">
+			<IngredientsList {ingredients} showTitle={true} />
+		</div>
+	{/if}
+</div>
