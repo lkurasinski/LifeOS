@@ -30,9 +30,12 @@
 					<div class="flex-1">
 						<p class="font-medium">{ingredient.foodName}</p>
 						<p class="text-sm text-muted-foreground">
-							{ingredient.amount}
-							{ingredient.unit}
-							{#if ingredient.notes}• {ingredient.notes}{/if}
+							{#if ingredient.amount}
+								{ingredient.amount} {ingredient.unit}
+								{#if ingredient.notes}• {ingredient.notes}{/if}
+							{:else if ingredient.notes}
+								{ingredient.notes}
+							{/if}
 						</p>
 					</div>
 					{#if onRemove}

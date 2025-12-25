@@ -17,13 +17,11 @@
 	let {
 		selectedFood,
 		ingredients = $bindable<RecipeIngredient[]>([]),
-		submitting = false,
 		onAddAnother,
 		onFinish
 	}: {
 		selectedFood: FoodOption;
 		ingredients?: RecipeIngredient[];
-		submitting?: boolean;
 		onAddAnother?: () => void;
 		onFinish?: () => void;
 	} = $props();
@@ -36,7 +34,7 @@
 		const newIngredient: RecipeIngredient = {
 			foodName: selectedFood.name_en,
 			foodId: selectedFood.id,
-			amount: ingredientAmount || 0,
+			amount: ingredientAmount || undefined,
 			unit: ingredientUnit,
 			notes: ingredientNotes || undefined
 		};
@@ -126,13 +124,8 @@
 	<IngredientsList {ingredients} onRemove={removeIngredient} />
 
 	{#if ingredients.length > 0}
-		<Button
-			type="button"
-			onclick={finishAdding}
-			class="w-full mt-4"
-			disabled={ingredients.length === 0 || submitting}
-		>
-			{submitting ? 'Creating Recipe...' : 'Finish & Create Recipe'}
+		<Button type="button" onclick={finishAdding} class="w-full mt-4">
+			Finish & Create Recipe
 		</Button>
 	{/if}
 </div>

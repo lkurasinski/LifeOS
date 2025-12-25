@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const recipeIngredientSchema = z.object({
 	foodId: z.string().min(1, 'Food is required'),
 	foodName: z.string().min(1, 'Food name is required'),
-	amount: z.number().positive('Amount must be positive'),
+	amount: z.number().positive('Amount must be positive').optional(),
 	unit: z.enum(['gram', 'ml']).default('gram'),
 	notes: z.string().optional()
 });
@@ -20,21 +20,11 @@ export const recipeFormSchema = z.object({
 	descriptionPl: z.string().optional(),
 	descriptionEn: z.string().optional(),
 	servings: z.coerce.number().int().positive('Servings must be at least 1').default(1),
-	prepTimeMinutes: z.coerce
-		.number()
-		.int()
-		.positive('Prep time must be positive')
-		.nullable()
-		.optional(),
-	cookTimeMinutes: z.coerce
-		.number()
-		.int()
-		.positive('Cook time must be positive')
-		.nullable()
-		.optional(),
+	prepTimeMinutes: z.coerce.number().int().positive('Prep time must be positive').optional(),
+	cookTimeMinutes: z.coerce.number().int().positive('Cook time must be positive').optional(),
 	difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
 	isPublic: z.boolean().default(true),
-	imageUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+	imageUrl: z.union([z.string().url('Invalid URL'), z.literal('')]).optional(),
 	ingredients: z.array(recipeIngredientSchema).min(1, 'At least one ingredient is required'),
 	instructions: z.array(recipeInstructionSchema),
 	tags: z.array(z.string()).optional()

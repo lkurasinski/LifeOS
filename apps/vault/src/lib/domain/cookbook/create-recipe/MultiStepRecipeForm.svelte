@@ -34,8 +34,8 @@
 		descriptionPl: '',
 		descriptionEn: '',
 		servings: 1,
-		prepTimeMinutes: null,
-		cookTimeMinutes: null,
+		prepTimeMinutes: undefined,
+		cookTimeMinutes: undefined,
 		difficulty: undefined,
 		isPublic: false,
 		imageUrl: '',
@@ -44,8 +44,8 @@
 		tags: []
 	};
 
-	const { form, errors, submitting } = superForm(initialData, {
-		validators: zod4(recipeFormSchema),
+	const { form, errors, enhance } = superForm(initialData, {
+		// validators: zod4(recipeFormSchema),
 		dataType: 'json',
 		SPA: true,
 		validationMethod: 'submit-only'
@@ -164,45 +164,40 @@
 		setStep(2);
 	}
 
-	async function finishAddingIngredients() {
-		console.log('dupa');
+	function finishAddingIngredients() {
 		if (ingredients.length === 0) {
 			toast.error('Please add at least one ingredient');
 			return;
 		}
 
 		$form.ingredients = ingredients;
-		await handleSubmit();
-	}
 
-	async function handleSubmit() {
-		$submitting = true;
+		// Optimistic update - close drawer immediately
+		const formData = { ...$form };
+		resetForm();
+		open = false;
 
-		console.log('submitting...');
-
-		try {
-			const response = await fetch('/api/recipes', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify($form)
-			});
-
+		// Show promise-based toast with loading/success/error states
+		const submitPromise = fetch('/api/recipes', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(formData)
+		}).then(async (response) => {
 			if (!response.ok) {
 				const error = await response.json();
-				toast.error(error.error || 'Failed to create recipe');
-				return;
+				throw new Error(error.error || 'Failed to create recipe');
 			}
+			return response.json();
+		});
 
-			toast.success('Recipe created successfully!');
-			resetForm();
-			open = false;
-			onSuccess?.();
-		} catch (error) {
-			toast.error('An unexpected error occurred');
-			console.error('Recipe creation error:', error);
-		} finally {
-			$submitting = false;
-		}
+		toast.promise(submitPromise, {
+			loading: 'Creating recipe...',
+			success: () => {
+				onSuccess?.();
+				return 'Recipe created successfully!';
+			},
+			error: (err) => err.message || 'An unexpected error occurred'
+		});
 	}
 
 	function resetForm() {
@@ -266,6 +261,7 @@
 				onsubmit={(e) => {
 					e.preventDefault();
 				}}
+				use:enhance
 			>
 				{#if currentStepErrors.length > 0}
 					<div
@@ -318,7 +314,6 @@
 								<Step3
 									{selectedFood}
 									bind:ingredients
-									submitting={$submitting}
 									onAddAnother={addAnotherIngredient}
 									onFinish={finishAddingIngredients}
 								/>

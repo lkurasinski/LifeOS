@@ -124,14 +124,21 @@ model Recipe {
 // RECIPE INGREDIENTS (składniki w przepisie)
 // ============================================
 
+enum IngredientUnit {
+  gram
+  ml
+
+  @@map("ingredient_unit")
+}
+
 model RecipeIngredient {
-  id          String  @id @default(uuid())
-  recipeId    String  @map("recipe_id")
-  foodId      String  @map("food_id")
-  amountGrams Float   @map("amount_grams") // zawsze w gramach
-  amountMl    Float?  @map("amount_ml") // opcjonalnie dla płynów
-  notes       String? // np. "posiekany", "ugotowany"
-  order       Int     @default(0)
+  id       String          @id @default(uuid())
+  recipeId String          @map("recipe_id")
+  foodId   String          @map("food_id")
+  amount   Float?          // optional amount
+  unit     IngredientUnit  @default(gram) // gram or ml
+  notes    String?         // np. "posiekany", "ugotowany"
+  order    Int             @default(0)
 
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   food   Food   @relation(fields: [foodId], references: [id])
