@@ -56,7 +56,7 @@
 
 <div class="space-y-2">
 	<Label>Search for ingredient</Label>
-	<Command.Root shouldFilter={false} class="rounded-lg border shadow-md">
+	<Command.Root shouldFilter={false} class="rounded-lg border">
 		<Command.Input bind:value={query} placeholder="Type to search ingredients..." />
 		<Command.List>
 			{#if searchResource.loading}

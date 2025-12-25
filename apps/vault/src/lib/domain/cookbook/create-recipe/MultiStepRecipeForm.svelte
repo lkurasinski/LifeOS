@@ -236,92 +236,90 @@
 </script>
 
 <Drawer.Root bind:open onClose={() => resetForm()}>
-	<Drawer.Content class="max-h-[90vh]" onkeydown={handleKeydown}>
-		<div class="mx-auto w-full max-w-3xl">
-			<Drawer.Header>
-				<Drawer.Title>
-					{#key currentStep}
-						<div in:fly={{ y: -10, duration: 300, easing: cubicOut }}>
+	<Drawer.Content onkeydown={handleKeydown}>
+		<div class="mx-auto w-full max-w-3xl flex justify-between flex-col h-screen">
+			<div class="">
+				<Drawer.Header>
+					<Drawer.Title>
+						{#key currentStep}
 							{stepTitle}
-						</div>
-					{/key}
-				</Drawer.Title>
-				<Drawer.Description>
-					{#key currentStep}
-						<div in:fade={{ duration: 200 }}>
+						{/key}
+					</Drawer.Title>
+					<Drawer.Description>
+						{#key currentStep}
 							Step {currentStep} of 3
 							{ingredientCountText}
-						</div>
-					{/key}
-				</Drawer.Description>
-			</Drawer.Header>
+						{/key}
+					</Drawer.Description>
+				</Drawer.Header>
 
-			<form
-				class="px-4 pb-4 overflow-y-auto max-h-[calc(90vh-200px)]"
-				onsubmit={(e) => {
-					e.preventDefault();
-				}}
-				use:enhance
-			>
-				{#if currentStepErrors.length > 0}
-					<div
-						class="mb-4 space-y-1 p-3 border border-destructive/50 rounded-lg bg-destructive/10"
-						transition:slide={{ duration: 300, easing: cubicOut }}
-					>
-						{#each currentStepErrors as error}
-							<p class="text-sm text-destructive" in:fly={{ x: -10, duration: 200 }}>{error}</p>
-						{/each}
-					</div>
-				{/if}
-
-				{#key currentStep}
-					{#if currentStep === 1}
+				<form
+					class="px-4 pb-4 overflow-y-auto max-h-[calc(90vh-200px)]"
+					onsubmit={(e) => {
+						e.preventDefault();
+					}}
+					use:enhance
+				>
+					{#if currentStepErrors.length > 0}
 						<div
-							class="space-y-2"
-							in:fly={{ x: 20, duration: 400, easing: cubicOut }}
-							out:fly={{ x: -20, duration: 300, easing: cubicOut }}
+							class="mb-4 space-y-1 p-3 border border-destructive/50 rounded-lg bg-destructive/10"
+							transition:slide={{ duration: 300, easing: cubicOut }}
 						>
-							<Label for="titlePl">Recipe Title (Polish) *</Label>
-							<Input
-								id="titlePl"
-								type="text"
-								bind:value={titlePlValue}
-								onkeyup={(e) => {
-									if (e.code === 'Enter') goToNextStep();
-								}}
-								placeholder="Nazwa przepisu"
-								autofocus
-							/>
+							{#each currentStepErrors as error}
+								<p class="text-sm text-destructive" in:fly={{ x: -10, duration: 200 }}>{error}</p>
+							{/each}
 						</div>
 					{/if}
 
-					{#if currentStep === 2}
-						<div
-							class="space-y-2"
-							in:fly={{ x: 20, duration: 400, easing: cubicOut }}
-							out:fly={{ x: -20, duration: 300, easing: cubicOut }}
-						>
-							<Step2 bind:selectedFood {ingredients} onSelect={goToNextStep} />
-						</div>
-					{/if}
-
-					{#if currentStep === 3}
-						<div
-							in:fly={{ x: 20, duration: 400, easing: cubicOut }}
-							out:fly={{ x: -20, duration: 300, easing: cubicOut }}
-						>
-							{#if selectedFood}
-								<Step3
-									{selectedFood}
-									bind:ingredients
-									onAddAnother={addAnotherIngredient}
-									onFinish={finishAddingIngredients}
+					{#key currentStep}
+						{#if currentStep === 1}
+							<div
+								class="space-y-2"
+								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
+								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
+							>
+								<Label for="titlePl">Recipe Title (Polish) *</Label>
+								<Input
+									id="titlePl"
+									type="text"
+									bind:value={titlePlValue}
+									onkeyup={(e) => {
+										if (e.code === 'Enter') goToNextStep();
+									}}
+									placeholder="Nazwa przepisu"
+									autofocus
 								/>
-							{/if}
-						</div>
-					{/if}
-				{/key}
-			</form>
+							</div>
+						{/if}
+
+						{#if currentStep === 2}
+							<div
+								class="space-y-2"
+								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
+								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
+							>
+								<Step2 bind:selectedFood {ingredients} onSelect={goToNextStep} />
+							</div>
+						{/if}
+
+						{#if currentStep === 3}
+							<div
+								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
+								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
+							>
+								{#if selectedFood}
+									<Step3
+										{selectedFood}
+										bind:ingredients
+										onAddAnother={addAnotherIngredient}
+										onFinish={finishAddingIngredients}
+									/>
+								{/if}
+							</div>
+						{/if}
+					{/key}
+				</form>
+			</div>
 
 			<Drawer.Footer class="flex gap-2">
 				{#if showBackButton}
