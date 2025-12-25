@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
+	import RecipesCatalog from '$lib/domain/cookbook/RecipesCatalog.svelte';
 	import NewRecipeForm from '$lib/components/NewRecipeForm.svelte';
 	import MultiStepRecipeForm from '$lib/domain/cookbook/create-recipe/MultiStepRecipeForm.svelte';
 	import TestDrawer from '$lib/components/TestDrawer.svelte';
@@ -17,18 +11,18 @@
 	let isFormOpen = $state(false);
 	let isTestOpen = $state(false);
 	let isMultiStepOpen = $state(false);
+	let catalogRef: RecipesCatalog;
 
 	function handleRecipeCreated() {
-		// Reload the page data to show the new recipe
-		// This will be handled by invalidateAll in the form
+		catalogRef?.refresh();
 	}
 </script>
 
 <div class="space-y-6">
 	<div class="flex items-center justify-between">
 		<div>
-			<h1 class="text-3xl font-bold tracking-tight">My Recipes</h1>
-			<p class="text-muted-foreground">Manage your personal collection of recipes</p>
+			<h1 class="text-3xl font-bold tracking-tight">Recipes</h1>
+			<p class="text-muted-foreground">Discover and manage your recipes</p>
 		</div>
 		<div class="flex gap-2">
 			<Button onclick={() => (isTestOpen = true)} variant="outline">Test Drawer</Button>
@@ -40,20 +34,7 @@
 		</div>
 	</div>
 
-	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-		<!-- Placeholder cards - will be replaced with actual recipes later -->
-		<Card>
-			<CardHeader>
-				<CardTitle>No recipes yet</CardTitle>
-				<CardDescription>Start by creating your first recipe</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<p class="text-sm text-muted-foreground">
-					Click the "New Recipe" button to add your favorite dishes to your cookbook.
-				</p>
-			</CardContent>
-		</Card>
-	</div>
+	<RecipesCatalog bind:this={catalogRef} />
 </div>
 
 <TestDrawer bind:open={isTestOpen} />
