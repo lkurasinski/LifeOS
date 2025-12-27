@@ -57,6 +57,7 @@
 		"jsonwebtoken": "^9.0.3",
 		"pino": "^10.1.0",
 		"runed": "^0.37.1",
+		"slugify": "^1.6.6",
 		"svelte-i18n": "^4.0.1",
 		"sveltekit-superforms": "^2.29.1",
 		"typesense": "^2.1.0",

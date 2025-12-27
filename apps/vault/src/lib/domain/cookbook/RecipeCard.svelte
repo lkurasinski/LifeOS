@@ -28,7 +28,7 @@
 			<div class="aspect-video w-full overflow-hidden bg-muted">
 				<img
 					src={recipe.imageUrl}
-					alt={recipe.titlePl}
+					alt={recipe.namePl}
 					class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
 				/>
 			</div>
@@ -41,9 +41,9 @@
 		<Card.Header>
 			<div class="flex items-start justify-between gap-2">
 				<div class="flex-1 min-w-0">
-					<Card.Title class="text-lg line-clamp-2">{recipe.titlePl}</Card.Title>
-					{#if recipe.titleEn}
-						<Card.Description class="line-clamp-1">{recipe.titleEn}</Card.Description>
+					<Card.Title class="text-lg line-clamp-2">{recipe.namePl}</Card.Title>
+					{#if recipe.nameEn}
+						<Card.Description class="line-clamp-1">{recipe.nameEn}</Card.Description>
 					{/if}
 				</div>
 				{#if recipe.difficulty}

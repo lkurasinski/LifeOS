@@ -29,15 +29,15 @@
 	let { open = $bindable(false), onSuccess }: { open?: boolean; onSuccess?: () => void } = $props();
 
 	const initialData: RecipeFormSchema = {
-		titlePl: '',
-		titleEn: '',
+		namePl: '',
+		nameEn: '',
 		descriptionPl: '',
 		descriptionEn: '',
 		servings: 1,
 		prepTimeMinutes: undefined,
 		cookTimeMinutes: undefined,
 		difficulty: undefined,
-		isPublic: false,
+		isPublic: true,
 		imageUrl: '',
 		ingredients: [],
 		instructions: [],
@@ -58,7 +58,7 @@
 	const searchParams = browser ? useSearchParams(stepParamsSchema, { pushHistory: true }) : null;
 
 	let currentStepErrors = $state<string[]>([]);
-	let titlePlValue = $state('');
+	let namePlValue = $state('');
 	let selectedFood = $state<FoodOption | null>(null);
 	let ingredients = $state<RecipeIngredient[]>([]);
 
@@ -104,10 +104,10 @@
 
 		switch (currentStep) {
 			case 1:
-				if (!titlePlValue.trim()) {
+				if (!namePlValue.trim()) {
 					errors.push('Title is required');
 				}
-				if (titlePlValue.length > 200) {
+				if (namePlValue.length > 200) {
 					errors.push('Title is too long (max 200 characters)');
 				}
 				break;
@@ -127,7 +127,7 @@
 	function saveCurrentStepData() {
 		switch (currentStep) {
 			case 1:
-				$form.titlePl = titlePlValue;
+				$form.namePl = namePlValue;
 				break;
 			case 2:
 				// Data saved via binding
@@ -202,7 +202,7 @@
 
 	function resetForm() {
 		currentStepErrors = [];
-		titlePlValue = '';
+		namePlValue = '';
 		selectedFood = null;
 		ingredients = [];
 		$form = initialData;
@@ -278,11 +278,11 @@
 								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
 								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
 							>
-								<Label for="titlePl">Recipe Title (Polish) *</Label>
+								<Label for="namePl">Recipe Title (Polish) *</Label>
 								<Input
-									id="titlePl"
+									id="namePl"
 									type="text"
-									bind:value={titlePlValue}
+									bind:value={namePlValue}
 									onkeyup={(e) => {
 										if (e.code === 'Enter') goToNextStep();
 									}}

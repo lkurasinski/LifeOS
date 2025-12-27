@@ -22,13 +22,13 @@
 	let { open = $bindable(false), onSuccess }: { open?: boolean; onSuccess?: () => void } = $props();
 
 	const initialData: RecipeFormSchema = {
-		titlePl: '',
-		titleEn: '',
+		namePl: '',
+		nameEn: '',
 		descriptionPl: '',
 		descriptionEn: '',
 		servings: 1,
-		prepTimeMinutes: null,
-		cookTimeMinutes: null,
+		prepTimeMinutes: undefined,
+		cookTimeMinutes: undefined,
 		difficulty: undefined,
 		isPublic: false,
 		imageUrl: '',
@@ -192,25 +192,25 @@
 
 						<div class="grid gap-4 sm:grid-cols-2">
 							<div class="space-y-2">
-								<Label for="titlePl">Title (Polish) *</Label>
+								<Label for="namePl">Title (Polish) *</Label>
 								<Input
-									id="titlePl"
+									id="namePl"
 									type="text"
-									bind:value={$form.titlePl}
+									bind:value={$form.namePl}
 									placeholder="Nazwa przepisu"
-									aria-invalid={$errors.titlePl ? 'true' : undefined}
+									aria-invalid={$errors.namePl ? 'true' : undefined}
 								/>
-								{#if $errors.titlePl}
-									<p class="text-sm text-destructive">{$errors.titlePl}</p>
+								{#if $errors.namePl}
+									<p class="text-sm text-destructive">{$errors.namePl}</p>
 								{/if}
 							</div>
 
 							<div class="space-y-2">
-								<Label for="titleEn">Title (English)</Label>
+								<Label for="nameEn">Title (English)</Label>
 								<Input
-									id="titleEn"
+									id="nameEn"
 									type="text"
-									bind:value={$form.titleEn}
+									bind:value={$form.nameEn}
 									placeholder="Recipe name"
 								/>
 							</div>

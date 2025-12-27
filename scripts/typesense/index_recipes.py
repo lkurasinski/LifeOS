@@ -37,9 +37,9 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         SELECT
             r.id,
             r.user_id,
-            u.name as user_name, 
-            r.title_pl,
-            r.title_en,
+            u.name as user_name,
+            r.name_pl,
+            r.name_en,
             r.description_pl,
             r.description_en,
             r.servings,
@@ -48,6 +48,7 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             r.difficulty,
             r.is_public,
             r.image_url,
+            r.awesomeness,
             r.created_at,
             r.updated_at,
             COALESCE(
@@ -72,6 +73,20 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
                 '[]'::json
             ) as ingredients,
             COALESCE(
+                array_agg(
+                    DISTINCT ingredient_name
+                    ORDER BY ingredient_name
+                ) FILTER (WHERE ingredient_name IS NOT NULL),
+                ARRAY[]::text[]
+            ) as ingredient_names,
+            COALESCE(
+                array_agg(
+                    DISTINCT sr.slug
+                    ORDER BY sr.slug
+                ) FILTER (WHERE sr.slug IS NOT NULL),
+                ARRAY[]::text[]
+            ) as sub_recipe_slugs,
+            COALESCE(
                 json_agg(
                     DISTINCT t.name_pl
                     ORDER BY t.name_pl
@@ -82,12 +97,18 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         INNER JOIN users u ON r.user_id = u.id
         LEFT JOIN recipe_ingredients ri ON r.id = ri.recipe_id
         LEFT JOIN foods f ON ri.food_id = f.id
+        LEFT JOIN LATERAL (
+            SELECT unnest(ARRAY[f.name_pl, f.name_en]) as ingredient_name
+            WHERE f.id IS NOT NULL
+        ) ingredient_names_flat ON true
+        LEFT JOIN recipe_sub_recipes rsr ON r.id = rsr.recipe_id
+        LEFT JOIN recipes sr ON rsr.sub_recipe_id = sr.id
         LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
         LEFT JOIN tags t ON rt.tag_id = t.id
         WHERE r.is_public = true
-        GROUP BY r.id, r.user_id, u.name, r.title_pl, r.title_en, r.description_pl,
+        GROUP BY r.id, r.user_id, u.name, r.name_pl, r.name_en, r.description_pl,
                  r.description_en, r.servings, r.prep_time_minutes, r.cook_time_minutes,
-                 r.difficulty, r.is_public, r.image_url, r.created_at, r.updated_at
+                 r.difficulty, r.is_public, r.image_url, r.awesomeness, r.created_at, r.updated_at
         ORDER BY r.created_at DESC
     """
 
@@ -100,18 +121,18 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         recipe = {
             "id": row[0],
             "user_id": row[1],
-            "title_pl": row[3],
+            "name_pl": row[3],
             "servings": row[7],
             "is_public": row[11],
-            "created_at": int(row[13].timestamp()),
-            "updated_at": int(row[14].timestamp()),
+            "created_at": int(row[14].timestamp()),
+            "updated_at": int(row[15].timestamp()),
         }
 
         # Optional fields
         if row[2]:  # user_name
             recipe["user_name"] = row[2]
-        if row[4]:  # title_en
-            recipe["title_en"] = row[4]
+        if row[4]:  # name_en
+            recipe["name_en"] = row[4]
         if row[5]:  # description_pl
             recipe["description_pl"] = row[5]
         if row[6]:  # description_en
@@ -124,14 +145,24 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             recipe["difficulty"] = row[10]
         if row[12]:  # image_url
             recipe["image_url"] = row[12]
+        if row[13]:  # awesomeness
+            recipe["awesomeness"] = row[13]
 
         # Ingredients array
-        if row[15] and row[15] != []:
-            recipe["ingredients"] = row[15]
+        if row[16] and row[16] != []:
+            recipe["ingredients"] = row[16]
+
+        # Ingredient names flat array
+        if row[17] and len(row[17]) > 0:
+            recipe["ingredient_names"] = [name for name in row[17] if name]
+
+        # Sub-recipe slugs array
+        if row[18] and len(row[18]) > 0:
+            recipe["sub_recipe_slugs"] = row[18]
 
         # Tags array
-        if row[16] and row[16] != []:
-            recipe["tags"] = row[16]
+        if row[19] and row[19] != []:
+            recipe["tags"] = row[19]
 
         recipes.append(recipe)
 

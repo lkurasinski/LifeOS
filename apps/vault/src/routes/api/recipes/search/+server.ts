@@ -35,7 +35,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			.documents()
 			.search({
 				q,
-				query_by: 'title_pl,title_en,description_pl,description_en',
+				query_by: 'name_pl,name_en,description_pl,description_en,ingredient_names',
 				per_page: perPage,
 				page,
 				sort_by: 'created_at:desc',
@@ -49,8 +49,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				id: doc.id,
 				userId: doc.user_id,
 				userName: doc.user_name ?? null,
-				titlePl: doc.title_pl,
-				titleEn: doc.title_en ?? null,
+				namePl: doc.name_pl,
+				nameEn: doc.name_en ?? null,
 				descriptionPl: doc.description_pl ?? null,
 				descriptionEn: doc.description_en ?? null,
 				servings: doc.servings,
@@ -58,7 +58,10 @@ export const GET: RequestHandler = async ({ url }) => {
 				cookTimeMinutes: doc.cook_time_minutes ?? null,
 				difficulty: doc.difficulty ?? null,
 				imageUrl: doc.image_url ?? null,
+				awesomeness: doc.awesomeness ?? null,
 				ingredients: doc.ingredients,
+				ingredientNames: doc.ingredient_names,
+				subRecipeSlugs: doc.sub_recipe_slugs,
 				tags: doc.tags,
 				createdAt: new Date(doc.created_at * 1000).toISOString(),
 				updatedAt: new Date(doc.updated_at * 1000).toISOString()
