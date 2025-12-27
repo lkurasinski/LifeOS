@@ -36,6 +36,7 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
     query = """
         SELECT
             r.id,
+            r.slug,
             r.user_id,
             u.name as user_name,
             r.name_pl,
@@ -106,7 +107,7 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
         LEFT JOIN tags t ON rt.tag_id = t.id
         WHERE r.is_public = true
-        GROUP BY r.id, r.user_id, u.name, r.name_pl, r.name_en, r.description_pl,
+        GROUP BY r.id, r.slug, r.user_id, u.name, r.name_pl, r.name_en, r.description_pl,
                  r.description_en, r.servings, r.prep_time_minutes, r.cook_time_minutes,
                  r.difficulty, r.is_public, r.image_url, r.awesomeness, r.created_at, r.updated_at
         ORDER BY r.created_at DESC
@@ -120,49 +121,50 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
     for row in rows:
         recipe = {
             "id": row[0],
-            "user_id": row[1],
-            "name_pl": row[3],
-            "servings": row[7],
-            "is_public": row[11],
-            "created_at": int(row[14].timestamp()),
-            "updated_at": int(row[15].timestamp()),
+            "slug": row[1],
+            "user_id": row[2],
+            "name_pl": row[4],
+            "servings": row[8],
+            "is_public": row[12],
+            "created_at": int(row[15].timestamp()),
+            "updated_at": int(row[16].timestamp()),
         }
 
         # Optional fields
-        if row[2]:  # user_name
-            recipe["user_name"] = row[2]
-        if row[4]:  # name_en
-            recipe["name_en"] = row[4]
-        if row[5]:  # description_pl
-            recipe["description_pl"] = row[5]
-        if row[6]:  # description_en
-            recipe["description_en"] = row[6]
-        if row[8]:  # prep_time_minutes
-            recipe["prep_time_minutes"] = row[8]
-        if row[9]:  # cook_time_minutes
-            recipe["cook_time_minutes"] = row[9]
-        if row[10]:  # difficulty
-            recipe["difficulty"] = row[10]
-        if row[12]:  # image_url
-            recipe["image_url"] = row[12]
-        if row[13]:  # awesomeness
-            recipe["awesomeness"] = row[13]
+        if row[3]:  # user_name
+            recipe["user_name"] = row[3]
+        if row[5]:  # name_en
+            recipe["name_en"] = row[5]
+        if row[6]:  # description_pl
+            recipe["description_pl"] = row[6]
+        if row[7]:  # description_en
+            recipe["description_en"] = row[7]
+        if row[9]:  # prep_time_minutes
+            recipe["prep_time_minutes"] = row[9]
+        if row[10]:  # cook_time_minutes
+            recipe["cook_time_minutes"] = row[10]
+        if row[11]:  # difficulty
+            recipe["difficulty"] = row[11]
+        if row[13]:  # image_url
+            recipe["image_url"] = row[13]
+        if row[14]:  # awesomeness
+            recipe["awesomeness"] = row[14]
 
         # Ingredients array
-        if row[16] and row[16] != []:
-            recipe["ingredients"] = row[16]
+        if row[17] and row[17] != []:
+            recipe["ingredients"] = row[17]
 
         # Ingredient names flat array
-        if row[17] and len(row[17]) > 0:
-            recipe["ingredient_names"] = [name for name in row[17] if name]
+        if row[18] and len(row[18]) > 0:
+            recipe["ingredient_names"] = [name for name in row[18] if name]
 
         # Sub-recipe slugs array
-        if row[18] and len(row[18]) > 0:
-            recipe["sub_recipe_slugs"] = row[18]
+        if row[19] and len(row[19]) > 0:
+            recipe["sub_recipe_slugs"] = row[19]
 
         # Tags array
-        if row[19] and row[19] != []:
-            recipe["tags"] = row[19]
+        if row[20] and row[20] != []:
+            recipe["tags"] = row[20]
 
         recipes.append(recipe)
 

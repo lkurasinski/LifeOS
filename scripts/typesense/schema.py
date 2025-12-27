@@ -37,6 +37,7 @@ RECIPES_SCHEMA = {
     "enable_nested_fields": True,
     "fields": [
         {"name": "id", "type": "string"},
+        {"name": "slug", "type": "string"},
         {"name": "user_id", "type": "string"},
         {"name": "user_name", "type": "string", "optional": True},
         {"name": "name_pl", "type": "string"},
