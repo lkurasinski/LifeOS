@@ -14,7 +14,17 @@ FOODS_SCHEMA = {
         {"name": "name_pl", "type": "string", "optional": True},
         {"name": "scientific_name", "type": "string", "optional": True},
         {"name": "category", "type": "string", "facet": True, "optional": True},
-        {"name": "nutrients", "type": "object[]", "optional": True},
+
+        # Denormalized common nutrients for fast sorting/filtering (per 100g)
+        {"name": "energy_kcal", "type": "float", "optional": True, "facet": True},
+        {"name": "protein", "type": "float", "optional": True, "facet": True},
+        {"name": "fat", "type": "float", "optional": True, "facet": True},
+        {"name": "carbs", "type": "float", "optional": True, "facet": True},
+        {"name": "fiber", "type": "float", "optional": True, "facet": True},
+
+        # Complete nutrition data as object with INFOODS codes as keys
+        {"name": "nutrients", "type": "object", "optional": True},
+
         {"name": "created_at", "type": "int64"},
         {"name": "updated_at", "type": "int64"},
     ],

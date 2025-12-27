@@ -28,11 +28,12 @@ logger = logging.getLogger(__name__)
 def fetch_foods_with_nutrition(conn) -> List[Dict]:
     """
     Fetch all foods with their nutrients from PostgreSQL.
-    Nutrients are returned as an array of objects.
+    Nutrients are returned as a flat object with INFOODS codes as keys.
+    Common nutrients are denormalized for fast sorting/filtering.
     """
     cursor = conn.cursor()
 
-    # Query to get foods with nutrients as JSON array
+    # Query to get foods with nutrients as JSON object with INFOODS codes
     query = """
         SELECT
             f.id,
@@ -44,16 +45,10 @@ def fetch_foods_with_nutrition(conn) -> List[Dict]:
             f.created_at,
             f.updated_at,
             COALESCE(
-                json_agg(
-                    json_build_object(
-                        'name_en', n.name_en,
-                        'name_pl', n.name_pl,
-                        'unit', n.unit,
-                        'value', fn.value
-                    )
-                    ORDER BY n.name_en
+                json_object_agg(
+                    n.id, fn.value
                 ) FILTER (WHERE n.id IS NOT NULL),
-                '[]'::json
+                '{}'::json
             ) as nutrients
         FROM foods f
         LEFT JOIN food_nutrition fn ON f.id = fn.food_id
@@ -85,9 +80,43 @@ def fetch_foods_with_nutrition(conn) -> List[Dict]:
         if row[5]:  # category
             food["category"] = row[5]
 
-        # Nutrients array
-        if row[8] and row[8] != []:
-            food["nutrients"] = row[8]
+        # Nutrients object with INFOODS codes
+        nutrients = row[8] if row[8] else {}
+        if nutrients:
+            # Convert all values to float to ensure consistent typing in Typesense
+            # (prevents int64 type inference issues)
+            nutrients_float = {k: float(v) for k, v in nutrients.items()}
+
+            # Backfill ENERC_KCAL from Atwater values if missing
+            # Priority: ENERC_ATWS > ENERC_ATW > ENERC_KCAL
+            if "ENERC_KCAL" not in nutrients_float:
+                if "ENERC_ATWS" in nutrients_float:
+                    nutrients_float["ENERC_KCAL"] = nutrients_float["ENERC_ATWS"]
+                elif "ENERC_ATW" in nutrients_float:
+                    nutrients_float["ENERC_KCAL"] = nutrients_float["ENERC_ATW"]
+
+            food["nutrients"] = nutrients_float
+
+            # Extract common nutrients for denormalized fields (fast sorting/filtering)
+            # Using INFOODS codes with priority
+
+            # Energy with Atwater priority: ENERC_ATWS > ENERC_ATW > ENERC_KCAL
+            energy = (
+                nutrients_float.get("ENERC_ATWS") or
+                nutrients_float.get("ENERC_ATW") or
+                nutrients_float.get("ENERC_KCAL")
+            )
+            if energy is not None:
+                food["energy_kcal"] = float(energy)
+
+            if "PROT" in nutrients_float:
+                food["protein"] = float(nutrients_float["PROT"])
+            if "FAT" in nutrients_float:
+                food["fat"] = float(nutrients_float["FAT"])
+            if "CHOCDF" in nutrients_float:  # Carbohydrate, by difference
+                food["carbs"] = float(nutrients_float["CHOCDF"])
+            if "FIBTG" in nutrients_float:  # Fiber, total dietary
+                food["fiber"] = float(nutrients_float["FIBTG"])
 
         foods.append(food)
 

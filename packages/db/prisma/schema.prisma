@@ -34,9 +34,9 @@ model User {
 // ============================================
 
 model Nutrition {
-  id     String  @id @default(uuid())
-  namePl String?  @map("name_pl")
-  nameEn String @map("name_en")
+  id     String  @id // INFOODS tagname code (e.g., CA, PROT, VITC)
+  namePl String? @map("name_pl")
+  nameEn String  @map("name_en")
   unit   String // g, mg, µg, kcal, kJ
 
   foodNutritions FoodNutrition[]
