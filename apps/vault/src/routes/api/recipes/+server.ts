@@ -60,7 +60,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						data: {
 							userId,
 							namePl: data.namePl,
-							nameEn: data.nameEn,
+							name_en: data.nameEn,
 							descriptionPl: data.descriptionPl,
 							descriptionEn: data.descriptionEn,
 							servings: data.servings,

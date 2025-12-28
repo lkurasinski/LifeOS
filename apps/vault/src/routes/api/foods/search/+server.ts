@@ -1,55 +1,49 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { typesense } from '$lib/server/typesense';
+import { getStrategy } from '$lib/services/food-sources';
+import { dataSourceProviders, type FoodSearchParams } from '$lib/domain/cookbook/foods';
+import { z } from 'zod';
 
-export interface FoodSearchResult {
-	id: string;
-	namePl: string | null;
-	nameEn: string;
-	category: string | null;
-	energyKcal: number | null;
-	protein: number | null;
-	fat: number | null;
-	carbs: number | null;
-	fiber: number | null;
-	nutrients: Record<string, number> | null;
-}
+export const GET: RequestHandler = async ({ url }): Promise<Response> => {
+	const query = url.searchParams.get('q') ?? '*';
+	const source = url.searchParams.get('source') || 'internal';
 
-export const GET: RequestHandler = async ({ url }) => {
-	const q = url.searchParams.get('q') ?? '*';
-	const perPage = Number(url.searchParams.get('per_page') ?? '10');
-	const sortBy = url.searchParams.get('sort_by') ?? 'created_at:desc';
+	if (!query) {
+		return json({ error: 'Query parameter "q" is required' }, { status: 400 });
+	}
 
 	try {
-		const result = await typesense
-			.collections('foods')
-			.documents()
-			.search({
-				q,
-				query_by: 'name_en,name_pl',
-				per_page: perPage,
-				sort_by: sortBy
-			});
+		const strategy = getStrategy(source);
 
-		const hits: FoodSearchResult[] = (result.hits ?? []).map((hit: any) => {
-			const doc = hit.document;
-			return {
-				id: doc.id as string,
-				namePl: doc.name_pl ?? null,
-				nameEn: doc.name_en as string,
-				category: doc.category ?? null,
-				energyKcal: doc.energy_kcal ?? null,
-				protein: doc.protein ?? null,
-				fat: doc.fat ?? null,
-				carbs: doc.carbs ?? null,
-				fiber: doc.fiber ?? null,
-				nutrients: doc.nutrients ?? null
-			};
+		const searchParams: FoodSearchParams = {
+			query,
+			pageSize: Number(url.searchParams.get('pageSize') ?? '25'),
+			pageNumber: Number(url.searchParams.get('pageNumber') ?? url.searchParams.get('page') ?? '1'),
+			category: url.searchParams.get('category') || undefined,
+			source: url.searchParams.get('source') || 'custom',
+			sortBy: url.searchParams.get('sortBy') || 'name',
+			sortOrder: url.searchParams.get('sortOrder') || 'asc'
+		};
+
+		url.searchParams.forEach((value, key) => {
+			if (!['q', 'source', 'pageSize', 'pageNumber', 'per_page', 'page'].includes(key)) {
+				// Handle comma-separated values
+				if (value.includes(',')) {
+					searchParams[key] = value.split(',');
+				} else {
+					searchParams[key] = value;
+				}
+			}
 		});
 
-		return json({ items: hits });
+		// Execute search using the strategy
+		const results = await strategy.search(searchParams);
+
+		// Return domain models
+		return json(results);
 	} catch (error) {
-		console.error('Typesense search error:', error);
-		return json({ items: [] }, { status: 500 });
+		console.error('Food search error:', error);
+		const message = error instanceof Error ? error.message : 'Failed to search food source';
+		return json({ error: message }, { status: 500 });
 	}
 };

@@ -6,27 +6,7 @@
  * https://www.fao.org/infoods/infoods/standards-guidelines/en/
  */
 
-export interface NutrientInfo {
-	/** INFOODS tagname code */
-	code: string;
-	/** Polish name */
-	namePl: string;
-	/** English name */
-	nameEn: string;
-	/** Unit of measurement */
-	unit: string;
-	/** Category for grouping */
-	category:
-		| 'energy'
-		| 'macronutrient'
-		| 'mineral'
-		| 'vitamin'
-		| 'amino_acid'
-		| 'fatty_acid'
-		| 'sterol'
-		| 'sugar'
-		| 'other';
-}
+import type { Nutrient } from '../domain/cookbook/foods';
 
 /** Common nutrients used for denormalized fields */
 export const COMMON_NUTRIENTS = {
@@ -38,247 +18,284 @@ export const COMMON_NUTRIENTS = {
 } as const;
 
 /** Complete nutrient information registry */
-export const NUTRIENTS: Record<string, NutrientInfo> = {
+export const NUTRIENTS: Record<string, Nutrient> = {
 	// Energy
 	ENERC_KCAL: {
 		code: 'ENERC_KCAL',
-		namePl: 'Energia',
-		nameEn: 'Energy',
+		name_pl: 'Energia',
+		name_en: 'Energy',
 		unit: 'kcal',
 		category: 'energy'
 	},
 	ENERC_KJ: {
 		code: 'ENERC_KJ',
-		namePl: 'Energia',
-		nameEn: 'Energy',
+		name_pl: 'Energia',
+		name_en: 'Energy',
 		unit: 'kJ',
 		category: 'energy'
 	},
 	ENERC_ATWS: {
 		code: 'ENERC_ATWS',
-		namePl: 'Energia (Atwater specyficzny)',
-		nameEn: 'Energy (Atwater specific factor)',
+		name_pl: 'Energia (Atwater specyficzny)',
+		name_en: 'Energy (Atwater specific factor)',
 		unit: 'kcal',
 		category: 'energy'
 	},
 	ENERC_ATW: {
 		code: 'ENERC_ATW',
-		namePl: 'Energia (Atwater ogólny)',
-		nameEn: 'Energy (Atwater general factor)',
+		name_pl: 'Energia (Atwater ogólny)',
+		name_en: 'Energy (Atwater general factor)',
 		unit: 'kcal',
 		category: 'energy'
 	},
 
 	// Macronutrients
-	PROT: { code: 'PROT', namePl: 'Białko', nameEn: 'Protein', unit: 'g', category: 'macronutrient' },
+	PROT: {
+		code: 'PROT',
+		name_pl: 'Białko',
+		name_en: 'Protein',
+		unit: 'g',
+		category: 'macronutrient'
+	},
 	FAT: {
 		code: 'FAT',
-		namePl: 'Tłuszcze ogółem',
-		nameEn: 'Total lipid (fat)',
+		name_pl: 'Tłuszcze ogółem',
+		name_en: 'Total lipid (fat)',
 		unit: 'g',
 		category: 'macronutrient'
 	},
 	CHOCDF: {
 		code: 'CHOCDF',
-		namePl: 'Węglowodany',
-		nameEn: 'Carbohydrate, by difference',
+		name_pl: 'Węglowodany',
+		name_en: 'Carbohydrate, by difference',
 		unit: 'g',
 		category: 'macronutrient'
 	},
 	FIBTG: {
 		code: 'FIBTG',
-		namePl: 'Błonnik pokarmowy',
-		nameEn: 'Fiber, total dietary',
+		name_pl: 'Błonnik pokarmowy',
+		name_en: 'Fiber, total dietary',
 		unit: 'g',
 		category: 'macronutrient'
 	},
-	WATER: { code: 'WATER', namePl: 'Woda', nameEn: 'Water', unit: 'g', category: 'macronutrient' },
-	ASH: { code: 'ASH', namePl: 'Popiół', nameEn: 'Ash', unit: 'g', category: 'macronutrient' },
+	WATER: { code: 'WATER', name_pl: 'Woda', name_en: 'Water', unit: 'g', category: 'macronutrient' },
+	ASH: { code: 'ASH', name_pl: 'Popiół', name_en: 'Ash', unit: 'g', category: 'macronutrient' },
 
 	// Minerals
-	CA: { code: 'CA', namePl: 'Wapń', nameEn: 'Calcium', unit: 'mg', category: 'mineral' },
-	FE: { code: 'FE', namePl: 'Żelazo', nameEn: 'Iron', unit: 'mg', category: 'mineral' },
-	MG: { code: 'MG', namePl: 'Magnez', nameEn: 'Magnesium', unit: 'mg', category: 'mineral' },
-	P: { code: 'P', namePl: 'Fosfor', nameEn: 'Phosphorus', unit: 'mg', category: 'mineral' },
-	K: { code: 'K', namePl: 'Potas', nameEn: 'Potassium', unit: 'mg', category: 'mineral' },
-	NA: { code: 'NA', namePl: 'Sód', nameEn: 'Sodium', unit: 'mg', category: 'mineral' },
-	ZN: { code: 'ZN', namePl: 'Cynk', nameEn: 'Zinc', unit: 'mg', category: 'mineral' },
-	CU: { code: 'CU', namePl: 'Miedź', nameEn: 'Copper', unit: 'mg', category: 'mineral' },
-	MN: { code: 'MN', namePl: 'Mangan', nameEn: 'Manganese', unit: 'mg', category: 'mineral' },
-	SE: { code: 'SE', namePl: 'Selen', nameEn: 'Selenium', unit: 'µg', category: 'mineral' },
-	ID: { code: 'ID', namePl: 'Jod', nameEn: 'Iodine', unit: 'µg', category: 'mineral' },
+	CA: { code: 'CA', name_pl: 'Wapń', name_en: 'Calcium', unit: 'mg', category: 'mineral' },
+	FE: { code: 'FE', name_pl: 'Żelazo', name_en: 'Iron', unit: 'mg', category: 'mineral' },
+	MG: { code: 'MG', name_pl: 'Magnez', name_en: 'Magnesium', unit: 'mg', category: 'mineral' },
+	P: { code: 'P', name_pl: 'Fosfor', name_en: 'Phosphorus', unit: 'mg', category: 'mineral' },
+	K: { code: 'K', name_pl: 'Potas', name_en: 'Potassium', unit: 'mg', category: 'mineral' },
+	NA: { code: 'NA', name_pl: 'Sód', name_en: 'Sodium', unit: 'mg', category: 'mineral' },
+	ZN: { code: 'ZN', name_pl: 'Cynk', name_en: 'Zinc', unit: 'mg', category: 'mineral' },
+	CU: { code: 'CU', name_pl: 'Miedź', name_en: 'Copper', unit: 'mg', category: 'mineral' },
+	MN: { code: 'MN', name_pl: 'Mangan', name_en: 'Manganese', unit: 'mg', category: 'mineral' },
+	SE: { code: 'SE', name_pl: 'Selen', name_en: 'Selenium', unit: 'µg', category: 'mineral' },
+	ID: { code: 'ID', name_pl: 'Jod', name_en: 'Iodine', unit: 'µg', category: 'mineral' },
 
 	// Vitamins
 	VITA_RAE: {
 		code: 'VITA_RAE',
-		namePl: 'Witamina A (RAE)',
-		nameEn: 'Vitamin A, RAE',
+		name_pl: 'Witamina A (RAE)',
+		name_en: 'Vitamin A, RAE',
 		unit: 'µg',
 		category: 'vitamin'
 	},
-	RETOL: { code: 'RETOL', namePl: 'Retinol', nameEn: 'Retinol', unit: 'µg', category: 'vitamin' },
+	RETOL: { code: 'RETOL', name_pl: 'Retinol', name_en: 'Retinol', unit: 'µg', category: 'vitamin' },
 	CARTB: {
 		code: 'CARTB',
-		namePl: 'Karoten beta',
-		nameEn: 'Carotene, beta',
+		name_pl: 'Karoten beta',
+		name_en: 'Carotene, beta',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 	VITC: {
 		code: 'VITC',
-		namePl: 'Witamina C',
-		nameEn: 'Vitamin C, total ascorbic acid',
+		name_pl: 'Witamina C',
+		name_en: 'Vitamin C, total ascorbic acid',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	VITD: {
 		code: 'VITD',
-		namePl: 'Witamina D (D2 + D3)',
-		nameEn: 'Vitamin D (D2 + D3)',
+		name_pl: 'Witamina D (D2 + D3)',
+		name_en: 'Vitamin D (D2 + D3)',
+		unit: 'µg',
+		category: 'vitamin'
+	},
+	CHOCAL: {
+		code: 'CHOCAL',
+		name_pl: 'Witamina D (Cholecalciferol)',
+		name_en: 'Vitamin D (D2 + D3)',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 	TOCPHA: {
 		code: 'TOCPHA',
-		namePl: 'Witamina E (alfa-tokoferol)',
-		nameEn: 'Vitamin E (alpha-tocopherol)',
+		name_pl: 'Witamina E (alfa-tokoferol)',
+		name_en: 'Vitamin E (alpha-tocopherol)',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	VITK1: {
 		code: 'VITK1',
-		namePl: 'Witamina K (filochinon)',
-		nameEn: 'Vitamin K (phylloquinone)',
+		name_pl: 'Witamina K (filochinon)',
+		name_en: 'Vitamin K (phylloquinone)',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 	THIA: {
 		code: 'THIA',
-		namePl: 'Tiamina (witamina B1)',
-		nameEn: 'Thiamin',
+		name_pl: 'Tiamina (witamina B1)',
+		name_en: 'Thiamin',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	RIBF: {
 		code: 'RIBF',
-		namePl: 'Ryboflawina (witamina B2)',
-		nameEn: 'Riboflavin',
+		name_pl: 'Ryboflawina (witamina B2)',
+		name_en: 'Riboflavin',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	NIA: {
 		code: 'NIA',
-		namePl: 'Niacyna (witamina B3)',
-		nameEn: 'Niacin',
+		name_pl: 'Niacyna (witamina B3)',
+		name_en: 'Niacin',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	PANTAC: {
 		code: 'PANTAC',
-		namePl: 'Kwas pantotenowy (witamina B5)',
-		nameEn: 'Pantothenic acid',
+		name_pl: 'Kwas pantotenowy (witamina B5)',
+		name_en: 'Pantothenic acid',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	VITB6A: {
 		code: 'VITB6A',
-		namePl: 'Witamina B6',
-		nameEn: 'Vitamin B-6',
+		name_pl: 'Witamina B6',
+		name_en: 'Vitamin B-6',
 		unit: 'mg',
 		category: 'vitamin'
 	},
 	BIOT: {
 		code: 'BIOT',
-		namePl: 'Biotyna (witamina B7)',
-		nameEn: 'Biotin',
+		name_pl: 'Biotyna (witamina B7)',
+		name_en: 'Biotin',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 	FOL: {
 		code: 'FOL',
-		namePl: 'Foliany ogółem',
-		nameEn: 'Folate, total',
+		name_pl: 'Foliany ogółem',
+		name_en: 'Folate, total',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 	VITB12: {
 		code: 'VITB12',
-		namePl: 'Witamina B12',
-		nameEn: 'Vitamin B-12',
+		name_pl: 'Witamina B12',
+		name_en: 'Vitamin B-12',
 		unit: 'µg',
 		category: 'vitamin'
 	},
 
-	// Amino Acids
-	ALA: { code: 'ALA', namePl: 'Alanina', nameEn: 'Alanine', unit: 'g', category: 'amino_acid' },
-	ARG: { code: 'ARG', namePl: 'Arginina', nameEn: 'Arginine', unit: 'g', category: 'amino_acid' },
+	//MARK: Amino Acids
+	ALA: { code: 'ALA', name_pl: 'Alanina', name_en: 'Alanine', unit: 'g', category: 'amino_acid' },
+	ARG: { code: 'ARG', name_pl: 'Arginina', name_en: 'Arginine', unit: 'g', category: 'amino_acid' },
 	ASP: {
 		code: 'ASP',
-		namePl: 'Kwas asparaginowy',
-		nameEn: 'Aspartic acid',
+		name_pl: 'Kwas asparaginowy',
+		name_en: 'Aspartic acid',
 		unit: 'g',
 		category: 'amino_acid'
 	},
-	CYS: { code: 'CYS', namePl: 'Cysteina', nameEn: 'Cysteine', unit: 'g', category: 'amino_acid' },
+	CYS: { code: 'CYS', name_pl: 'Cysteina', name_en: 'Cysteine', unit: 'g', category: 'amino_acid' },
 	GLU: {
 		code: 'GLU',
-		namePl: 'Kwas glutaminowy',
-		nameEn: 'Glutamic acid',
+		name_pl: 'Kwas glutaminowy',
+		name_en: 'Glutamic acid',
 		unit: 'g',
 		category: 'amino_acid'
 	},
-	GLY: { code: 'GLY', namePl: 'Glicyna', nameEn: 'Glycine', unit: 'g', category: 'amino_acid' },
-	HIS: { code: 'HIS', namePl: 'Histydyna', nameEn: 'Histidine', unit: 'g', category: 'amino_acid' },
+	GLY: { code: 'GLY', name_pl: 'Glicyna', name_en: 'Glycine', unit: 'g', category: 'amino_acid' },
+	HIS: {
+		code: 'HIS',
+		name_pl: 'Histydyna',
+		name_en: 'Histidine',
+		unit: 'g',
+		category: 'amino_acid'
+	},
 	ILE: {
 		code: 'ILE',
-		namePl: 'Izoleucyna',
-		nameEn: 'Isoleucine',
+		name_pl: 'Izoleucyna',
+		name_en: 'Isoleucine',
 		unit: 'g',
 		category: 'amino_acid'
 	},
-	LEU: { code: 'LEU', namePl: 'Leucyna', nameEn: 'Leucine', unit: 'g', category: 'amino_acid' },
-	LYS: { code: 'LYS', namePl: 'Lizyna', nameEn: 'Lysine', unit: 'g', category: 'amino_acid' },
-	MET: { code: 'MET', namePl: 'Metionina', nameEn: 'Methionine', unit: 'g', category: 'amino_acid' },
+	LEU: { code: 'LEU', name_pl: 'Leucyna', name_en: 'Leucine', unit: 'g', category: 'amino_acid' },
+	LYS: { code: 'LYS', name_pl: 'Lizyna', name_en: 'Lysine', unit: 'g', category: 'amino_acid' },
+	MET: {
+		code: 'MET',
+		name_pl: 'Metionina',
+		name_en: 'Methionine',
+		unit: 'g',
+		category: 'amino_acid'
+	},
 	PHE: {
 		code: 'PHE',
-		namePl: 'Fenyloalanina',
-		nameEn: 'Phenylalanine',
+		name_pl: 'Fenyloalanina',
+		name_en: 'Phenylalanine',
 		unit: 'g',
 		category: 'amino_acid'
 	},
-	PRO: { code: 'PRO', namePl: 'Prolina', nameEn: 'Proline', unit: 'g', category: 'amino_acid' },
-	SER: { code: 'SER', namePl: 'Seryna', nameEn: 'Serine', unit: 'g', category: 'amino_acid' },
-	THR: { code: 'THR', namePl: 'Treonina', nameEn: 'Threonine', unit: 'g', category: 'amino_acid' },
-	TRP: { code: 'TRP', namePl: 'Tryptofan', nameEn: 'Tryptophan', unit: 'g', category: 'amino_acid' },
-	TYR: { code: 'TYR', namePl: 'Tyrozyna', nameEn: 'Tyrosine', unit: 'g', category: 'amino_acid' },
-	VAL: { code: 'VAL', namePl: 'Walina', nameEn: 'Valine', unit: 'g', category: 'amino_acid' },
+	PRO: { code: 'PRO', name_pl: 'Prolina', name_en: 'Proline', unit: 'g', category: 'amino_acid' },
+	SER: { code: 'SER', name_pl: 'Seryna', name_en: 'Serine', unit: 'g', category: 'amino_acid' },
+	THR: {
+		code: 'THR',
+		name_pl: 'Treonina',
+		name_en: 'Threonine',
+		unit: 'g',
+		category: 'amino_acid'
+	},
+	TRP: {
+		code: 'TRP',
+		name_pl: 'Tryptofan',
+		name_en: 'Tryptophan',
+		unit: 'g',
+		category: 'amino_acid'
+	},
+	TYR: { code: 'TYR', name_pl: 'Tyrozyna', name_en: 'Tyrosine', unit: 'g', category: 'amino_acid' },
+	VAL: { code: 'VAL', name_pl: 'Walina', name_en: 'Valine', unit: 'g', category: 'amino_acid' },
 
 	// Fatty Acids Summary
 	FASAT: {
 		code: 'FASAT',
-		namePl: 'Kwasy tłuszczowe nasycone',
-		nameEn: 'Fatty acids, total saturated',
+		name_pl: 'Kwasy tłuszczowe nasycone',
+		name_en: 'Fatty acids, total saturated',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 	FAMS: {
 		code: 'FAMS',
-		namePl: 'Kwasy tłuszczowe jednonienasycone',
-		nameEn: 'Fatty acids, total monounsaturated',
+		name_pl: 'Kwasy tłuszczowe jednonienasycone',
+		name_en: 'Fatty acids, total monounsaturated',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 	FAPU: {
 		code: 'FAPU',
-		namePl: 'Kwasy tłuszczowe wielonienasycone',
-		nameEn: 'Fatty acids, total polyunsaturated',
+		name_pl: 'Kwasy tłuszczowe wielonienasycone',
+		name_en: 'Fatty acids, total polyunsaturated',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 	FATRN: {
 		code: 'FATRN',
-		namePl: 'Kwasy tłuszczowe trans',
-		nameEn: 'Fatty acids, total trans',
+		name_pl: 'Kwasy tłuszczowe trans',
+		name_en: 'Fatty acids, total trans',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
@@ -286,53 +303,75 @@ export const NUTRIENTS: Record<string, NutrientInfo> = {
 	// Important PUFAs
 	F18D3N3: {
 		code: 'F18D3N3',
-		namePl: 'Kwas alfa-linolenowy (ALA)',
-		nameEn: 'PUFA 18:3 n-3 (ALA)',
+		name_pl: 'Kwas alfa-linolenowy (ALA)',
+		name_en: 'PUFA 18:3 n-3 (ALA)',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 	F20D5N3: {
 		code: 'F20D5N3',
-		namePl: 'Kwas eikozapentaenowy (EPA)',
-		nameEn: 'PUFA 20:5 n-3 (EPA)',
+		name_pl: 'Kwas eikozapentaenowy (EPA)',
+		name_en: 'PUFA 20:5 n-3 (EPA)',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 	F22D6N3: {
 		code: 'F22D6N3',
-		namePl: 'Kwas dokozaheksaenowy (DHA)',
-		nameEn: 'PUFA 22:6 n-3 (DHA)',
+		name_pl: 'Kwas dokozaheksaenowy (DHA)',
+		name_en: 'PUFA 22:6 n-3 (DHA)',
 		unit: 'g',
 		category: 'fatty_acid'
 	},
 
 	// Sterols
-	CHOLE: { code: 'CHOLE', namePl: 'Cholesterol', nameEn: 'Cholesterol', unit: 'mg', category: 'sterol' },
+	CHOLE: {
+		code: 'CHOLE',
+		name_pl: 'Cholesterol',
+		name_en: 'Cholesterol',
+		unit: 'mg',
+		category: 'sterol'
+	},
 
 	// Sugars
-	FRUS: { code: 'FRUS', namePl: 'Fruktoza', nameEn: 'Fructose', unit: 'g', category: 'sugar' },
-	GLUS: { code: 'GLUS', namePl: 'Glukoza', nameEn: 'Glucose', unit: 'g', category: 'sugar' },
-	LACS: { code: 'LACS', namePl: 'Laktoza', nameEn: 'Lactose', unit: 'g', category: 'sugar' },
-	MALS: { code: 'MALS', namePl: 'Maltoza', nameEn: 'Maltose', unit: 'g', category: 'sugar' },
-	SUCS: { code: 'SUCS', namePl: 'Sacharoza', nameEn: 'Sucrose', unit: 'g', category: 'sugar' },
-	SUGAR: { code: 'SUGAR', namePl: 'Cukry ogółem', nameEn: 'Sugars, Total', unit: 'g', category: 'sugar' },
+	FRUS: { code: 'FRUS', name_pl: 'Fruktoza', name_en: 'Fructose', unit: 'g', category: 'sugar' },
+	GLUS: { code: 'GLUS', name_pl: 'Glukoza', name_en: 'Glucose', unit: 'g', category: 'sugar' },
+	LACS: { code: 'LACS', name_pl: 'Laktoza', name_en: 'Lactose', unit: 'g', category: 'sugar' },
+	MALS: { code: 'MALS', name_pl: 'Maltoza', name_en: 'Maltose', unit: 'g', category: 'sugar' },
+	SUCS: { code: 'SUCS', name_pl: 'Sacharoza', name_en: 'Sucrose', unit: 'g', category: 'sugar' },
+	SUGAR: {
+		code: 'SUGAR',
+		name_pl: 'Cukry ogółem',
+		name_en: 'Sugars, Total',
+		unit: 'g',
+		category: 'sugar'
+	},
+
+	STARCH: { code: 'STARCH', name_pl: 'Skrobia', name_en: 'Starch', unit: 'g', category: 'sugar' },
+	STARES: {
+		code: 'STARES', // @TODO should be STARES3
+		name_pl: 'Starch, resistant RS3',
+		name_en: 'Starch, resistant RS3',
+		unit: 'g',
+		category: 'sugar'
+	},
 
 	// Other
 	CHOLN: {
 		code: 'CHOLN',
-		namePl: 'Cholina ogółem',
-		nameEn: 'Choline, total',
+		name_pl: 'Cholina ogółem',
+		name_en: 'Choline, total',
 		unit: 'mg',
 		category: 'other'
 	},
-	BETN: { code: 'BETN', namePl: 'Betaina', nameEn: 'Betaine', unit: 'mg', category: 'other' }
+	BETN: { code: 'BETN', name_pl: 'Betaina', name_en: 'Betaine', unit: 'mg', category: 'other' },
+	NT: { code: 'NT', name_pl: 'Azot', name_en: 'Nitrogen', unit: 'g', category: 'other' }
 };
 
 /**
  * Get nutrient info by INFOODS code
  * Returns undefined if code not found in registry
  */
-export function getNutrientInfo(code: string): NutrientInfo | undefined {
+export function getNutrientInfo(code: string): Nutrient | undefined {
 	return NUTRIENTS[code];
 }
 
@@ -342,7 +381,7 @@ export function getNutrientInfo(code: string): NutrientInfo | undefined {
 export function getNutrientName(code: string, lang: 'pl' | 'en' = 'pl'): string {
 	const info = NUTRIENTS[code];
 	if (!info) return code;
-	return lang === 'pl' ? info.namePl : info.nameEn;
+	return lang === 'pl' ? info.name_pl : info.name_en;
 }
 
 /**

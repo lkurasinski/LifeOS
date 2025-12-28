@@ -20,4 +20,16 @@ declare global {
 	}
 }
 
+declare module '$env/static/private' {
+	export const FDC_API_KEY: string;
+	export const DATABASE_URL: string;
+	export const JWT_SECRET: string;
+	export const TYPESENSE_HOST: string;
+	export const TYPESENSE_PORT: string;
+	export const TYPESENSE_PROTOCOL: string;
+	export const TYPESENSE_API_KEY: string;
+	export const NODE_ENV: string;
+	export const PUBLIC_APP_URL: string;
+}
+
 export {};

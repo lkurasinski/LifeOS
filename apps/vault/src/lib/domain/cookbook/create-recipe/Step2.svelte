@@ -1,9 +1,11 @@
 <script lang="ts">
 	import * as Command from '$lib/components/ui/command';
 	import { Label } from '$lib/components/ui/label';
+	import { Button } from '$lib/components/ui/button';
 	import { resource } from 'runed';
 	import type { RecipeIngredient } from '$lib/schemas/recipe';
 	import IngredientsList from './IngredientsList.svelte';
+	import AddProductDialog from '$lib/components/add-product/AddProductDialog.svelte';
 
 	type FoodOption = {
 		id: string;
@@ -25,6 +27,7 @@
 	let query = $state('');
 	let minChars = 2;
 	let perPage = 10;
+	let showAddProductDialog = $state(false);
 
 	const searchResource = resource(
 		() => query,
@@ -33,10 +36,19 @@
 				return { items: [] };
 			}
 			try {
+				// Uses unified API - defaults to internal source
 				const response = await fetch(
-					`/api/foods/search?q=${encodeURIComponent(q)}&per_page=${perPage}`
+					`/api/foods/search?q=${encodeURIComponent(q)}&pageSize=${perPage}`
 				);
-				return await response.json();
+				const data = await response.json();
+				// Map domain Food models to expected format
+				const items = (data.items || []).map((food: any) => ({
+					id: food.id,
+					name_pl: food.name_pl,
+					name_en: food.name_en,
+					category: food.category
+				}));
+				return { items };
 			} catch (error) {
 				console.error(error);
 				return { items: [] };
@@ -52,6 +64,19 @@
 		query = option.name_pl ?? option.name_en;
 		onSelect?.();
 	}
+
+	function handleProductCreated(
+		event: CustomEvent<{ id: string; name_pl: string | null; name_en: string }>
+	) {
+		const { id, name_pl, name_en } = event.detail;
+		const newFood: FoodOption = {
+			id,
+			name_pl: name_pl || undefined,
+			name_en
+		};
+		selectOption(newFood);
+		showAddProductDialog = false;
+	}
 </script>
 
 <div class="space-y-2">
@@ -62,7 +87,17 @@
 			{#if searchResource.loading}
 				<!--				<Command.Loading>Searching...</Command.Loading>-->
 			{:else if query.length >= minChars && (searchResource.current?.items ?? []).length === 0}
-				<Command.Empty>No results found.</Command.Empty>
+				<div class="py-6 px-4 text-center space-y-3">
+					<Command.Empty>No results found for "{query}"</Command.Empty>
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onclick={() => (showAddProductDialog = true)}
+					>
+						+ Add Product from External Source
+					</Button>
+				</div>
 			{/if}
 			{#if (searchResource.current?.items ?? []).length > 0}
 				<Command.Group heading="Select ingredient">
@@ -71,7 +106,7 @@
 							<div class="flex flex-col">
 								<span class="font-medium">{option.name_pl ?? option.name_en}</span>
 								<div class="text-xs text-muted-foreground">
-									{#if option.name_pl && option.name_en}
+									{#if option.name_pl || option.name_en}
 										{option.name_en}
 									{/if}
 									{#if option.category}
@@ -99,3 +134,9 @@
 		</div>
 	{/if}
 </div>
+
+<AddProductDialog
+	bind:open={showAddProductDialog}
+	initialQuery={query}
+	on:created={handleProductCreated}
+/>

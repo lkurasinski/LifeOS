@@ -1,10 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { typesense } from '$lib/server/typesense';
-import {
-	typesenseRecipeDocumentSchema,
-	type RecipeSearchResult
-} from '$lib/schemas/recipe';
+import { typesenseRecipeDocumentSchema, type RecipeSearchResult } from '$lib/schemas/recipe';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const q = url.searchParams.get('q') ?? '*';
@@ -50,7 +47,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				userId: doc.user_id,
 				userName: doc.user_name ?? null,
 				namePl: doc.name_pl,
-				nameEn: doc.name_en ?? null,
+				name_en: doc.name_en ?? null,
 				descriptionPl: doc.description_pl ?? null,
 				descriptionEn: doc.description_en ?? null,
 				servings: doc.servings,

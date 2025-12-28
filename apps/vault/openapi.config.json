@@ -1,0 +1,16 @@
+{
+	"integrations": [
+		{
+			"name": "fdc",
+			"displayName": "USDA FoodData Central",
+			"input": {
+				"url": "https://api.nal.usda.gov/fdc/v1/json-spec",
+				"requiresAuth": true,
+				"envVar": "FDC_API_KEY"
+			},
+			"output": {
+				"spec": "src/lib/integrations/fdc/fdc-api-spec.json"
+			}
+		}
+	]
+}
