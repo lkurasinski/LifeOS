@@ -1,21 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma';
-import type { FDCFoodDetail, FoodNutrient } from '$lib/integrations/fdc/client';
-import { mapFDCNutrientsForDB } from '$lib/integrations/fdc/mappers';
-import { z } from 'zod';
-
-const createFoodSchema = z.object({
-	fdcData: z.any(), // Using any since it's already validated by FDC API types
-	overrides: z
-		.object({
-			namePl: z.string().optional(),
-			nameEn: z.string().optional(),
-			category: z.string().optional(),
-			scientificName: z.string().optional()
-		})
-		.optional()
-});
+import { createFoodCommandSchema, type CreateFoodCommand } from '$lib/domain/cookbook/foods';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const user = locals.user;
@@ -25,49 +11,41 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	try {
 		const body = await request.json();
-		const validatedData = createFoodSchema.parse(body);
-		const { fdcData, overrides } = validatedData;
 
-		const fdcFood = fdcData as FDCFoodDetail;
+		// Validate using domain CreateFoodCommand schema
+		const command = createFoodCommandSchema.parse(body);
 
-		// Normalize FDC nutrients to INFOODS codes using mapper
-		const nutrients = mapFDCNutrientsForDB((fdcFood as any).foodNutrients || []);
-
-		// Extract food category from the different food types
-		let foodCategory: string | undefined;
-		if ('foodCategory' in fdcFood && fdcFood.foodCategory) {
-			foodCategory =
-				typeof fdcFood.foodCategory === 'string'
-					? fdcFood.foodCategory
-					: fdcFood.foodCategory.description;
-		} else if ('brandedFoodCategory' in fdcFood && fdcFood.brandedFoodCategory) {
-			foodCategory = fdcFood.brandedFoodCategory;
-		}
-
-		const scientificName = 'scientificName' in fdcFood ? fdcFood.scientificName : undefined;
-
-		// Create food with nutrition data
+		// Create food with nutrition data in transaction
 		const food = await prisma.$transaction(async (tx) => {
+			// Build source URL based on provider
+			let sourceUrl: string | null = null;
+			if (command.source?.provider === 'fdc' && command.source.externalId) {
+				sourceUrl = `https://fdc.nal.usda.gov/fdc-app.html#/food-details/${command.source.externalId}/nutrients`;
+			}
+
 			// Create the food record
 			const createdFood = await tx.food.create({
 				data: {
-					fdcId: fdcFood.fdcId,
-					nameEn: overrides?.nameEn ?? fdcFood.description,
-					namePl: overrides?.namePl ?? null,
-					category: overrides?.category ?? foodCategory ?? null,
-					scientificName: overrides?.scientificName ?? scientificName ?? null,
-					isCustom: false,
-					userId: null // FDC foods are public/shared
+					nameEn: command.name_en,
+					namePl: command.name_pl || null,
+					category: command.category || null,
+					scientificName: command.scientificName || null,
+					brand: command.brand || null,
+					userId: command.source?.provider === 'custom' ? user.id : null,
+					// Source tracking columns
+					sourceProvider: command.source?.provider || null,
+					sourceExternalId: command.source?.externalId?.toString() || null,
+					sourceUrl
 				}
 			});
 
 			// Create nutrition entries
-			if (nutrients.length > 0) {
+			if (command.nutrients.length > 0) {
 				await tx.foodNutrition.createMany({
-					data: nutrients.map((n) => ({
+					data: command.nutrients.map((n) => ({
 						foodId: createdFood.id,
 						nutritionId: n.code,
-						value: n.value
+						amount: n.value
 					})),
 					skipDuplicates: true
 				});
@@ -76,11 +54,27 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			return createdFood;
 		});
 
-		return json(food, { status: 201 });
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return json({ error: 'Invalid request data', details: error.issues }, { status: 400 });
+		return json(
+			{
+				id: food.id,
+				name_en: food.nameEn,
+				name_pl: food.namePl
+			},
+			{ status: 201 }
+		);
+	} catch (error: unknown) {
+		if (error && typeof error === 'object' && 'issues' in error) {
+			return json(
+				{ error: 'Invalid request data', details: (error as any).issues },
+				{ status: 400 }
+			);
 		}
+
+		// Handle Prisma unique constraint violation (duplicate fdcId)
+		if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+			return json({ error: 'This food already exists in the database' }, { status: 409 });
+		}
+
 		console.error('Food creation error:', error);
 		return json({ error: 'Failed to create food' }, { status: 500 });
 	}

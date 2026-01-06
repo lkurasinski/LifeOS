@@ -16,7 +16,7 @@ Scripts for indexing PostgreSQL data to Typesense for fast search.
    ```
 
 3. **Data in PostgreSQL**:
-   - Run FoodData migration first: `scripts/migrations/FoodData/import-fooddata.py`
+   - Run database seeding first: `cd scripts && python seed-database.py`
 
 ## Quick Start
 
@@ -270,13 +270,13 @@ curl "http://localhost:8108/collections/foods/documents/search?q=*&filter_by=pro
 0 2 * * * cd /path/to/LifeOS/scripts/typesense && python update_incremental.py --hours 24
 ```
 
-### Post-Migration Hook
+### Post-Seeding Hook
 
-After running FoodData migration, automatically update index:
+After running database seeding, automatically update index:
 
 ```bash
-cd scripts/migrations/FoodData
-python import-fooddata.py && cd ../../typesense && python update_incremental.py --hours 1
+cd scripts
+python seed-database.py && cd typesense && python reindex_all.py
 ```
 
 ---
@@ -306,10 +306,10 @@ docker compose ps  # Check status
 
 **Problem**: PostgreSQL database is empty.
 
-**Solution**: Run FoodData migration first:
+**Solution**: Run database seeding first:
 ```bash
-cd scripts/migrations/FoodData
-python import-fooddata.py
+cd scripts
+python seed-database.py
 ```
 
 ### Slow indexing

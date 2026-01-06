@@ -44,7 +44,6 @@ export async function searchFoods(params: {
 	sortBy?: 'dataType.keyword' | 'lowercaseDescription.keyword' | 'fdcId' | 'publishedDate';
 	sortOrder?: 'asc' | 'desc';
 }): Promise<SearchResult> {
-	console.log(params);
 	const { data, error } = await getFoodsSearch({
 		query: withApiKey({
 			query: params.query,

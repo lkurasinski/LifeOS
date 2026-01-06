@@ -23,7 +23,7 @@
 
 	const initialData: RecipeFormSchema = {
 		namePl: '',
-		name_en: '',
+		nameEn: '',
 		descriptionPl: '',
 		descriptionEn: '',
 		servings: 1,
@@ -87,8 +87,8 @@
 
 		const newInstruction: RecipeInstruction = {
 			stepNumber: $form.instructions.length + 1,
-			textPl: instructionText.trim(),
-			textEn: undefined
+			descriptionPl: instructionText.trim(),
+			descriptionEn: undefined
 		};
 
 		$form.instructions = [...$form.instructions, newInstruction];

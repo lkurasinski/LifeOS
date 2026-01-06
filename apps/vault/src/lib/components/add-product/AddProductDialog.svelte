@@ -105,8 +105,8 @@
 			const createdFood = await res.json();
 			dispatch('created', {
 				id: createdFood.id,
-				name_pl: createdFood.namePl,
-				name_en: createdFood.nameEn
+				name_pl: createdFood.name_pl,
+				name_en: createdFood.name_en
 			});
 			handleClose();
 		} catch (e) {

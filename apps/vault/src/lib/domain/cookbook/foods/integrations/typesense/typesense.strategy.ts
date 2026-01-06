@@ -63,13 +63,28 @@ export class TypesenseStrategy implements FoodSourceStrategy {
 			throw new Error(`Food not found: ${id}`);
 		}
 
+		// Determine source from source tracking columns
+		let source: { provider: 'fdc' | 'custom' | 'openfoodfacts'; externalId: string | number } | null =
+			null;
+		if (food.sourceProvider && food.sourceExternalId) {
+			source = {
+				provider: food.sourceProvider as 'fdc' | 'custom' | 'openfoodfacts',
+				externalId: food.sourceExternalId
+			};
+		} else {
+			source = {
+				provider: 'custom' as const,
+				externalId: food.id
+			};
+		}
+
 		return {
 			id: food.id,
 			name_en: food.nameEn,
 			name_pl: food.namePl,
 			category: food.category,
 			scientificName: food.scientificName,
-			brand: null,
+			brand: food.brand,
 			nutrients: food.nutritionValues.map((nv) => ({
 				nutrient: {
 					code: nv.nutrition.id,
@@ -77,17 +92,9 @@ export class TypesenseStrategy implements FoodSourceStrategy {
 					name_en: nv.nutrition.nameEn,
 					unit: nv.nutrition.unit
 				},
-				value: nv.value
+				value: nv.amount
 			})),
-			source: food.fdcId
-				? {
-						provider: 'fdc' as const,
-						externalId: food.fdcId
-					}
-				: {
-						provider: 'custom' as const,
-						externalId: food.id
-					},
+			source,
 			userId: food.userId,
 			createdAt: food.createdAt,
 			updatedAt: food.updatedAt

@@ -5,7 +5,7 @@ import { createSlugWithSuffix, isUniqueConstraintError } from '$lib/server/slug'
 import { z } from 'zod';
 
 const ingredientSchema = z.object({
-	foodId: z.string(),
+	foodId: z.coerce.number(),
 	amount: z.number().positive().optional(),
 	unit: z.enum(['gram', 'ml']).default('gram'),
 	notes: z.string().optional()
@@ -28,8 +28,8 @@ const recipeSchema = z.object({
 		.array(
 			z.object({
 				stepNumber: z.number().int().positive(),
-				textPl: z.string().min(1),
-				textEn: z.string().optional()
+				descriptionPl: z.string().min(1),
+				descriptionEn: z.string().optional()
 			})
 		)
 		.optional(),
@@ -60,7 +60,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						data: {
 							userId,
 							namePl: data.namePl,
-							name_en: data.nameEn,
+							nameEn: data.nameEn,
 							descriptionPl: data.descriptionPl,
 							descriptionEn: data.descriptionEn,
 							servings: data.servings,
@@ -83,8 +83,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 							instructions: {
 								create: data.instructions?.map((step) => ({
 									stepNumber: step.stepNumber,
-									textPl: step.textPl,
-									textEn: step.textEn
+									descriptionPl: step.descriptionPl,
+									descriptionEn: step.descriptionEn
 								}))
 							}
 						},
@@ -111,7 +111,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 									try {
 										return await tx.tag.create({
 											data: {
-												id: tagSlug,
+												slug: tagSlug,
 												namePl
 											}
 										});

@@ -8,12 +8,17 @@ FOODS_SCHEMA = {
     "name": "foods",
     "enable_nested_fields": True,
     "fields": [
-        {"name": "id", "type": "string"},
-        {"name": "fdc_id", "type": "int32", "optional": True},
+        {"name": "id", "type": "string"},  # Typesense requires document ID as string
         {"name": "name_en", "type": "string"},
         {"name": "name_pl", "type": "string", "optional": True},
         {"name": "scientific_name", "type": "string", "optional": True},
         {"name": "category", "type": "string", "facet": True, "optional": True},
+        {"name": "brand", "type": "string", "facet": True, "optional": True},
+
+        # Source tracking
+        {"name": "source_provider", "type": "string", "facet": True, "optional": True},
+        {"name": "source_external_id", "type": "string", "optional": True},
+        {"name": "source_url", "type": "string", "optional": True},
 
         # Denormalized common nutrients for fast sorting/filtering (per 100g)
         {"name": "energy_kcal", "type": "float", "optional": True, "facet": True},
@@ -36,9 +41,9 @@ RECIPES_SCHEMA = {
     "name": "recipes",
     "enable_nested_fields": True,
     "fields": [
-        {"name": "id", "type": "string"},
+        {"name": "id", "type": "string"},  # Typesense requires document ID as string
         {"name": "slug", "type": "string"},
-        {"name": "user_id", "type": "string"},
+        {"name": "user_id", "type": "string"},  # Keep as string for consistency with id
         {"name": "user_name", "type": "string", "optional": True},
         {"name": "name_pl", "type": "string"},
         {"name": "name_en", "type": "string", "optional": True},
@@ -53,7 +58,7 @@ RECIPES_SCHEMA = {
         {"name": "awesomeness", "type": "int32", "optional": True, "facet": True},
         {"name": "ingredients", "type": "object[]", "optional": True},
         {"name": "ingredient_names", "type": "string[]", "optional": True},
-        {"name": "sub_recipe_slugs", "type": "string[]", "optional": True},
+        {"name": "component_slugs", "type": "string[]", "optional": True},
         {"name": "tags", "type": "string[]", "facet": True, "optional": True},
         {"name": "created_at", "type": "int64"},
         {"name": "updated_at", "type": "int64"},

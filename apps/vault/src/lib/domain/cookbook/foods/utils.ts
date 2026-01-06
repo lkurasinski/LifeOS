@@ -22,7 +22,7 @@ export function isFromExternalSource(food: Food): food is Food & { source: NonNu
  * Type guard: Check if food is custom (user-created)
  */
 export function isCustomFood(food: Food): boolean {
-	return food.isCustom === true;
+	return food.source?.provider === 'custom';
 }
 
 /**

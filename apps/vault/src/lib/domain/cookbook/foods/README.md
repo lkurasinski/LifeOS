@@ -2,6 +2,27 @@
 
 This module defines the **canonical data models** (domain models) for all food-related operations in the application.
 
+## Structure
+
+```
+foods/
+├── README.md                    # This file
+├── schemas.ts                   # Zod schemas (single source of truth)
+├── index.ts                     # Public API exports
+├── utils.ts                     # Type guards and utilities
+└── integrations/                # External data source integrations
+    ├── README.md                # Integration documentation
+    ├── fdc/                     # USDA FoodData Central
+    │   ├── client.ts            # Type-safe FDC API client
+    │   ├── mappers.ts           # FDC → Domain model converters
+    │   ├── fdc-strategy.ts      # Strategy implementation
+    │   └── generated/           # Auto-generated types from OpenAPI
+    └── typesense/               # Typesense search integration
+        ├── typesense.strategy.ts # Internal DB search strategy
+        ├── typesense.mappers.ts  # Typesense → Domain model converters
+        └── typesense.schema.ts   # Typesense document types
+```
+
 ## Philosophy
 
 **Single Versatile Entity Pattern:**
@@ -16,6 +37,7 @@ This module defines the **canonical data models** (domain models) for all food-r
 2. **Type Safety**: All types derived from Zod schemas for runtime validation
 3. **Single Source of Truth**: One `Nutrient` definition, one `Food` definition
 4. **Versatility**: Same types work for DB entities, API responses, and UI display
+5. **Naming Convention**: Locale-related fields use snake_case with language suffix (`name_en`, `name_pl`), other fields use camelCase (`scientificName`, `userId`)
 
 ## Usage
 
@@ -27,11 +49,13 @@ import {
 	Nutrient,
 	NutrientValue,
 	CreateFoodCommand,
+	FoodSearchParams,
+	FoodSearchResults,
 	foodSchema,
 	createFoodCommandSchema,
 	isSavedFood,
 	hasNutrient
-} from '$lib/domain/foods';
+} from '$lib/domain/cookbook/foods';
 ```
 
 ### Working with Food Entity
@@ -46,8 +70,8 @@ import {
 // Example: From database
 const savedFood: Food = {
 	id: '123',
-	nameEn: 'Chicken Breast',
-	namePl: 'Pierś z kurczaka',
+	name_en: 'Chicken Breast',
+	name_pl: 'Pierś z kurczaka',
 	category: 'Poultry',
 	scientificName: 'Gallus gallus domesticus',
 	brand: null,
@@ -55,9 +79,10 @@ const savedFood: Food = {
 		{
 			nutrient: {
 				code: 'ENERC_KCAL',
-				namePl: 'Energia',
-				nameEn: 'Energy',
-				unit: 'kcal'
+				name_pl: 'Energia',
+				name_en: 'Energy',
+				unit: 'kcal',
+				category: 'energy'
 			},
 			value: 165
 		}
@@ -66,7 +91,6 @@ const savedFood: Food = {
 		provider: 'fdc',
 		externalId: 171477
 	},
-	isCustom: false,
 	userId: null,
 	createdAt: new Date(),
 	updatedAt: new Date()
@@ -75,16 +99,16 @@ const savedFood: Food = {
 // Example: From external API (before saving)
 const externalFood: Food = {
 	// No id, createdAt, updatedAt yet
-	nameEn: 'Broccoli',
-	namePl: null,
+	name_en: 'Broccoli',
+	name_pl: null,
 	category: 'Vegetables',
-	// ... rest of fields
+	scientificName: null,
+	brand: null,
 	nutrients: [/* ... */],
 	source: {
 		provider: 'fdc',
 		externalId: 170379
 	},
-	isCustom: false,
 	userId: null
 };
 ```
@@ -175,18 +199,47 @@ const food: Food = await fetch('/api/foods/search');
 
 ```typescript
 // In API route: /api/foods/search/+server.ts
-import { searchFDC } from '$lib/integrations/fdc/client';
-import { mapFDCToFood } from '$lib/integrations/fdc/mappers';
-import type { Food } from '$lib/domain/foods';
+import { getStrategy } from '$lib/services/food-sources';
+import type { FoodSearchResults } from '$lib/domain/cookbook/foods';
 
 export const GET: RequestHandler = async ({ url }) => {
-	const fdcResults = await searchFDC({ query: url.searchParams.get('q') });
+	const source = url.searchParams.get('source') || 'internal';
+	const strategy = getStrategy(source);
 
-	// Map FDC types to domain Food type
-	const foods: Food[] = fdcResults.map(mapFDCToFood);
+	// Strategy handles mapping to domain models
+	const results: FoodSearchResults = await strategy.search({
+		query: url.searchParams.get('q') || '*',
+		pageSize: 25,
+		pageNumber: 1
+	});
 
-	return json({ items: foods });
+	return json(results); // Returns { items: Food[], total, page, pageSize, totalPages }
 };
+```
+
+The Strategy Pattern ensures all external APIs return consistent domain models:
+
+```typescript
+// FDC integration example
+// File: integrations/fdc/mappers.ts
+import type { Food } from '$lib/domain/cookbook/foods';
+import type { FDC_FoodDetail } from './generated/types.gen';
+
+export function mapFDCFoodDetailToFood(fdcFood: FDC_FoodDetail): Food {
+	return {
+		name_en: fdcFood.description,
+		name_pl: null,
+		category: extractCategory(fdcFood),
+		scientificName: fdcFood.scientificName || null,
+		brand: fdcFood.brandOwner || null,
+		nutrients: mapFDCNutrients(fdcFood.foodNutrients),
+		source: {
+			provider: 'fdc',
+			externalId: fdcFood.fdcId
+		},
+		userId: null
+	};
+}
 ```
 
 ## Benefits

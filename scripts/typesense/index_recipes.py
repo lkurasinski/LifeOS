@@ -82,11 +82,11 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             ) as ingredient_names,
             COALESCE(
                 array_agg(
-                    DISTINCT sr.slug
-                    ORDER BY sr.slug
-                ) FILTER (WHERE sr.slug IS NOT NULL),
+                    DISTINCT cr.slug
+                    ORDER BY cr.slug
+                ) FILTER (WHERE cr.slug IS NOT NULL),
                 ARRAY[]::text[]
-            ) as sub_recipe_slugs,
+            ) as component_slugs,
             COALESCE(
                 json_agg(
                     DISTINCT t.name_pl
@@ -102,8 +102,8 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             SELECT unnest(ARRAY[f.name_pl, f.name_en]) as ingredient_name
             WHERE f.id IS NOT NULL
         ) ingredient_names_flat ON true
-        LEFT JOIN recipe_sub_recipes rsr ON r.id = rsr.recipe_id
-        LEFT JOIN recipes sr ON rsr.sub_recipe_id = sr.id
+        LEFT JOIN recipe_components rc ON r.id = rc.recipe_id
+        LEFT JOIN recipes cr ON rc.component_id = cr.id
         LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
         LEFT JOIN tags t ON rt.tag_id = t.id
         WHERE r.is_public = true
@@ -120,9 +120,9 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
     recipes = []
     for row in rows:
         recipe = {
-            "id": row[0],
+            "id": str(row[0]),  # Typesense requires ID as string
             "slug": row[1],
-            "user_id": row[2],
+            "user_id": str(row[2]),  # Convert to string for consistency
             "name_pl": row[4],
             "servings": row[8],
             "is_public": row[12],
@@ -158,9 +158,9 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         if row[18] and len(row[18]) > 0:
             recipe["ingredient_names"] = [name for name in row[18] if name]
 
-        # Sub-recipe slugs array
+        # Component recipe slugs array
         if row[19] and len(row[19]) > 0:
-            recipe["sub_recipe_slugs"] = row[19]
+            recipe["component_slugs"] = row[19]
 
         # Tags array
         if row[20] and row[20] != []:

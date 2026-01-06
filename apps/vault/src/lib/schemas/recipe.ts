@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const recipeIngredientSchema = z.object({
-	foodId: z.string().min(1, 'Food is required'),
+	foodId: z.coerce.number(),
 	foodName: z.string().min(1, 'Food name is required'),
 	amount: z.number().positive('Amount must be positive').optional(),
 	unit: z.enum(['gram', 'ml']).default('gram'),
@@ -10,8 +10,8 @@ export const recipeIngredientSchema = z.object({
 
 export const recipeInstructionSchema = z.object({
 	stepNumber: z.number().int().positive(),
-	textPl: z.string().min(1, 'Instruction text is required'),
-	textEn: z.string().optional()
+	descriptionPl: z.string().min(1, 'Instruction text is required'),
+	descriptionEn: z.string().optional()
 });
 
 export const recipeFormSchema = z.object({
@@ -61,7 +61,7 @@ export const typesenseRecipeDocumentSchema = z.object({
 	awesomeness: z.number().nullable().optional(),
 	ingredients: z.array(typesenseRecipeIngredientSchema).optional(),
 	ingredient_names: z.array(z.string()).optional(),
-	sub_recipe_slugs: z.array(z.string()).optional(),
+	component_slugs: z.array(z.string()).optional(),
 	tags: z.array(z.string()).optional(),
 	created_at: z.number(),
 	updated_at: z.number()
@@ -83,7 +83,7 @@ export const recipeSearchResultSchema = z.object({
 	awesomeness: z.number().nullable().optional(),
 	ingredients: z.array(typesenseRecipeIngredientSchema).optional(),
 	ingredientNames: z.array(z.string()).optional(),
-	subRecipeSlugs: z.array(z.string()).optional(),
+	componentSlugs: z.array(z.string()).optional(),
 	tags: z.array(z.string()).optional(),
 	createdAt: z.string(),
 	updatedAt: z.string()

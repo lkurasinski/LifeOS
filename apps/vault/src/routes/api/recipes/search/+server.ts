@@ -47,7 +47,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				userId: doc.user_id,
 				userName: doc.user_name ?? null,
 				namePl: doc.name_pl,
-				name_en: doc.name_en ?? null,
+				nameEn: doc.name_en ?? null,
 				descriptionPl: doc.description_pl ?? null,
 				descriptionEn: doc.description_en ?? null,
 				servings: doc.servings,
@@ -58,7 +58,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				awesomeness: doc.awesomeness ?? null,
 				ingredients: doc.ingredients,
 				ingredientNames: doc.ingredient_names,
-				subRecipeSlugs: doc.sub_recipe_slugs,
+				componentSlugs: doc.component_slugs,
 				tags: doc.tags,
 				createdAt: new Date(doc.created_at * 1000).toISOString(),
 				updatedAt: new Date(doc.updated_at * 1000).toISOString()

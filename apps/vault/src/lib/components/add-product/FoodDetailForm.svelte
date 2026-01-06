@@ -37,16 +37,18 @@
 			SPA: true,
 			onUpdate: ({ form }) => {
 				if (form.valid) {
-					// Build foodData from domain Food model
-					const foodData: any = {
-						nameEn: form.data.nameEn,
-						namePl: form.data.namePl || null,
-						category: form.data.category || null,
-						scientificName: form.data.scientificName || null,
-						brand: foodDetail.brand,
-						nutrients: foodDetail.nutrients,
-						source: foodDetail.source,
-						isCustom: false
+					// Build CreateFoodCommand from domain Food model
+					const foodData = {
+						name_en: form.data.nameEn,
+						name_pl: form.data.namePl || undefined,
+						category: form.data.category || undefined,
+						scientificName: form.data.scientificName || undefined,
+						brand: foodDetail.brand || undefined,
+						nutrients: foodDetail.nutrients.map((nv) => ({
+							code: nv.nutrient.code,
+							value: nv.value
+						})),
+						source: foodDetail.source!
 					};
 
 					onsubmit?.(new CustomEvent('submit', { detail: { foodData } }));

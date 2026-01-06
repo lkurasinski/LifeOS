@@ -12,14 +12,17 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "node --loader ts-node/esm prisma/seed.ts"
+    "db:seed": "node --loader ts-node/esm prisma/seed.ts",
+    "db:seed:nutrients": "tsx seeds/nutrients/seed-nutrients.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.2.0"
+    "@prisma/client": "^6.2.0",
+    "csv-parse": "^6.1.0"
   },
   "devDependencies": {
+    "@types/node": "^24.10.4",
     "prisma": "^6.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.6.0"
   }
 }
-

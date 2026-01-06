@@ -15,7 +15,7 @@ datasource db {
 // ============================================
 
 model User {
-  id           String   @id @default(uuid())
+  id           Int      @id @default(autoincrement())
   email        String   @unique
   passwordHash String   @map("password_hash")
   name         String?
@@ -33,15 +33,31 @@ model User {
 // NUTRITION (katalog składników odżywczych)
 // ============================================
 
+enum NutritionUnit {
+  kJ
+  kcal
+  mcg
+  mg
+  g
+  IU
+  none
+
+  @@map("nutrition_unit")
+}
+
 model Nutrition {
-  id     String  @id // INFOODS tagname code (e.g., CA, PROT, VITC)
-  namePl String? @map("name_pl")
-  nameEn String  @map("name_en")
-  unit   String // g, mg, µg, kcal, kJ
+  id            String        @id // INFOODS tagname code (e.g., CA, PROT, VITC) - kept as string for semantic meaning
+  namePl        String?       @map("name_pl")
+  nameEn        String        @map("name_en")
+  unit          NutritionUnit
+  descriptionPl String?       @map("description_pl") @db.Text
+  descriptionEn String?       @map("description_en") @db.Text
+  commentPl     String?       @map("comment_pl") @db.Text
+  commentEn     String?       @map("comment_en") @db.Text
+  categoryId    String?       @map("category_id") // Reference to parent category
 
   foodNutritions FoodNutrition[]
 
-  @@unique([nameEn, unit])
   @@map("nutrition")
 }
 
@@ -50,25 +66,29 @@ model Nutrition {
 // ============================================
 
 model Food {
-  id             String   @id @default(uuid())
-  fdcId          Int?     @unique @map("fdc_id") // z USDA FoodData Central
-  namePl         String?  @map("name_pl")
-  nameEn         String   @map("name_en")
-  scientificName String?  @map("scientific_name")
+  id             Int     @id @default(autoincrement())
+  namePl         String? @map("name_pl")
+  nameEn         String  @map("name_en")
+  scientificName String? @map("scientific_name")
   category       String?
-  isCustom       Boolean  @default(false) @map("is_custom") // czy user-created
-  userId         String?  @map("user_id") // tylko dla custom
+  brand          String?
+  userId         Int?    @map("user_id")
+
+  // Source tracking
+  sourceProvider   String? @map("source_provider") // 'fdc', 'openfoodfacts', 'custom'
+  sourceExternalId String? @map("source_external_id") // External ID from source
+  sourceUrl        String? @map("source_url") // URL to source detail page
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user              User?              @relation(fields: [userId], references: [id])
-  nutritionValues   FoodNutrition[]    // Wartości odżywcze per 100g
+  user              User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nutritions        FoodNutrition[] // Wartości odżywcze per 100g
   recipeIngredients RecipeIngredient[]
 
   @@index([namePl])
   @@index([nameEn])
-  @@index([fdcId])
+  @@index([sourceProvider, sourceExternalId])
   @@map("foods")
 }
 
@@ -77,15 +97,14 @@ model Food {
 // ============================================
 
 model FoodNutrition {
-  id          String @id @default(uuid())
-  foodId      String @map("food_id")
+  foodId      Int    @map("food_id")
   nutritionId String @map("nutrition_id")
-  value       Float  // wartość per 100g w jednostce z Nutrition.unit
+  amount      Float // wartość per 100g w jednostce z Nutrition.unit
 
   food      Food      @relation(fields: [foodId], references: [id], onDelete: Cascade)
   nutrition Nutrition @relation(fields: [nutritionId], references: [id])
 
-  @@unique([foodId, nutritionId])
+  @@id([foodId, nutritionId])
   @@map("food_nutrition")
 }
 
@@ -94,20 +113,20 @@ model FoodNutrition {
 // ============================================
 
 model Recipe {
-  id              String   @id @default(uuid())
-  userId          String   @map("user_id")
-  namePl          String   @map("name_pl")
-  nameEn          String?  @map("name_en")
-  descriptionPl   String?  @map("description_pl")
-  descriptionEn   String?  @map("description_en")
-  servings        Int      @default(1)
-  prepTimeMinutes Int?     @map("prep_time_minutes")
-  cookTimeMinutes Int?     @map("cook_time_minutes")
-  difficulty      String?  // easy, medium, hard
-  isPublic        Boolean  @default(false) @map("is_public")
-  imageUrl        String?  @map("image_url")
-  slug            String   @unique
-  awesomeness     Int?     // 1-5 scale
+  id              Int     @id @default(autoincrement())
+  userId          Int     @map("user_id")
+  namePl          String  @map("name_pl")
+  nameEn          String? @map("name_en")
+  descriptionPl   String? @map("description_pl") @db.Text
+  descriptionEn   String? @map("description_en") @db.Text
+  servings        Int     @default(1)
+  prepTimeMinutes Int?    @map("prep_time_minutes")
+  cookTimeMinutes Int?    @map("cook_time_minutes")
+  difficulty      String? // easy, medium, hard
+  isPublic        Boolean @default(true) @map("is_public")
+  imageUrl        String? @map("image_url")
+  slug            String  @unique
+  awesomeness     Int? // 1-5 scale
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -117,9 +136,9 @@ model Recipe {
   instructions Instruction[]
   tags         RecipeTag[]
 
-  // Sub-recipes relationship
-  parentRecipes RecipeSubRecipe[] @relation("ParentRecipe")
-  subRecipes    RecipeSubRecipe[] @relation("SubRecipe")
+  // Recipe composition relationship
+  includesRecipes RecipeComponent[] @relation("IncludesRecipes")
+  includedIn      RecipeComponent[] @relation("IncludedIn")
 
   @@index([userId])
   @@index([isPublic])
@@ -132,25 +151,36 @@ model Recipe {
 // ============================================
 
 enum IngredientUnit {
-  gram
-  ml
+  gram // g
+  ml // ml
+  liter // l
+  kilogram // kg
+  teaspoon // tsp
+  tablespoon // tbsp
+  cup // cup
+  piece // pc
+  pinch // pinch
+  clove // clove (for garlic)
+  slice // slice
+  handful // handful
+  can // can
+  package // pkg
 
   @@map("ingredient_unit")
 }
 
 model RecipeIngredient {
-  id       String          @id @default(uuid())
-  recipeId String          @map("recipe_id")
-  foodId   String          @map("food_id")
-  amount   Float?          // optional amount
-  unit     IngredientUnit  @default(gram) // gram or ml
-  notes    String?         // np. "posiekany", "ugotowany"
-  order    Int             @default(0)
+  recipeId Int            @map("recipe_id")
+  foodId   Int            @map("food_id")
+  amount   Float? // optional amount
+  unit     IngredientUnit @default(gram)
+  notes    String? // np. "posiekany", "ugotowany"
+  order    Int            @default(0)
 
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
-  food   Food   @relation(fields: [foodId], references: [id])
+  food   Food   @relation(fields: [foodId], references: [id], onDelete: Restrict)
 
-  @@unique([recipeId, foodId])
+  @@id([recipeId, foodId])
   @@map("recipe_ingredients")
 }
 
@@ -159,33 +189,31 @@ model RecipeIngredient {
 // ============================================
 
 model Instruction {
-  id         String  @id @default(uuid())
-  recipeId   String  @map("recipe_id")
-  stepNumber Int     @map("step_number")
-  textPl     String  @map("text_pl")
-  textEn     String? @map("text_en")
+  recipeId      Int     @map("recipe_id")
+  stepNumber    Int     @map("step_number")
+  descriptionPl String  @map("description_pl") @db.Text
+  descriptionEn String? @map("description_en") @db.Text
 
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
-  @@unique([recipeId, stepNumber])
+  @@id([recipeId, stepNumber])
   @@map("instructions")
 }
 
 // ============================================
-// RECIPE SUB-RECIPES (przepisy składowe)
+// RECIPE COMPONENTS (przepisy składowe)
 // ============================================
 
-model RecipeSubRecipe {
-  id          String @id @default(uuid())
-  recipeId    String @map("recipe_id")    // parent recipe
-  subRecipeId String @map("sub_recipe_id") // child recipe
-  order       Int    @default(0)           // preserve order
+model RecipeComponent {
+  recipeId    Int @map("recipe_id")    // parent recipe that includes the component
+  componentId Int @map("component_id") // component recipe being included
+  order       Int @default(0)          // preserve order
 
-  recipe    Recipe @relation("ParentRecipe", fields: [recipeId], references: [id], onDelete: Cascade)
-  subRecipe Recipe @relation("SubRecipe", fields: [subRecipeId], references: [id], onDelete: Cascade)
+  recipe    Recipe @relation("IncludesRecipes", fields: [recipeId], references: [id], onDelete: Cascade)
+  component Recipe @relation("IncludedIn", fields: [componentId], references: [id], onDelete: Cascade)
 
-  @@unique([recipeId, subRecipeId])
-  @@map("recipe_sub_recipes")
+  @@id([recipeId, componentId])
+  @@map("recipe_components")
 }
 
 // ============================================
@@ -193,7 +221,8 @@ model RecipeSubRecipe {
 // ============================================
 
 model Tag {
-  id     String  @id // url-safe slug from name_pl
+  id     Int     @id @default(autoincrement())
+  slug   String  @unique // url-safe slug from name_pl
   namePl String  @unique @map("name_pl")
   nameEn String? @map("name_en")
 
@@ -203,8 +232,8 @@ model Tag {
 }
 
 model RecipeTag {
-  recipeId String @map("recipe_id")
-  tagId    String @map("tag_id")
+  recipeId Int @map("recipe_id")
+  tagId    Int @map("tag_id")
 
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)

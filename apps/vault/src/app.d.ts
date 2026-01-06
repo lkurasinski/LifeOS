@@ -7,7 +7,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user?: {
-				id: string;
+				id: number;
 				email: string;
 				name: string | null;
 				locale: string;

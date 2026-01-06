@@ -153,18 +153,40 @@ Auth flow:
 3. Protected routes check `event.locals.user`
 4. Logout: POST /api/auth/logout → Clears cookie
 
-### Typesense Integration
+### Food Sources Architecture
 
-Typesense provides fast search for food ingredients. Key files:
-- `apps/vault/src/lib/server/typesense.ts`: Client configuration
+The application uses a **Strategy Pattern** to provide unified access to multiple food data sources:
+
+**Food Sources:**
+- **Internal** (default): PostgreSQL database via Typesense search + Prisma
+- **FDC**: USDA FoodData Central external API
+- **OpenFoodFacts**: (Coming soon)
+
+**Key Files:**
+- `apps/vault/src/lib/services/food-sources/`: Strategy registry
+- `apps/vault/src/lib/domain/cookbook/foods/`: Domain models (Zod schemas)
+- `apps/vault/src/lib/domain/cookbook/foods/integrations/`: Source implementations
+  - `typesense/`: Internal database search (Typesense + Prisma)
+  - `fdc/`: USDA FoodData Central integration
+- `apps/vault/src/lib/server/typesense.ts`: Typesense client configuration
 - `scripts/typesense/`: Indexing scripts (Python)
-- Collections: `foods`, `nutrition`
 
-**Foods collection fields** (denormalized for performance):
-- id, fdcId, name_pl, name_en, category, is_custom
-- Denormalized nutrition: energy_kcal, protein, fat, carbs, fiber
+**Unified API Endpoints:**
+- `GET /api/foods/search?source={internal|fdc}&q=<query>` - Search foods (defaults to internal)
+- `GET /api/foods/{id}?source={internal|fdc}` - Get food details (defaults to internal)
 
-Search endpoint: `GET /api/foods/search?q=<query>&per_page=10`
+**Response Format:**
+```typescript
+{
+  items: Food[],      // Domain model (same structure for all sources)
+  total: number,
+  page: number,
+  pageSize: number,
+  totalPages: number
+}
+```
+
+All external APIs are mapped to domain `Food` models at the integration boundary.
 
 ### SvelteKit Route Structure
 
@@ -178,7 +200,9 @@ apps/vault/src/routes/
 │   └── register/             # Registration page
 └── api/                      # API endpoints
     ├── auth/                 # Authentication
-    ├── foods/search/         # Typesense search
+    ├── foods/
+    │   ├── search/           # Unified search (internal/external)
+    │   └── [id]/             # Unified food details
     └── recipes/              # Recipe CRUD
 ```
 
@@ -243,18 +267,59 @@ python update_incremental.py --hours 24
 
 ## Testing Search
 
-Using curl:
+### Using Typesense directly:
 ```bash
-# Search foods
+# Search foods collection
 curl "http://localhost:8108/collections/foods/documents/search?q=chicken&query_by=name_en"
 
 # High protein foods
 curl "http://localhost:8108/collections/foods/documents/search?q=*&filter_by=protein:>20"
 ```
 
-Using API endpoint:
+### Using Unified API:
 ```bash
-curl "http://localhost:5173/api/foods/search?q=tomato&per_page=10"
+# Search internal database (default)
+curl "http://localhost:5173/api/foods/search?q=tomato&pageSize=10"
+
+# Search internal database (explicit)
+curl "http://localhost:5173/api/foods/search?source=internal&q=tomato&pageSize=10"
+
+# Search USDA FoodData Central
+curl "http://localhost:5173/api/foods/search?source=fdc&q=chicken%20breast&pageSize=10"
+
+# Get food details from internal DB
+curl "http://localhost:5173/api/foods/{uuid}"
+
+# Get food details from FDC
+curl "http://localhost:5173/api/foods/171477?source=fdc"
+```
+
+**Response format (all sources):**
+```json
+{
+  "items": [
+    {
+      "id": "uuid",              // Optional (only for saved foods)
+      "name_en": "Chicken Breast",
+      "name_pl": "Pierś z kurczaka",
+      "category": "Poultry",
+      "scientificName": null,
+      "brand": null,
+      "nutrients": [...],
+      "source": {
+        "provider": "fdc",
+        "externalId": 171477
+      },
+      "userId": null,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "total": 42,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 5
+}
 ```
 
 ## Key Implementation Details

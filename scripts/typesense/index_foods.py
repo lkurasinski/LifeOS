@@ -37,23 +37,27 @@ def fetch_foods_with_nutrition(conn) -> List[Dict]:
     query = """
         SELECT
             f.id,
-            f.fdc_id,
             f.name_en,
             f.name_pl,
             f.scientific_name,
             f.category,
+            f.brand,
+            f.source_provider,
+            f.source_external_id,
+            f.source_url,
             f.created_at,
             f.updated_at,
             COALESCE(
                 json_object_agg(
-                    n.id, fn.value
+                    n.id, fn.amount
                 ) FILTER (WHERE n.id IS NOT NULL),
                 '{}'::json
             ) as nutrients
         FROM foods f
         LEFT JOIN food_nutrition fn ON f.id = fn.food_id
         LEFT JOIN nutrition n ON fn.nutrition_id = n.id
-        GROUP BY f.id, f.fdc_id, f.name_en, f.name_pl, f.scientific_name, f.category, f.created_at, f.updated_at
+        GROUP BY f.id, f.name_en, f.name_pl, f.scientific_name, f.category, f.brand,
+                 f.source_provider, f.source_external_id, f.source_url, f.created_at, f.updated_at
         ORDER BY f.created_at DESC
     """
 
@@ -64,24 +68,30 @@ def fetch_foods_with_nutrition(conn) -> List[Dict]:
     foods = []
     for row in rows:
         food = {
-            "id": row[0],
-            "name_en": row[2],
-            "created_at": int(row[6].timestamp()),
-            "updated_at": int(row[7].timestamp()),
+            "id": str(row[0]),  # Typesense requires ID as string
+            "name_en": row[1],
+            "created_at": int(row[9].timestamp()),
+            "updated_at": int(row[10].timestamp()),
         }
 
         # Optional fields
-        if row[1]:  # fdc_id
-            food["fdc_id"] = row[1]
-        if row[3]:  # name_pl
-            food["name_pl"] = row[3]
-        if row[4]:  # scientific_name
-            food["scientific_name"] = row[4]
-        if row[5]:  # category
-            food["category"] = row[5]
+        if row[2]:  # name_pl
+            food["name_pl"] = row[2]
+        if row[3]:  # scientific_name
+            food["scientific_name"] = row[3]
+        if row[4]:  # category
+            food["category"] = row[4]
+        if row[5]:  # brand
+            food["brand"] = row[5]
+        if row[6]:  # source_provider
+            food["source_provider"] = row[6]
+        if row[7]:  # source_external_id
+            food["source_external_id"] = row[7]
+        if row[8]:  # source_url
+            food["source_url"] = row[8]
 
         # Nutrients object with INFOODS codes
-        nutrients = row[8] if row[8] else {}
+        nutrients = row[11] if row[11] else {}
         if nutrients:
             # Convert all values to float to ensure consistent typing in Typesense
             # (prevents int64 type inference issues)

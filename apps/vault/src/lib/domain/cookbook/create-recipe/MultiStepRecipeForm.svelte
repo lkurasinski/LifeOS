@@ -30,7 +30,7 @@
 
 	const initialData: RecipeFormSchema = {
 		namePl: '',
-		name_en: '',
+		nameEn: '',
 		descriptionPl: '',
 		descriptionEn: '',
 		servings: 1,
