@@ -51,7 +51,7 @@ export function getNutrient(food: Food, nutrientCode: string): NutrientValue | u
  * Useful for displaying previews
  */
 export function getKeyNutrients(food: Food): NutrientValue[] {
-	const keyCodes = ['ENERC_KCAL', 'PROT', 'FAT', 'CHOCDF'];
+	const keyCodes = ['ENERC_kcal', 'ENERA_kcal', 'PROTCNT_g', 'FAT_g', 'CHOCDF_g'];
 	return food.nutrients.filter((nv) => keyCodes.includes(nv.nutrient.code));
 }
 

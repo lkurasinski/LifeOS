@@ -97,36 +97,45 @@ def fetch_foods_with_nutrition(conn) -> List[Dict]:
             # (prevents int64 type inference issues)
             nutrients_float = {k: float(v) for k, v in nutrients.items()}
 
-            # Backfill ENERC_KCAL from Atwater values if missing
-            # Priority: ENERC_ATWS > ENERC_ATW > ENERC_KCAL
-            if "ENERC_KCAL" not in nutrients_float:
-                if "ENERC_ATWS" in nutrients_float:
-                    nutrients_float["ENERC_KCAL"] = nutrients_float["ENERC_ATWS"]
-                elif "ENERC_ATW" in nutrients_float:
-                    nutrients_float["ENERC_KCAL"] = nutrients_float["ENERC_ATW"]
+            # Backfill general energy from specific Atwater values if available
+            # Priority: ENERC_ASF_kcal > ENERC_AGF_kcal > ENERA_kcal > ENERC_kcal
+            if "ENERC_kcal" not in nutrients_float and "ENERA_kcal" not in nutrients_float:
+                if "ENERC_ASF_kcal" in nutrients_float:
+                    nutrients_float["ENERC_kcal"] = nutrients_float["ENERC_ASF_kcal"]
+                elif "ENERC_AGF_kcal" in nutrients_float:
+                    nutrients_float["ENERC_kcal"] = nutrients_float["ENERC_AGF_kcal"]
+                elif "ENERA_kcal" in nutrients_float:
+                    nutrients_float["ENERC_kcal"] = nutrients_float["ENERA_kcal"]
 
             food["nutrients"] = nutrients_float
 
             # Extract common nutrients for denormalized fields (fast sorting/filtering)
-            # Using INFOODS codes with priority
+            # Using current database INFOODS codes with unit suffixes
 
-            # Energy with Atwater priority: ENERC_ATWS > ENERC_ATW > ENERC_KCAL
+            # Energy with Atwater priority: ENERC_ASF_kcal > ENERC_AGF_kcal > ENERA_kcal > ENERC_kcal
             energy = (
-                nutrients_float.get("ENERC_ATWS") or
-                nutrients_float.get("ENERC_ATW") or
-                nutrients_float.get("ENERC_KCAL")
+                nutrients_float.get("ENERC_ASF_kcal") or
+                nutrients_float.get("ENERC_AGF_kcal")
             )
             if energy is not None:
                 food["energy_kcal"] = float(energy)
 
-            if "PROT" in nutrients_float:
-                food["protein"] = float(nutrients_float["PROT"])
-            if "FAT" in nutrients_float:
-                food["fat"] = float(nutrients_float["FAT"])
-            if "CHOCDF" in nutrients_float:  # Carbohydrate, by difference
-                food["carbs"] = float(nutrients_float["CHOCDF"])
-            if "FIBTG" in nutrients_float:  # Fiber, total dietary
-                food["fiber"] = float(nutrients_float["FIBTG"])
+            # Protein: PROTCNT_g (total protein)
+            if "PROTCNT_g" in nutrients_float:
+                food["protein"] = float(nutrients_float["PROTCNT_g"])
+
+            # Fat: FAT_g (total lipid/fat)
+            if "FAT_g" in nutrients_float:
+                food["fat"] = float(nutrients_float["FAT_g"])
+
+            # Carbohydrates: CHOCDF_g (carbohydrate by difference) or CHOAVL_g (by summation)
+            carbs = nutrients_float.get("CHOCDF_g") or nutrients_float.get("CHOAVL_g")
+            if carbs is not None:
+                food["carbs"] = float(carbs)
+
+            # Fiber: FIBTG_g (total dietary fiber)
+            if "FIBTG_g" in nutrients_float:
+                food["fiber"] = float(nutrients_float["FIBTG_g"])
 
         foods.append(food)
 
