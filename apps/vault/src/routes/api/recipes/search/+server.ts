@@ -9,6 +9,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const page = Number(url.searchParams.get('page') ?? '1');
 	const difficulty = url.searchParams.get('difficulty');
 	const tags = url.searchParams.get('tags')?.split(',').filter(Boolean);
+	const mealTypes = url.searchParams.get('meal_types')?.split(',').filter(Boolean);
 
 	try {
 		const filterBy = [];
@@ -25,6 +26,12 @@ export const GET: RequestHandler = async ({ url }) => {
 		if (tags && tags.length > 0) {
 			const tagFilters = tags.map((tag) => `tags:=${tag}`).join(' && ');
 			filterBy.push(tagFilters);
+		}
+
+		// Filter by meal types if provided
+		if (mealTypes && mealTypes.length > 0) {
+			const mealTypeFilters = mealTypes.map((type) => `meal_type:=${type}`).join(' || ');
+			filterBy.push(`(${mealTypeFilters})`);
 		}
 
 		const result = await typesense
@@ -56,6 +63,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				difficulty: doc.difficulty ?? null,
 				imageUrl: doc.image_url ?? null,
 				awesomeness: doc.awesomeness ?? null,
+				mealType: doc.meal_type,
 				ingredients: doc.ingredients,
 				ingredientNames: doc.ingredient_names,
 				componentSlugs: doc.component_slugs,

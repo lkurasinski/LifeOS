@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma';
 import { createSlugWithSuffix, isUniqueConstraintError } from '$lib/server/slug';
 import { z } from 'zod';
+import { mealTypeSchema } from '$lib/schemas/recipe';
 
 const ingredientSchema = z.object({
 	foodId: z.coerce.number(),
@@ -23,6 +24,7 @@ const recipeSchema = z.object({
 	isPublic: z.boolean().optional().default(true),
 	imageUrl: z.union([z.string().url('Invalid URL'), z.literal('')]).optional(),
 	awesomeness: z.number().int().min(1).max(5).optional(),
+	mealType: z.array(mealTypeSchema).default([]),
 	ingredients: z.array(ingredientSchema).min(1),
 	instructions: z
 		.array(
@@ -71,6 +73,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 							imageUrl: data?.imageUrl,
 							slug,
 							awesomeness: data.awesomeness,
+							mealType: data.mealType,
 							ingredients: {
 								create: data.ingredients.map((ing, index) => ({
 									foodId: ing.foodId,

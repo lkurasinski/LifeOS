@@ -1,5 +1,18 @@
 import { z } from 'zod';
 
+export const mealTypeSchema = z.enum([
+	'BREAKFAST',
+	'BRUNCH',
+	'LUNCH',
+	'DINNER',
+	'APPETIZER',
+	'DESSERT',
+	'SNACK',
+	'BEVERAGE',
+	'SALAD',
+	'SOUP'
+]);
+
 export const recipeIngredientSchema = z.object({
 	foodId: z.coerce.number(),
 	foodName: z.string().min(1, 'Food name is required'),
@@ -25,6 +38,7 @@ export const recipeFormSchema = z.object({
 	difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
 	isPublic: z.boolean().default(true),
 	imageUrl: z.union([z.string().url('Invalid URL'), z.literal('')]).optional(),
+	mealType: z.array(mealTypeSchema).default([]),
 	ingredients: z.array(recipeIngredientSchema).min(1, 'At least one ingredient is required'),
 	instructions: z.array(recipeInstructionSchema),
 	tags: z.array(z.string()).optional()
@@ -59,6 +73,7 @@ export const typesenseRecipeDocumentSchema = z.object({
 	is_public: z.boolean(),
 	image_url: z.string().nullable().optional(),
 	awesomeness: z.number().nullable().optional(),
+	meal_type: z.array(mealTypeSchema).optional(),
 	ingredients: z.array(typesenseRecipeIngredientSchema).optional(),
 	ingredient_names: z.array(z.string()).optional(),
 	component_slugs: z.array(z.string()).optional(),
@@ -81,6 +96,7 @@ export const recipeSearchResultSchema = z.object({
 	difficulty: z.enum(['easy', 'medium', 'hard']).nullable().optional(),
 	imageUrl: z.string().nullable().optional(),
 	awesomeness: z.number().nullable().optional(),
+	mealType: z.array(mealTypeSchema).optional(),
 	ingredients: z.array(typesenseRecipeIngredientSchema).optional(),
 	ingredientNames: z.array(z.string()).optional(),
 	componentSlugs: z.array(z.string()).optional(),

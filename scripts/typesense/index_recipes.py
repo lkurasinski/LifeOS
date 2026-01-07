@@ -50,6 +50,7 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             r.is_public,
             r.image_url,
             r.awesomeness,
+            r.meal_type,
             r.created_at,
             r.updated_at,
             COALESCE(
@@ -109,7 +110,7 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
         WHERE r.is_public = true
         GROUP BY r.id, r.slug, r.user_id, u.name, r.name_pl, r.name_en, r.description_pl,
                  r.description_en, r.servings, r.prep_time_minutes, r.cook_time_minutes,
-                 r.difficulty, r.is_public, r.image_url, r.awesomeness, r.created_at, r.updated_at
+                 r.difficulty, r.is_public, r.image_url, r.awesomeness, r.meal_type, r.created_at, r.updated_at
         ORDER BY r.created_at DESC
     """
 
@@ -126,8 +127,8 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             "name_pl": row[4],
             "servings": row[8],
             "is_public": row[12],
-            "created_at": int(row[15].timestamp()),
-            "updated_at": int(row[16].timestamp()),
+            "created_at": int(row[16].timestamp()),
+            "updated_at": int(row[17].timestamp()),
         }
 
         # Optional fields
@@ -149,22 +150,24 @@ def fetch_recipes_with_relations(conn) -> List[Dict]:
             recipe["image_url"] = row[13]
         if row[14]:  # awesomeness
             recipe["awesomeness"] = row[14]
+        if row[15]:  # meal_type
+            recipe["meal_type"] = row[15]
 
         # Ingredients array
-        if row[17] and row[17] != []:
-            recipe["ingredients"] = row[17]
+        if row[18] and row[18] != []:
+            recipe["ingredients"] = row[18]
 
         # Ingredient names flat array
-        if row[18] and len(row[18]) > 0:
-            recipe["ingredient_names"] = [name for name in row[18] if name]
+        if row[19] and len(row[19]) > 0:
+            recipe["ingredient_names"] = [name for name in row[19] if name]
 
         # Component recipe slugs array
-        if row[19] and len(row[19]) > 0:
-            recipe["component_slugs"] = row[19]
+        if row[20] and len(row[20]) > 0:
+            recipe["component_slugs"] = row[20]
 
         # Tags array
-        if row[20] and row[20] != []:
-            recipe["tags"] = row[20]
+        if row[21] and row[21] != []:
+            recipe["tags"] = row[21]
 
         recipes.append(recipe)
 

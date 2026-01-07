@@ -112,6 +112,21 @@ model FoodNutrition {
 // RECIPES (przepisy)
 // ============================================
 
+enum MealType {
+  BREAKFAST
+  BRUNCH
+  LUNCH
+  DINNER
+  APPETIZER
+  DESSERT
+  SNACK
+  BEVERAGE
+  SALAD
+  SOUP
+
+  @@map("meal_type")
+}
+
 model Recipe {
   id              Int     @id @default(autoincrement())
   userId          Int     @map("user_id")
@@ -124,9 +139,10 @@ model Recipe {
   cookTimeMinutes Int?    @map("cook_time_minutes")
   difficulty      String? // easy, medium, hard
   isPublic        Boolean @default(true) @map("is_public")
-  imageUrl        String? @map("image_url")
-  slug            String  @unique
+  imageUrl        String?     @map("image_url")
+  slug            String      @unique
   awesomeness     Int? // 1-5 scale
+  mealType        MealType[] @map("meal_type")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

@@ -4,6 +4,7 @@
 	import { toast } from 'svelte-sonner';
 	import {
 		recipeFormSchema,
+		mealTypeSchema,
 		type RecipeFormSchema,
 		type RecipeIngredient,
 		type RecipeInstruction
@@ -32,6 +33,7 @@
 		difficulty: undefined,
 		isPublic: false,
 		imageUrl: '',
+		mealType: [],
 		ingredients: [],
 		instructions: [],
 		tags: []
@@ -51,6 +53,16 @@
 	let ingredientNotes = $state('');
 
 	let instructionText = $state('');
+
+	const mealTypeOptions = mealTypeSchema.options;
+
+	function toggleMealType(type: (typeof mealTypeOptions)[number]) {
+		if ($form.mealType.includes(type)) {
+			$form.mealType = $form.mealType.filter((t) => t !== type);
+		} else {
+			$form.mealType = [...$form.mealType, type];
+		}
+	}
 
 	function addIngredient() {
 		if (!selectedFood || ingredientAmount <= 0) {
@@ -253,6 +265,28 @@
 								<option value="medium">Medium</option>
 								<option value="hard">Hard</option>
 							</select>
+						</div>
+
+						<div class="space-y-2">
+							<Label>Meal Type</Label>
+							<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+								{#each mealTypeOptions as mealType}
+									<label class="flex items-center gap-2 cursor-pointer p-2 rounded-md border hover:bg-muted/50 transition-colors">
+										<input
+											type="checkbox"
+											checked={$form.mealType.includes(mealType)}
+											onchange={() => toggleMealType(mealType)}
+											class="h-4 w-4 rounded border-gray-300"
+										/>
+										<span class="text-sm capitalize">
+											{mealType.toLowerCase().replace('_', ' ')}
+										</span>
+									</label>
+								{/each}
+							</div>
+							{#if $errors.mealType}
+								<p class="text-sm text-destructive">{$errors.mealType}</p>
+							{/if}
 						</div>
 
 						<div class="space-y-2">

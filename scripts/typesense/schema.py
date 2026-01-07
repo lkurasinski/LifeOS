@@ -56,6 +56,7 @@ RECIPES_SCHEMA = {
         {"name": "is_public", "type": "bool"},
         {"name": "image_url", "type": "string", "optional": True},
         {"name": "awesomeness", "type": "int32", "optional": True, "facet": True},
+        {"name": "meal_type", "type": "string[]", "facet": True, "optional": True},
         {"name": "ingredients", "type": "object[]", "optional": True},
         {"name": "ingredient_names", "type": "string[]", "optional": True},
         {"name": "component_slugs", "type": "string[]", "optional": True},
