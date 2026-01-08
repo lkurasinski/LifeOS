@@ -5,6 +5,26 @@
 import type { Food, NutrientValue } from './schemas';
 
 /**
+ * Build source URL based on provider and external ID
+ */
+export function buildSourceUrl(
+	provider: string | undefined,
+	externalId: string | number | undefined
+): string | null {
+	if (!provider || !externalId) return null;
+
+	switch (provider) {
+		case 'fdc':
+			return `https://fdc.nal.usda.gov/fdc-app.html#/food-details/${externalId}/nutrients`;
+		case 'openfoodfacts':
+			// Future: return OpenFoodFacts URL
+			return null;
+		default:
+			return null;
+	}
+}
+
+/**
  * Type guard: Check if food is saved in database
  */
 export function isSavedFood(food: Food): food is Food & { id: string; createdAt: Date; updatedAt: Date } {

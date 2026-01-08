@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Button } from './ui/button';
+	import { API_ROUTES } from '$lib/constants/api-routes';
 
 	interface Props {
 		user?: {
@@ -15,7 +16,7 @@
 	async function handleLogout() {
 		loading = true;
 		try {
-			await fetch('/api/auth/logout', {
+			await fetch(API_ROUTES.AUTH.LOGOUT, {
 				method: 'POST'
 			});
 			await goto('/login');
@@ -33,7 +34,10 @@
 			<div class="flex items-center gap-6">
 				<a href="/cookbook" class="text-xl font-bold">LifeOS Cookbook</a>
 				<div class="hidden md:flex gap-4">
-					<a href="/cookbook" class="text-sm font-medium text-muted-foreground hover:text-foreground">
+					<a
+						href="/cookbook"
+						class="text-sm font-medium text-muted-foreground hover:text-foreground"
+					>
 						Recipes
 					</a>
 					<a

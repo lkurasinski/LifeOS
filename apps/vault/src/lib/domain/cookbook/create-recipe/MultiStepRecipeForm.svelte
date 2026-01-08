@@ -18,6 +18,7 @@
 	import { useSearchParams } from 'runed/kit';
 	import { browser } from '$app/environment';
 	import { z } from 'zod';
+	import { API_ROUTES } from '$lib/constants/api-routes';
 
 	type FoodOption = {
 		id: string;
@@ -178,7 +179,7 @@
 		open = false;
 
 		// Show promise-based toast with loading/success/error states
-		const submitPromise = fetch('/api/recipes', {
+		const submitPromise = fetch(API_ROUTES.RECIPES.CREATE, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(formData)

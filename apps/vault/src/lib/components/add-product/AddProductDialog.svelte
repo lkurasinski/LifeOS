@@ -11,6 +11,7 @@
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
 	import type { Food } from '../../domain/cookbook/foods';
+	import { buildSearchUrl, API_ROUTES } from '$lib/constants/api-routes';
 
 	export let open = false;
 	export let initialQuery = '';
@@ -41,9 +42,12 @@
 		error = null;
 
 		try {
-			const res = await fetch(
-				`/api/foods/search?source=${source}&q=${encodeURIComponent(searchQuery)}&pageSize=25`
-			);
+			const searchUrl = buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
+				source,
+				q: searchQuery,
+				pageSize: 25
+			});
+			const res = await fetch(searchUrl);
 			if (!res.ok) throw new Error('Search failed');
 			const data = await res.json();
 			searchResults = data.items || [];
@@ -57,7 +61,7 @@
 	}
 
 	async function fetchFoodDetail(sourceId: string | number): Promise<Food | null> {
-		const res = await fetch(`/api/foods/${sourceId}?source=${source}`);
+		const res = await fetch(API_ROUTES.FOODS.DETAILS(sourceId, source));
 		if (!res.ok) throw new Error('Failed to load food details');
 		return await res.json();
 	}
@@ -91,7 +95,7 @@
 		error = null;
 
 		try {
-			const res = await fetch('/api/foods', {
+			const res = await fetch(API_ROUTES.FOODS.CREATE, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(foodData)

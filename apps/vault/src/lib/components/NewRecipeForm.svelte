@@ -19,6 +19,7 @@
 	import * as ButtonGroup from '$lib/components/ui/button-group';
 	import IngredientSelect from '$lib/components/ui/ingredient-select/IngredientSelect.svelte';
 	import { InputNumber } from '$lib/components/ui/input-number';
+	import { API_ROUTES } from '$lib/constants/api-routes';
 
 	let { open = $bindable(false), onSuccess }: { open?: boolean; onSuccess?: () => void } = $props();
 
@@ -147,7 +148,7 @@
 		$submitting = true;
 
 		try {
-			const response = await fetch('/api/recipes', {
+			const response = await fetch(API_ROUTES.RECIPES.CREATE, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify($form)
@@ -271,7 +272,9 @@
 							<Label>Meal Type</Label>
 							<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
 								{#each mealTypeOptions as mealType}
-									<label class="flex items-center gap-2 cursor-pointer p-2 rounded-md border hover:bg-muted/50 transition-colors">
+									<label
+										class="flex items-center gap-2 cursor-pointer p-2 rounded-md border hover:bg-muted/50 transition-colors"
+									>
 										<input
 											type="checkbox"
 											checked={$form.mealType.includes(mealType)}

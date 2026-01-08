@@ -1,7 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { z } from 'zod';
 import { prisma } from '$lib/server/prisma';
 import { createFoodCommandSchema, type CreateFoodCommand } from '$lib/domain/cookbook/foods';
+import { buildSourceUrl } from '$lib/domain/cookbook/foods/utils';
+import { isUniqueConstraintError } from '$lib/server/slug';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const user = locals.user;
@@ -18,10 +21,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		// Create food with nutrition data in transaction
 		const food = await prisma.$transaction(async (tx) => {
 			// Build source URL based on provider
-			let sourceUrl: string | null = null;
-			if (command.source?.provider === 'fdc' && command.source.externalId) {
-				sourceUrl = `https://fdc.nal.usda.gov/fdc-app.html#/food-details/${command.source.externalId}/nutrients`;
-			}
+			const sourceUrl = buildSourceUrl(command.source?.provider, command.source?.externalId);
 
 			// Create the food record
 			const createdFood = await tx.food.create({
@@ -58,20 +58,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			{
 				id: food.id,
 				name_en: food.nameEn,
-				name_pl: food.namePl
+				name_pl: food.namePl,
+				category: food.category,
+				source: {
+					provider: food.sourceProvider,
+					externalId: food.sourceExternalId,
+					url: food.sourceUrl
+				}
 			},
 			{ status: 201 }
 		);
 	} catch (error: unknown) {
-		if (error && typeof error === 'object' && 'issues' in error) {
-			return json(
-				{ error: 'Invalid request data', details: (error as any).issues },
-				{ status: 400 }
-			);
+		if (error instanceof z.ZodError) {
+			return json({ error: 'Invalid request data', details: error.issues }, { status: 400 });
 		}
 
-		// Handle Prisma unique constraint violation (duplicate fdcId)
-		if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+		// Handle Prisma unique constraint violation (duplicate food)
+		if (isUniqueConstraintError(error)) {
 			return json({ error: 'This food already exists in the database' }, { status: 409 });
 		}
 
