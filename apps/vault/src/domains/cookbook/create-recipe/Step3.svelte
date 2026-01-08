@@ -25,6 +25,8 @@
 	let ingredientNotes = $state('');
 
 	function addIngredient() {
+		if (!selectedFood.id) return;
+
 		const newIngredient: RecipeIngredient = {
 			foodName: selectedFood.name_en,
 			foodId: selectedFood.id,

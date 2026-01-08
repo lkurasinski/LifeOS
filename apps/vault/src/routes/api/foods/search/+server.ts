@@ -16,26 +16,28 @@ export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 	try {
 		const strategy = getStrategy(source);
 
+		const sourceParam = url.searchParams.get('source');
+		const sortByParam = url.searchParams.get('sortBy');
+		const sortOrderParam = url.searchParams.get('sortOrder');
+
 		const searchParams: FoodSearchParams = {
 			query,
 			pageSize: Number(url.searchParams.get('pageSize') ?? '25'),
 			pageNumber: Number(url.searchParams.get('pageNumber') ?? url.searchParams.get('page') ?? '1'),
 			category: url.searchParams.get('category') || undefined,
-			source: url.searchParams.get('source') || 'custom',
-			sortBy: url.searchParams.get('sortBy') || 'name',
-			sortOrder: url.searchParams.get('sortOrder') || 'asc'
+			source:
+				sourceParam && ['fdc', 'openfoodfacts', 'home-baked'].includes(sourceParam)
+					? (sourceParam as 'fdc' | 'openfoodfacts' | 'home-baked')
+					: undefined,
+			sortBy:
+				sortByParam && ['name', 'category', 'created_at'].includes(sortByParam)
+					? (sortByParam as 'name' | 'category' | 'created_at')
+					: 'name',
+			sortOrder:
+				sortOrderParam && ['asc', 'desc'].includes(sortOrderParam)
+					? (sortOrderParam as 'asc' | 'desc')
+					: 'asc'
 		};
-
-		url.searchParams.forEach((value, key) => {
-			if (!['q', 'source', 'pageSize', 'pageNumber', 'per_page', 'page'].includes(key)) {
-				// Handle comma-separated values
-				if (value.includes(',')) {
-					searchParams[key] = value.split(',');
-				} else {
-					searchParams[key] = value;
-				}
-			}
-		});
 
 		// Execute search using the strategy
 		const results = await strategy.search(searchParams);

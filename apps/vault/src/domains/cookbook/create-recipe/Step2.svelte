@@ -7,19 +7,14 @@
 	import IngredientsList from './IngredientsList.svelte';
 	import AddProductDialog from '$lib/components/add-product/AddProductDialog.svelte';
 
-	type FoodOption = {
-		id: string;
-		name_pl?: string;
-		name_en: string;
-		category?: string;
-	};
+	import type { Food } from '$domains/cookbook/foods';
 
 	let {
-		selectedFood = $bindable<FoodOption | null>(null),
+		selectedFood = $bindable<Food | null>(null),
 		ingredients = [],
 		onSelect
 	}: {
-		selectedFood?: FoodOption | null;
+		selectedFood?: Food | null;
 		ingredients?: RecipeIngredient[];
 		onSelect?: () => void;
 	} = $props();
@@ -41,14 +36,8 @@
 					`/api/foods/search?q=${encodeURIComponent(q)}&pageSize=${perPage}`
 				);
 				const data = await response.json();
-				// Map domain Food models to expected format
-				const items = (data.items || []).map((food: any) => ({
-					id: food.id,
-					name_pl: food.name_pl,
-					name_en: food.name_en,
-					category: food.category
-				}));
-				return { items };
+				// Return full Food models
+				return { items: data.items || [] };
 			} catch (error) {
 				console.error(error);
 				return { items: [] };
@@ -59,22 +48,14 @@
 		}
 	);
 
-	function selectOption(option: FoodOption) {
+	function selectOption(option: Food) {
 		selectedFood = option;
 		query = option.name_pl ?? option.name_en;
 		onSelect?.();
 	}
 
-	function handleProductCreated(
-		event: CustomEvent<{ id: string; name_pl: string | null; name_en: string }>
-	) {
-		const { id, name_pl, name_en } = event.detail;
-		const newFood: FoodOption = {
-			id,
-			name_pl: name_pl || undefined,
-			name_en
-		};
-		selectOption(newFood);
+	function handleProductCreated(event: CustomEvent<Food>) {
+		selectOption(event.detail);
 		showAddProductDialog = false;
 	}
 </script>
@@ -102,7 +83,7 @@
 			{#if (searchResource.current?.items ?? []).length > 0}
 				<Command.Group heading="Select ingredient">
 					{#each searchResource.current?.items ?? [] as option}
-						<Command.Item value={option.id} onSelect={() => selectOption(option)}>
+						<Command.Item value={option.i} onSelect={() => selectOption(option)}>
 							<div class="flex flex-col">
 								<span class="font-medium">{option.name_pl ?? option.name_en}</span>
 								<div class="text-xs text-muted-foreground">

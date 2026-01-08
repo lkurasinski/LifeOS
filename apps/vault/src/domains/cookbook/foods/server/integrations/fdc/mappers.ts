@@ -12,12 +12,12 @@ import type {
 } from './client';
 import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
 import { FDC_TO_INFOODS } from '$domains/cookbook/foods/server/integrations/fdc/fdc-nutrient-mapping';
-import type { Food, FoodCreateInput, NutrientValue } from '$domains/cookbook/foods';
+import type { Food, NutrientValue } from '$domains/cookbook/foods';
 
 /**
  * Map FDC search result to domain Food model
  */
-export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): FoodCreateInput {
+export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
 	return {
 		// No id yet - not saved to DB
 		name_en: fdcFood.description,
@@ -38,7 +38,7 @@ export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): FoodCre
 /**
  * Map FDC food detail to domain Food model
  */
-export function mapFDCFoodDetailToFood(fdcFood: FDC_FDCFoodDetail): FoodCreateInput {
+export function mapFDCFoodDetailToFood(fdcFood: FDC_FDCFoodDetail): Food {
 	// Map FDC nutrients to domain NutrientValue objects
 	const nutrients: NutrientValue[] = ((fdcFood as any).foodNutrients || [])
 		.map((fdcNutrient: FDC_FoodNutrient): NutrientValue | null => {

@@ -10,7 +10,7 @@ import { TypesenseStrategy } from '$domains/cookbook/foods/server/integrations/t
 import { FDCStrategy } from '$domains/cookbook/foods/server/integrations/fdc/fdc-strategy';
 
 // Strategy registry
-const strategies: Map<string, FoodSourceStrategy> = new Map([
+const strategies: Map<string, FoodSourceStrategy> = new Map<string, FoodSourceStrategy>([
 	['internal', new TypesenseStrategy()],
 	['fdc', new FDCStrategy()]
 	// Add more strategies here:

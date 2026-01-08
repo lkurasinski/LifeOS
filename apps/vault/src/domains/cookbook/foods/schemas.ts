@@ -53,7 +53,7 @@ export type NutrientValue = z.infer<typeof nutrientValueSchema>;
 // CORE ENTITY
 // ============================================================================
 export const foodSchema = z.object({
-	id: z.number(),
+	id: z.number().optional(), // when entry is not yet created
 	name_en: z.string().min(1),
 	name_pl: z.string().nullable().optional(),
 	category: z.string().nullable().optional(),
@@ -62,19 +62,11 @@ export const foodSchema = z.object({
 	nutrients: z.array(nutrientValueSchema),
 	source: dataSourceSchema.nullable().optional(),
 	userId: z.string().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date()
+	createdAt: z.date().optional(), // when entry is not yet created
+	updatedAt: z.date().optional() // when entry is not yet created
 });
 
 export type Food = z.infer<typeof foodSchema>;
-
-export const foodCreateSchema = foodSchema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true
-});
-
-export type FoodCreateInput = z.infer<typeof foodCreateSchema>;
 
 // ============================================================================
 // SEARCH & QUERY

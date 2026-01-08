@@ -19,7 +19,7 @@
 
 	const dispatch = createEventDispatcher<{
 		close: void;
-		created: { id: string; name_pl: string | null; name_en: string };
+		created: Food;
 	}>();
 
 	type Step = 'search' | 'results' | 'detail';
@@ -88,7 +88,7 @@
 		}
 	}
 
-	async function handleSubmitFood(event: CustomEvent<{ foodData: any }>) {
+	async function handleSubmitFood(event: CustomEvent<{ foodData: Food }>) {
 		const { foodData } = event.detail;
 
 		loading = true;

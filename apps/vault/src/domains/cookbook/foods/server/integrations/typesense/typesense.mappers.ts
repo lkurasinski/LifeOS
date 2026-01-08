@@ -17,8 +17,8 @@ export function mapTypesenseFoodToFood(doc: Typesense_FoodDocument): Food {
 			url: doc.source_url
 		},
 		userId: null, //@TODO
-		createdAt: doc.created_at ? new Date(doc.created_at) : undefined,
-		updatedAt: doc.updated_at ? new Date(doc.updated_at) : undefined
+		createdAt: new Date(doc.created_at),
+		updatedAt: new Date(doc.updated_at)
 	};
 }
 

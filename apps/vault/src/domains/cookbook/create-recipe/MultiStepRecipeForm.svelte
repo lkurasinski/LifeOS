@@ -19,6 +19,7 @@
 	import { browser } from '$app/environment';
 	import { z } from 'zod';
 	import { API_ROUTES } from '$lib/api/api-routes';
+	import type { Food } from '$domains/cookbook/foods';
 
 	type FoodOption = {
 		id: string;
@@ -61,7 +62,7 @@
 
 	let currentStepErrors = $state<string[]>([]);
 	let namePlValue = $state('');
-	let selectedFood = $state<FoodOption | null>(null);
+	let selectedFood = $state<Food | null>(null);
 	let ingredients = $state<RecipeIngredient[]>([]);
 
 	const currentStep = $derived.by(() => {
@@ -198,7 +199,7 @@
 				onSuccess?.();
 				return 'Recipe created successfully!';
 			},
-			error: (err) => err.message || 'An unexpected error occurred'
+			error: (err) => (err instanceof Error ? err.message : 'An unexpected error occurred')
 		});
 	}
 

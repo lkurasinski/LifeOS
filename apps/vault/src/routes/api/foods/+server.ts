@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					category: command.category || null,
 					scientificName: command.scientificName || null,
 					brand: command.brand || null,
-					userId: command.source?.provider === 'home-baked' ? user.id : null,
+					userId: user.id || null,
 					// Source tracking columns
 					sourceProvider: command.source?.provider || null,
 					sourceExternalId: command.source?.externalId?.toString() || null,
@@ -59,6 +59,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				id: food.id,
 				name_en: food.nameEn,
 				name_pl: food.namePl,
+				scientificName: food.scientificName,
 				category: food.category,
 				source: {
 					provider: food.sourceProvider,
