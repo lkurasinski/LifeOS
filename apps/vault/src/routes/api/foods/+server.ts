@@ -2,8 +2,8 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { z } from 'zod';
 import { prisma } from '$lib/server/prisma';
-import { createFoodCommandSchema, type CreateFoodCommand } from '$lib/domain/cookbook/foods';
-import { buildSourceUrl } from '$lib/domain/cookbook/foods/utils';
+import { createFoodCommandSchema, type CreateFoodCommand } from '$domains/cookbook/foods';
+import { buildSourceUrl } from '$domains/cookbook/foods/utils';
 import { isUniqueConstraintError } from '$lib/server/slug';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					category: command.category || null,
 					scientificName: command.scientificName || null,
 					brand: command.brand || null,
-					userId: command.source?.provider === 'custom' ? user.id : null,
+					userId: command.source?.provider === 'home-baked' ? user.id : null,
 					// Source tracking columns
 					sourceProvider: command.source?.provider || null,
 					sourceExternalId: command.source?.externalId?.toString() || null,

@@ -1,8 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getStrategy } from '$lib/services/food-sources';
-import { dataSourceProviders, type FoodSearchParams } from '$lib/domain/cookbook/foods';
+import { getStrategy } from '$domains/cookbook/foods/server/services/food-sources';
+import { type FoodSearchParams } from '$domains/cookbook/foods';
 import { z } from 'zod';
+import { dataSourceProviders } from '$lib';
 
 export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 	const query = url.searchParams.get('q') ?? '*';

@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import RecipesCatalog from '$lib/domain/cookbook/RecipesCatalog.svelte';
-	import NewRecipeForm from '$lib/components/NewRecipeForm.svelte';
-	import MultiStepRecipeForm from '$lib/domain/cookbook/create-recipe/MultiStepRecipeForm.svelte';
+	import { Button } from '../../../lib/components/button';
+	import RecipesCatalog from '$domains/cookbook/RecipesCatalog.svelte';
+	import MultiStepRecipeForm from '$domains/cookbook/create-recipe/MultiStepRecipeForm.svelte';
 	import TestDrawer from '$lib/components/TestDrawer.svelte';
 	import type { PageData } from './$types';
 
@@ -38,5 +37,4 @@
 </div>
 
 <TestDrawer bind:open={isTestOpen} />
-<NewRecipeForm bind:open={isFormOpen} onSuccess={handleRecipeCreated} />
 <MultiStepRecipeForm bind:open={isMultiStepOpen} onSuccess={handleRecipeCreated} />

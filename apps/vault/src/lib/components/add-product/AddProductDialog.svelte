@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Dialog from '$lib/components/ui/dialog/dialog.svelte';
-	import DialogContent from '$lib/components/ui/dialog/dialog-content.svelte';
-	import DialogHeader from '$lib/components/ui/dialog/dialog-header.svelte';
-	import DialogTitle from '$lib/components/ui/dialog/dialog-title.svelte';
-	import DialogDescription from '$lib/components/ui/dialog/dialog-description.svelte';
-	import Input from '$lib/components/ui/input/Input.svelte';
-	import Label from '$lib/components/ui/label/Label.svelte';
-	import Button from '$lib/components/ui/button/Button.svelte';
+	import Dialog from '$lib/components/dialog/dialog.svelte';
+	import DialogContent from '$lib/components/dialog/dialog-content.svelte';
+	import DialogHeader from '$lib/components/dialog/dialog-header.svelte';
+	import DialogTitle from '$lib/components/dialog/dialog-title.svelte';
+	import DialogDescription from '$lib/components/dialog/dialog-description.svelte';
+	import Input from '$lib/components/input/Input.svelte';
+	import Label from '$lib/components/label/Label.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
-	import type { Food } from '../../domain/cookbook/foods';
-	import { buildSearchUrl, API_ROUTES } from '$lib/constants/api-routes';
+	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
+	import type { Food } from '$domains/cookbook/foods';
 
 	export let open = false;
 	export let initialQuery = '';

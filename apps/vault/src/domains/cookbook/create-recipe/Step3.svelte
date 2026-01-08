@@ -1,0 +1,123 @@
+<script lang="ts">
+	import { Button } from '../../../lib/components/button';
+	import { Input } from '../../../lib/components/input';
+	import { Label } from '../../../lib/components/label';
+	import * as Select from '../../../lib/components/select';
+	import { InputNumber } from '../../../lib/components/input-number';
+	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
+	import IngredientsList from './IngredientsList.svelte';
+	import type { Food } from '$domains/cookbook/foods';
+
+	let {
+		selectedFood,
+		ingredients = $bindable<RecipeIngredient[]>([]),
+		onAddAnother,
+		onFinish
+	}: {
+		selectedFood: Food;
+		ingredients?: RecipeIngredient[];
+		onAddAnother?: () => void;
+		onFinish?: () => void;
+	} = $props();
+
+	let ingredientAmount = $state(0);
+	let ingredientUnit = $state<RecipeIngredient['unit']>('gram');
+	let ingredientNotes = $state('');
+
+	function addIngredient() {
+		const newIngredient: RecipeIngredient = {
+			foodName: selectedFood.name_en,
+			foodId: selectedFood.id,
+			amount: ingredientAmount || undefined,
+			unit: ingredientUnit,
+			notes: ingredientNotes || undefined
+		};
+
+		ingredients = [...ingredients, newIngredient];
+
+		// Reset form
+		ingredientAmount = 0;
+		ingredientUnit = 'gram';
+		ingredientNotes = '';
+
+		// Trigger add another callback
+		onAddAnother?.();
+	}
+
+	function removeIngredient(index: number) {
+		ingredients = ingredients.filter((_, i) => i !== index);
+	}
+
+	function finishAdding() {
+		// Add current ingredient if there's data
+		if (ingredientAmount > 0) {
+			addIngredient();
+		}
+		onFinish?.();
+	}
+</script>
+
+<div class="space-y-4">
+	<!-- Current Ingredient Info -->
+	<div class="p-3 border rounded-lg bg-muted/50">
+		<p class="text-sm font-semibold">
+			Adding: {selectedFood.name_pl ?? selectedFood.name_en}
+		</p>
+		{#if selectedFood.name_pl && selectedFood.name_en}
+			<p class="text-xs text-muted-foreground">{selectedFood.name_en}</p>
+		{/if}
+	</div>
+
+	<!-- Ingredient Details Form -->
+	<div class="grid gap-3 sm:grid-cols-3">
+		<div class="space-y-2">
+			<Label for="amount">Amount *</Label>
+			<InputNumber
+				id="amount"
+				min="0"
+				step="0.1"
+				bind:value={ingredientAmount}
+				onkeydown={(e) => {
+					if (e.key === 'Enter') {
+						e.preventDefault();
+						addIngredient();
+					}
+				}}
+				placeholder="100"
+				autofocus
+			/>
+		</div>
+
+		<div class="space-y-2">
+			<Label for="unit">Unit</Label>
+			<Select.Root type="single" name="unit" bind:value={ingredientUnit}>
+				<Select.Trigger class="w-full">
+					{ingredientUnit === 'gram' ? 'Grams (g)' : 'Milliliters (ml)'}
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Group>
+						<Select.Label>Unit</Select.Label>
+						<Select.Item value="gram" label="Grams (g)">Grams (g)</Select.Item>
+						<Select.Item value="ml" label="Milliliters (ml)">Milliliters (ml)</Select.Item>
+					</Select.Group>
+				</Select.Content>
+			</Select.Root>
+		</div>
+
+		<div class="space-y-2">
+			<Label for="notes">Notes</Label>
+			<Input id="notes" type="text" bind:value={ingredientNotes} placeholder="e.g., diced" />
+		</div>
+	</div>
+
+	<Button type="button" onclick={addIngredient} class="w-full" variant="secondary">
+		Add & Select Another Ingredient
+	</Button>
+
+	<!-- Added Ingredients List -->
+	<IngredientsList {ingredients} onRemove={removeIngredient} />
+
+	{#if ingredients.length > 0}
+		<Button type="button" onclick={finishAdding} class="w-full mt-4">Finish & Create Recipe</Button>
+	{/if}
+</div>

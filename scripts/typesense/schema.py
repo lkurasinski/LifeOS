@@ -15,11 +15,6 @@ FOODS_SCHEMA = {
         {"name": "category", "type": "string", "facet": True, "optional": True},
         {"name": "brand", "type": "string", "facet": True, "optional": True},
 
-        # Source tracking
-        {"name": "source_provider", "type": "string", "facet": True, "optional": True},
-        {"name": "source_external_id", "type": "string", "optional": True},
-        {"name": "source_url", "type": "string", "optional": True},
-
         # Denormalized common nutrients for fast sorting/filtering (per 100g)
         {"name": "energy_kcal", "type": "float", "optional": True, "facet": True},
         {"name": "protein", "type": "float", "optional": True, "facet": True},
@@ -29,6 +24,11 @@ FOODS_SCHEMA = {
 
         # Complete nutrition data as object with INFOODS codes as keys
         {"name": "nutrients", "type": "object", "optional": True},
+
+        # Source tracking
+        {"name": "source_provider", "type": "string", "facet": True, "optional": True},
+        {"name": "source_external_id", "type": "string", "optional": True},
+        {"name": "source_url", "type": "string", "optional": True},
 
         {"name": "created_at", "type": "int64"},
         {"name": "updated_at", "type": "int64"},

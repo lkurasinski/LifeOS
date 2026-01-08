@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from './ui/button';
-	import { API_ROUTES } from '$lib/constants/api-routes';
+	import { Button } from './button';
+	import { API_ROUTES } from '$lib/api/api-routes';
 
 	interface Props {
 		user?: {

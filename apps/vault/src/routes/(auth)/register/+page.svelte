@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
+	import { Button } from '../../../lib/components/button';
+	import { Input } from '../../../lib/components/input';
+	import { Label } from '../../../lib/components/label';
 	import {
 		Card,
 		CardContent,
 		CardDescription,
 		CardHeader,
 		CardTitle
-	} from '$lib/components/ui/card';
-	import { API_ROUTES } from '$lib/constants/api-routes';
+	} from '../../../lib/components/card';
+	import { API_ROUTES } from '$lib/api/api-routes';
 
 	let email = $state('');
 	let password = $state('');

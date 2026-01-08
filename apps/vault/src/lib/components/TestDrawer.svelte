@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Drawer from '$lib/components/ui/drawer';
-	import { Button } from '$lib/components/ui/button';
+	import * as Drawer from './drawer';
+	import { Button } from './button';
 
 	let { open = $bindable(false) }: { open?: boolean } = $props();
 </script>

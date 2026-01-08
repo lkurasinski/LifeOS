@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getStrategy } from '../../../../lib/services/food-sources';
+import { getStrategy } from '../../../../domains/cookbook/foods/server/services/food-sources';
 
 export const GET: RequestHandler = async ({ params, url }) => {
 	const { id } = params;
@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
 	try {
 		const strategy = getStrategy(source);
-		const food = await strategy.getById(id);
+		const food = await strategy.getById(Number(id));
 
 		return json(food);
 	} catch (error) {

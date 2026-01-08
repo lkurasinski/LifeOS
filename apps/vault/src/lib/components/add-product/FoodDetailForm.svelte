@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4 } from 'sveltekit-superforms/adapters';
-	import Button from '$lib/components/ui/button/Button.svelte';
-	import Input from '$lib/components/ui/input/Input.svelte';
-	import Label from '$lib/components/ui/label/Label.svelte';
-	import Card from '$lib/components/ui/card/card.svelte';
-	import CardHeader from '$lib/components/ui/card/card-header.svelte';
-	import CardTitle from '$lib/components/ui/card/card-title.svelte';
-	import CardContent from '$lib/components/ui/card/card-content.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import type { Food } from '../../domain/cookbook/foods';
+	import Button from '$lib/components/button/Button.svelte';
+	import Input from '$lib/components/input/Input.svelte';
+	import Label from '$lib/components/label/Label.svelte';
+	import Card from '$lib/components/card/card.svelte';
+	import CardHeader from '$lib/components/card/card-header.svelte';
+	import CardTitle from '$lib/components/card/card-title.svelte';
+	import CardContent from '$lib/components/card/card-content.svelte';
+	import Separator from '$lib/components/separator/separator.svelte';
+	import Badge from '$lib/components/badge/badge.svelte';
+
 	import { foodDetailFormSchema } from './food-detail-form.schema';
+	import type { Food } from '$domains/cookbook/foods';
 
 	let {
 		foodDetail,

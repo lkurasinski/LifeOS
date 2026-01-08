@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma';
 import { createSlugWithSuffix, isUniqueConstraintError } from '$lib/server/slug';
 import { z } from 'zod';
-import { mealTypeSchema } from '$lib/schemas/recipe';
+import { mealTypeSchema } from '$domains/cookbook/recipe/recipe.schema';
 
 const ingredientSchema = z.object({
 	foodId: z.coerce.number(),
