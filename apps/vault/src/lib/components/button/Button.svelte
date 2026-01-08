@@ -6,7 +6,7 @@
 		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		class?: string;
-
+		ref?: HTMLButtonElement | null;
 	}
 
 	let {
@@ -14,6 +14,7 @@
 		size = 'default',
 		class: className,
 		type = 'button',
+		ref = $bindable(null),
 		children,
 		...restProps
 	}: Props = $props();
@@ -36,6 +37,7 @@
 </script>
 
 <button
+	bind:this={ref}
 	{type}
 	class={cn(
 		'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',

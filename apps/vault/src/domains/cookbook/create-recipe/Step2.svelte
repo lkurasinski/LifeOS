@@ -118,6 +118,6 @@
 
 <AddProductDialog
 	bind:open={showAddProductDialog}
-	initialQuery={query}
 	on:created={handleProductCreated}
+	initialQuery={query}
 />

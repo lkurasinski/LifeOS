@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4 } from 'sveltekit-superforms/adapters';
+	import { untrack } from 'svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import Input from '$lib/components/input/Input.svelte';
 	import Label from '$lib/components/label/Label.svelte';
@@ -27,12 +28,12 @@
 	} = $props();
 
 	const { form, errors, enhance, submitting } = superForm(
-		{
+		untrack(() => ({
 			namePl: foodDetail.name_pl || '',
 			nameEn: foodDetail.name_en,
 			category: foodDetail.category || '',
 			scientificName: foodDetail.scientificName || ''
-		},
+		})),
 		{
 			validators: zod4(foodDetailFormSchema),
 			SPA: true,
@@ -59,16 +60,18 @@
 	);
 
 	// Group nutrients by category using domain nutrient structure
-	const nutrientsByCategory = foodDetail.nutrients.reduce(
-		(acc, n) => {
-			const code = n.nutrient.code;
-			const category = n.nutrient.category || 'Other';
+	const nutrientsByCategory = $derived(
+		foodDetail.nutrients.reduce(
+			(acc, n) => {
+				const code = n.nutrient.code;
+				const category = n.nutrient.category || 'Other';
 
-			if (!acc[category]) acc[category] = [];
-			acc[category].push(n);
-			return acc;
-		},
-		{} as Record<string, typeof foodDetail.nutrients>
+				if (!acc[category]) acc[category] = [];
+				acc[category].push(n);
+				return acc;
+			},
+			{} as Record<string, typeof foodDetail.nutrients>
+		)
 	);
 </script>
 

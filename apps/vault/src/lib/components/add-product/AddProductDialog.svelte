@@ -13,9 +13,15 @@
 	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
 	import type { Food } from '$domains/cookbook/foods';
 
-	export let open = false;
-	export let initialQuery = '';
-	export let source: 'fdc' | 'openfoodfacts' = 'fdc';
+	let {
+		open = $bindable(false),
+		initialQuery = '',
+		source = 'fdc'
+	}: {
+		open?: boolean;
+		initialQuery?: string;
+		source?: 'fdc' | 'openfoodfacts';
+	} = $props();
 
 	const dispatch = createEventDispatcher<{
 		close: void;
@@ -24,16 +30,18 @@
 
 	type Step = 'search' | 'results' | 'detail';
 
-	let step: Step = 'search';
-	let searchQuery = initialQuery;
-	let searchResults: Food[] = [];
-	let selectedFood: Food | null = null;
-	let loading = false;
-	let error: string | null = null;
+	let step = $state<Step>('search');
+	let searchQuery = $state('');
+	let searchResults = $state<Food[]>([]);
+	let selectedFood = $state<Food | null>(null);
+	let loading = $state(false);
+	let error = $state<string | null>(null);
 
-	$: if (open && initialQuery) {
-		searchQuery = initialQuery;
-	}
+	$effect(() => {
+		if (open && initialQuery) {
+			searchQuery = initialQuery;
+		}
+	});
 
 	async function handleSearch() {
 		if (!searchQuery.trim()) return;
@@ -106,12 +114,8 @@
 				throw new Error(errorData.error || 'Failed to create food');
 			}
 
-			const createdFood = await res.json();
-			dispatch('created', {
-				id: createdFood.id,
-				name_pl: createdFood.name_pl,
-				name_en: createdFood.name_en
-			});
+			const createdFood: Food = await res.json();
+			dispatch('created', createdFood);
 			handleClose();
 		} catch (e) {
 			console.error('Food creation error:', e);
