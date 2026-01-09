@@ -2,7 +2,9 @@
 	import * as Command from '../../../lib/components/command';
 	import { Label } from '../../../lib/components/label';
 	import { Button } from '../../../lib/components/button';
-	import { resource } from 'runed';
+	import { createQuery } from '@tanstack/svelte-query';
+	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
+	import { fetchJson } from '$lib/api/client';
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
 	import IngredientsList from './IngredientsList.svelte';
 	import AddProductDialog from '$lib/components/add-product/AddProductDialog.svelte';
@@ -24,29 +26,18 @@
 	let perPage = 10;
 	let showAddProductDialog = $state(false);
 
-	const searchResource = resource(
-		() => query,
-		async (q) => {
-			if (q.length < minChars) {
-				return { items: [] };
-			}
-			try {
-				// Uses unified API - defaults to internal source
-				const response = await fetch(
-					`/api/foods/search?q=${encodeURIComponent(q)}&pageSize=${perPage}`
-				);
-				const data = await response.json();
-				// Return full Food models
-				return { items: data.items || [] };
-			} catch (error) {
-				console.error(error);
-				return { items: [] };
-			}
-		},
-		{
-			debounce: 300
-		}
-	);
+	const searchQuery = createQuery(() => ({
+		queryKey: ['foods', 'search', query, perPage] as const,
+		queryFn: () =>
+			fetchJson<{ items: Food[] }>(
+				buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
+					q: query,
+					pageSize: perPage
+				})
+			),
+		enabled: query.length >= minChars,
+		placeholderData: (previousData: { items: Food[] } | undefined) => previousData
+	}));
 
 	function selectOption(option: Food) {
 		selectedFood = option;
@@ -61,13 +52,13 @@
 </script>
 
 <div class="space-y-2">
-	<Label>Search for ingredient</Label>
+	<Label>Search for ingredident</Label>
 	<Command.Root shouldFilter={false} class="rounded-lg border">
 		<Command.Input bind:value={query} placeholder="Type to search ingredients..." />
 		<Command.List>
-			{#if searchResource.loading}
+			{#if searchQuery.isPending}
 				<!--				<Command.Loading>Searching...</Command.Loading>-->
-			{:else if query.length >= minChars && (searchResource.current?.items ?? []).length === 0}
+			{:else if query.length >= minChars && (searchQuery.data?.items ?? []).length === 0}
 				<div class="py-6 px-4 text-center space-y-3">
 					<Command.Empty>No results found for "{query}"</Command.Empty>
 					<Button
@@ -80,10 +71,13 @@
 					</Button>
 				</div>
 			{/if}
-			{#if (searchResource.current?.items ?? []).length > 0}
+			{#if (searchQuery.data?.items ?? []).length > 0}
 				<Command.Group heading="Select ingredient">
-					{#each searchResource.current?.items ?? [] as option}
-						<Command.Item value={option.i} onSelect={() => selectOption(option)}>
+					{#each searchQuery.data?.items ?? [] as option}
+						<Command.Item
+							value={option.id?.toString() || option.name_en}
+							onSelect={() => selectOption(option)}
+						>
 							<div class="flex flex-col">
 								<span class="font-medium">{option.name_pl ?? option.name_en}</span>
 								<div class="text-xs text-muted-foreground">

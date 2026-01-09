@@ -35,6 +35,9 @@ importers:
       '@lifeos/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@tanstack/svelte-query':
+        specifier: ^6.0.14
+        version: 6.0.14(svelte@5.46.0)
       autoprefixer:
         specifier: ^10.4.23
         version: 10.4.23(postcss@8.5.6)
@@ -944,6 +947,14 @@ packages:
     resolution: {integrity: sha512-jVA+/UpKL1vRLg6Hkao5jldawNmRo7mQYrZtNHMIVpLfLhDml5nMRUo/8MwoX2vNXvnaXNNMedrMfMugAVX1nA==}
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7
+
+  '@tanstack/query-core@5.90.16':
+    resolution: {integrity: sha512-MvtWckSVufs/ja463/K4PyJeqT+HMlJWtw6PrCpywznd2NSgO3m4KwO9RqbFqGg6iDE8vVMFWMeQI4Io3eEYww==}
+
+  '@tanstack/svelte-query@6.0.14':
+    resolution: {integrity: sha512-gKuHxbyGP2pCQgE/Px9FtlyFmHTt0OV5xTrKrk7PMKGkv3LPWTTwDb7xlMDe1V7U2K5ci+jq1j3HsuTPqIZxjA==}
+    peerDependencies:
+      svelte: ^5.25.0
 
   '@types/bcrypt@6.0.0':
     resolution: {integrity: sha512-/oJGukuH3D2+D+3H4JWLaAsJ/ji86dhRidzZ/Od7H/i8g+aCmvkeCc6Ni/f9uxGLSQVCRZkX2/lqEFG2BvWtlQ==}
@@ -3081,6 +3092,13 @@ snapshots:
       '@tailwindcss/oxide': 4.1.18
       tailwindcss: 4.1.18
       vite: 7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)
+
+  '@tanstack/query-core@5.90.16': {}
+
+  '@tanstack/svelte-query@6.0.14(svelte@5.46.0)':
+    dependencies:
+      '@tanstack/query-core': 5.90.16
+      svelte: 5.46.0
 
   '@types/bcrypt@6.0.0':
     dependencies:

@@ -10,7 +10,7 @@ import { getFoodDetail, searchFoods } from '$domains/cookbook/foods/server/integ
 import {
 	mapFDCFoodDetailToFood,
 	mapFDCSearchResultToFood
-} from '$domains/cookbook/foods/server/integrations/fdc/mappers';
+} from '$domains/cookbook/foods/server/integrations/fdc/fdc.mappers';
 import type { FoodSourceStrategy } from '../../services/food-sources';
 
 export class FDCStrategy implements FoodSourceStrategy {

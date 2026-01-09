@@ -1,6 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { Logger } from '$lib/server/logger';
+import type { Logger } from '$lib/server/logger/logger';
 
 declare global {
 	namespace App {

@@ -1,9 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
-import { logger, defaultLoggerConfig, type LoggerConfig } from './logger';
+import { logger, defaultLoggerConfig, trimBody, type LoggerConfig } from './logger';
 
 const config: LoggerConfig = {
 	...defaultLoggerConfig,
-	logHeaders: ['user-agent', 'content-type', 'authorization'],
+	// logHeaders: ['user-agent', 'content-type', 'authorization'],
+	logHeaders: [],
 	logCookies: false,
 	logRequestBody: true
 };
@@ -33,6 +34,13 @@ function getHeaders(request: Request, headerNames: string[]): Record<string, str
 	return headers;
 }
 
+function getResourceType(path: string): string {
+	if (path.startsWith('/api/')) {
+		return 'API-INT';
+	}
+	return 'PAGE';
+}
+
 export const loggerHandle: Handle = async ({ event, resolve }) => {
 	const startTime = Date.now();
 	const requestId = crypto.randomUUID().split('-')[0];
@@ -45,7 +53,11 @@ export const loggerHandle: Handle = async ({ event, resolve }) => {
 	const params = Object.fromEntries(event.url.searchParams);
 	const hasParams = Object.keys(params).length > 0;
 
-	const requestData: Record<string, any> = {};
+	const resourceType = getResourceType(path);
+
+	const requestData: Record<string, any> = {
+		type: resourceType
+	};
 
 	if (hasParams) requestData.params = params;
 
@@ -61,10 +73,10 @@ export const loggerHandle: Handle = async ({ event, resolve }) => {
 
 	if (config.logRequestBody && method !== 'GET' && method !== 'HEAD') {
 		const body = await parseRequestBody(event.request);
-		if (body) requestData.body = body;
+		if (body) requestData.body = trimBody(body, config.maxBodyLength);
 	}
 
-	requestLogger.info(requestData, `>> ${method} ${path}`);
+	requestLogger.info(requestData, `[${resourceType}] ⌛ ${method} ${path}`);
 
 	try {
 		const response = await resolve(event);
@@ -73,11 +85,28 @@ export const loggerHandle: Handle = async ({ event, resolve }) => {
 
 		const level = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
 
+		const responseData: Record<string, any> = {
+			// type: resourceType,
+			// duration: `${duration}ms`
+		};
+
+		if (config.logResponseBody && resourceType === 'API-INT') {
+			try {
+				const clonedResponse = response.clone();
+				const contentType = response.headers.get('content-type');
+
+				if (contentType?.includes('application/json')) {
+					const body = await clonedResponse.json();
+					responseData.body = trimBody(body, config.maxBodyLength);
+				}
+			} catch {
+				// Skip if response body cannot be parsed
+			}
+		}
+
 		requestLogger[level](
-			{
-				duration: `${duration}ms`
-			},
-			`<< ${status} ${method} ${path}`
+			responseData,
+			`[${resourceType}] ✅ ${status} ${method} ${path} [${duration}ms]`
 		);
 
 		return response;
@@ -86,11 +115,12 @@ export const loggerHandle: Handle = async ({ event, resolve }) => {
 
 		requestLogger.error(
 			{
+				type: resourceType,
 				error: error instanceof Error ? error.message : String(error),
 				stack: error instanceof Error ? error.stack : undefined,
 				duration: `${duration}ms`
 			},
-			`!! ${method} ${path}`
+			`!! [${resourceType}] ${method} ${path}`
 		);
 
 		throw error;

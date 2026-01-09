@@ -54,6 +54,7 @@
 	},
 	"dependencies": {
 		"@lifeos/db": "workspace:*",
+		"@tanstack/svelte-query": "^6.0.14",
 		"autoprefixer": "^10.4.23",
 		"bcrypt": "^6.0.0",
 		"bits-ui": "^2.14.4",

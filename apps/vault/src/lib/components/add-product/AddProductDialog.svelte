@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import Dialog from '$lib/components/dialog/dialog.svelte';
 	import DialogContent from '$lib/components/dialog/dialog-content.svelte';
 	import DialogHeader from '$lib/components/dialog/dialog-header.svelte';
@@ -11,6 +12,7 @@
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
 	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
+	import { fetchJson, postJson } from '$lib/api/client';
 	import type { Food } from '$domains/cookbook/foods';
 
 	let {
@@ -30,12 +32,11 @@
 
 	type Step = 'search' | 'results' | 'detail';
 
+	const queryClient = useQueryClient();
+
 	let step = $state<Step>('search');
 	let searchQuery = $state('');
-	let searchResults = $state<Food[]>([]);
 	let selectedFood = $state<Food | null>(null);
-	let loading = $state(false);
-	let error = $state<string | null>(null);
 
 	$effect(() => {
 		if (open && initialQuery) {
@@ -43,95 +44,61 @@
 		}
 	});
 
+	const externalSearchQuery = createQuery(() => ({
+		queryKey: ['foods', 'external', source, searchQuery] as const,
+		queryFn: () =>
+			fetchJson<{ items: Food[] }>(
+				buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
+					source,
+					q: searchQuery,
+					pageSize: 25
+				})
+			),
+		enabled: false // Manual trigger only
+	}));
+
+	const createFoodMutation = createMutation(() => ({
+		mutationFn: (foodData: Food) => postJson<Food>(API_ROUTES.FOODS.CREATE, foodData),
+		onSuccess: (createdFood: Food) => {
+			// Invalidate food search queries to refetch with new data
+			queryClient.invalidateQueries({ queryKey: ['foods', 'search'] });
+			dispatch('created', createdFood);
+			handleClose();
+		}
+	}));
+
 	async function handleSearch() {
 		if (!searchQuery.trim()) return;
 
-		loading = true;
-		error = null;
-
-		try {
-			const searchUrl = buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
-				source,
-				q: searchQuery,
-				pageSize: 25
-			});
-			const res = await fetch(searchUrl);
-			if (!res.ok) throw new Error('Search failed');
-			const data = await res.json();
-			searchResults = data.items || [];
+		const result = await externalSearchQuery.refetch();
+		if (result.data) {
 			step = 'results';
-		} catch (e) {
-			console.error('Search error:', e);
-			error = e instanceof Error ? e.message : 'Failed to search';
-		} finally {
-			loading = false;
 		}
-	}
-
-	async function fetchFoodDetail(sourceId: string | number): Promise<Food | null> {
-		const res = await fetch(API_ROUTES.FOODS.DETAILS(sourceId, source));
-		if (!res.ok) throw new Error('Failed to load food details');
-		return await res.json();
 	}
 
 	async function handleSelectFood(event: CustomEvent<{ sourceId: string | number }>) {
 		const { sourceId } = event.detail;
-		loading = true;
-		error = null;
 
 		try {
-			const food = await fetchFoodDetail(sourceId);
-
-			if (food) {
-				selectedFood = food;
-				step = 'detail';
-			} else {
-				error = 'Food not found';
-			}
+			const food = await fetchJson<Food>(API_ROUTES.FOODS.DETAILS(sourceId, source));
+			selectedFood = food;
+			step = 'detail';
 		} catch (e) {
 			console.error('Detail fetch error:', e);
-			error = e instanceof Error ? e.message : 'Failed to load details';
-		} finally {
-			loading = false;
+			// Error will be shown through UI
 		}
 	}
 
-	async function handleSubmitFood(event: CustomEvent<{ foodData: Food }>) {
+	function handleSubmitFood(event: CustomEvent<{ foodData: Food }>) {
 		const { foodData } = event.detail;
-
-		loading = true;
-		error = null;
-
-		try {
-			const res = await fetch(API_ROUTES.FOODS.CREATE, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(foodData)
-			});
-
-			if (!res.ok) {
-				const errorData = await res.json();
-				throw new Error(errorData.error || 'Failed to create food');
-			}
-
-			const createdFood: Food = await res.json();
-			dispatch('created', createdFood);
-			handleClose();
-		} catch (e) {
-			console.error('Food creation error:', e);
-			error = e instanceof Error ? e.message : 'Failed to create food';
-		} finally {
-			loading = false;
-		}
+		createFoodMutation.mutate(foodData);
 	}
 
 	function handleClose() {
 		open = false;
 		step = 'search';
 		searchQuery = '';
-		searchResults = [];
 		selectedFood = null;
-		error = null;
 		dispatch('close');
 	}
 
@@ -141,12 +108,11 @@
 			selectedFood = null;
 		} else if (step === 'results') {
 			step = 'search';
-			searchResults = [];
 		}
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter' && step === 'search' && !loading) {
+		if (e.key === 'Enter' && step === 'search' && !externalSearchQuery.isFetching) {
 			e.preventDefault();
 			handleSearch();
 		}
@@ -162,9 +128,15 @@
 			</DialogDescription>
 		</DialogHeader>
 
-		{#if error}
+		{#if externalSearchQuery.isError}
 			<div class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-				{error}
+				{externalSearchQuery.error?.message || 'An error occurred'}
+			</div>
+		{/if}
+
+		{#if createFoodMutation.isError}
+			<div class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+				{createFoodMutation.error?.message || 'Failed to create food'}
 			</div>
 		{/if}
 
@@ -189,23 +161,26 @@
 
 				<div class="flex justify-end gap-2">
 					<Button variant="outline" onclick={handleClose}>Cancel</Button>
-					<Button onclick={handleSearch} disabled={loading || !searchQuery.trim()}>
-						{loading ? 'Searching...' : 'Search'}
+					<Button
+						onclick={handleSearch}
+						disabled={externalSearchQuery.isFetching || !searchQuery.trim()}
+					>
+						{externalSearchQuery.isFetching ? 'Searching...' : 'Search'}
 					</Button>
 				</div>
 			</div>
 		{:else if step === 'results'}
 			<SearchResults
-				results={searchResults}
+				results={externalSearchQuery.data?.items || []}
 				{source}
-				{loading}
+				loading={externalSearchQuery.isFetching}
 				onselect={handleSelectFood}
 				onback={handleBack}
 			/>
 		{:else if step === 'detail' && selectedFood}
 			<FoodDetailForm
 				foodDetail={selectedFood}
-				{loading}
+				loading={createFoodMutation.isPending}
 				onsubmit={handleSubmitFood}
 				onback={handleBack}
 			/>

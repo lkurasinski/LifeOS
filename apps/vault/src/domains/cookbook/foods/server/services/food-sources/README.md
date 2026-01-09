@@ -106,7 +106,7 @@ To add a new food source:
 1. **Create integration** in `$domains/cookbook/foods/integrations/{source}/`
    - `{source}-strategy.ts` - Implement `FoodSourceStrategy`
    - `client.ts` - API client
-   - `mappers.ts` - Map external types to `Food` domain model
+   - `fdc.mappers.ts` - Map external types to `Food` domain model
 
 2. **Register strategy** in `index.ts`:
    ```typescript

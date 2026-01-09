@@ -2,7 +2,7 @@ import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 import { verifyJWT } from '$lib/server/auth';
 import { prisma } from '$lib/server/prisma';
-import { loggerHandle } from '$lib/server/logger.handle';
+import { loggerHandle } from '$lib/server/logger/logger.handle';
 
 const authHandle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get('authToken');
