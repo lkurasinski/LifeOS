@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button } from '../../../lib/components/button';
-	import { Input } from '../../../lib/components/input';
-	import { Label } from '../../../lib/components/label';
-	import * as Select from '../../../lib/components/select';
+	import { Button } from '$lib/components/button';
+	import { Input } from '$lib/components/input';
+	import { Label } from '$lib/components/label';
+	import * as Select from '$lib/components/select';
 	import { fly, scale, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
@@ -20,9 +20,7 @@
 	} = $props();
 
 	function updateIngredient(index: number, field: keyof RecipeIngredient, value: any) {
-		ingredients = ingredients.map((ing, i) =>
-			i === index ? { ...ing, [field]: value } : ing
-		);
+		ingredients = ingredients.map((ing, i) => (i === index ? { ...ing, [field]: value } : ing));
 	}
 </script>
 
@@ -90,7 +88,8 @@
 									id="notes-{index}"
 									type="text"
 									value={ingredient.notes || ''}
-									oninput={(e) => updateIngredient(index, 'notes', e.currentTarget.value || undefined)}
+									oninput={(e) =>
+										updateIngredient(index, 'notes', e.currentTarget.value || undefined)}
 									placeholder="optional"
 									class="h-9"
 								/>

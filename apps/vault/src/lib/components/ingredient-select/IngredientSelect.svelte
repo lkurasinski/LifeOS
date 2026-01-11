@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import AddProductDialog from '../add-product/AddProductDialog.svelte';
+	import AddProductDialog from '$domains/cookbook/recipe/add-product/AddProductDialog.svelte';
 	import Button from '../button/Button.svelte';
 
 	type FoodOption = {

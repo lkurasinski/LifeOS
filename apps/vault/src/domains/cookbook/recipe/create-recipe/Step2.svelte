@@ -1,13 +1,13 @@
 <script lang="ts">
-	import * as Command from '../../../lib/components/command';
-	import { Label } from '../../../lib/components/label';
-	import { Button } from '../../../lib/components/button';
+	import * as Command from '$lib/components/command';
+	import { Label } from '$lib/components/label';
+	import { Button } from '$lib/components/button';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
 	import { fetchJson } from '$lib/api/client';
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
 	import IngredientsList from './IngredientsList.svelte';
-	import AddProductDialog from '$lib/components/add-product/AddProductDialog.svelte';
+	import AddProductDialog from '../add-product/AddProductDialog.svelte';
 	import type { Food } from '$domains/cookbook/foods';
 
 	let {
@@ -122,9 +122,7 @@
 		<div class="space-y-4">
 			<IngredientsList bind:ingredients onRemove={removeIngredient} editable={true} />
 			<Button type="button" onclick={finishAdding} class="w-full">
-				Finish & Create Recipe ({ingredients.length} ingredient{ingredients.length > 1
-					? 's'
-					: ''})
+				Finish & Create Recipe ({ingredients.length} ingredient{ingredients.length > 1 ? 's' : ''})
 			</Button>
 		</div>
 	{/if}

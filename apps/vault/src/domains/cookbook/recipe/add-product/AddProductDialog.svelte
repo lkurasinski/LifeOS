@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import Dialog from '$lib/components/dialog/dialog.svelte';
-	import DialogContent from '$lib/components/dialog/dialog-content.svelte';
-	import DialogHeader from '$lib/components/dialog/dialog-header.svelte';
-	import DialogTitle from '$lib/components/dialog/dialog-title.svelte';
-	import DialogDescription from '$lib/components/dialog/dialog-description.svelte';
-	import Input from '$lib/components/input/Input.svelte';
-	import Label from '$lib/components/label/Label.svelte';
-	import Button from '$lib/components/button/Button.svelte';
+	import Dialog from '../../../../lib/components/dialog/dialog.svelte';
+	import DialogContent from '../../../../lib/components/dialog/dialog-content.svelte';
+	import DialogHeader from '../../../../lib/components/dialog/dialog-header.svelte';
+	import DialogTitle from '../../../../lib/components/dialog/dialog-title.svelte';
+	import DialogDescription from '../../../../lib/components/dialog/dialog-description.svelte';
+	import Input from '../../../../lib/components/input/Input.svelte';
+	import Label from '../../../../lib/components/label/Label.svelte';
+	import Button from '../../../../lib/components/button/Button.svelte';
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
 	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';

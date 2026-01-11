@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '../../../lib/components/button';
 	import RecipesCatalog from '$domains/cookbook/RecipesCatalog.svelte';
-	import MultiStepRecipeForm from '$domains/cookbook/create-recipe/MultiStepRecipeForm.svelte';
+	import MultiStepRecipeForm from '$domains/cookbook/recipe/create-recipe/MultiStepRecipeForm.svelte';
 	import TestDrawer from '$lib/components/TestDrawer.svelte';
 	import type { PageData } from './$types';
 

@@ -7,10 +7,10 @@
 		type RecipeFormSchema,
 		type RecipeIngredient
 	} from '$domains/cookbook/recipe/recipe.schema';
-	import * as Drawer from '../../../lib/components/drawer';
-	import { Button } from '../../../lib/components/button';
-	import { Input } from '../../../lib/components/input';
-	import { Label } from '../../../lib/components/label';
+	import * as Drawer from '$lib/components/drawer';
+	import { Button } from '$lib/components/button';
+	import { Input } from '$lib/components/input';
+	import { Label } from '$lib/components/label';
 	import Step2 from './Step2.svelte';
 	import { fly, slide, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Button from '$lib/components/button/Button.svelte';
-	import Badge from '$lib/components/badge/badge.svelte';
-	import Card from '$lib/components/card/card.svelte';
-	import CardHeader from '$lib/components/card/card-header.svelte';
-	import CardTitle from '$lib/components/card/card-title.svelte';
-	import CardDescription from '$lib/components/card/card-description.svelte';
-	import CardContent from '$lib/components/card/card-content.svelte';
+	import Button from '../../../../lib/components/button/Button.svelte';
+	import Badge from '../../../../lib/components/badge/badge.svelte';
+	import Card from '../../../../lib/components/card/card.svelte';
+	import CardHeader from '../../../../lib/components/card/card-header.svelte';
+	import CardTitle from '../../../../lib/components/card/card-title.svelte';
+	import CardDescription from '../../../../lib/components/card/card-description.svelte';
+	import CardContent from '../../../../lib/components/card/card-content.svelte';
 	import type { Food } from '$domains/cookbook/foods';
 
 	let {
