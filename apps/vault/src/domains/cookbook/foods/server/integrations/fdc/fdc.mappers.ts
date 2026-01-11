@@ -15,6 +15,43 @@ import { FDC_TO_INFOODS } from '$domains/cookbook/foods/server/integrations/fdc/
 import type { Food, NutrientValue } from '$domains/cookbook/foods';
 
 /**
+ * Convert nutrient value to grams for comparison
+ * This allows sorting nutrients with different units (g, mg, µg, etc.)
+ */
+function convertToGrams(value: number, unit: string): number {
+	const unitLower = unit.toLowerCase().trim();
+
+	switch (unitLower) {
+		case 'g':
+			return value;
+		case 'mg':
+			return value / 1000;
+		case 'µg':
+		case 'mcg':
+		case 'ug':
+			return value / 1000000;
+		case 'kg':
+			return value * 1000;
+		case 'kcal':
+			return value / 1000;
+		case 'kj':
+			return value / 4184;
+		default:
+			return value;
+	}
+}
+
+/**
+ * Sort nutrients by their normalized value (converted to common unit)
+ * This ensures proper sorting across different units
+ */
+function sortNutrientsByValue(a: NutrientValue, b: NutrientValue): number {
+	const aInGrams = convertToGrams(a.value, a.nutrient.unit);
+	const bInGrams = convertToGrams(b.value, b.nutrient.unit);
+	return bInGrams - aInGrams;
+}
+
+/**
  * Map FDC search result to domain Food model
  */
 export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
@@ -58,7 +95,8 @@ export function mapFDCFoodDetailToFood(fdcFood: FDC_FDCFoodDetail): Food {
 				value: fdcNutrient.amount || 0
 			};
 		})
-		.filter((n: NutrientValue | null): n is NonNullable<typeof n> => n !== null);
+		.filter((n: NutrientValue | null): n is NonNullable<typeof n> => n !== null)
+		.sort(sortNutrientsByValue);
 
 	// Extract category - different FDC food types have different fields
 	let category: string | null = null;

@@ -31,7 +31,7 @@ export const nutrientSchema = z.object({
 	name_en: z.string(),
 	unit: z.string(),
 	description: z.string().optional(),
-	category: NutrientsCategories.optional()
+	category: z.string()
 });
 
 export type Nutrient = z.infer<typeof nutrientSchema>;

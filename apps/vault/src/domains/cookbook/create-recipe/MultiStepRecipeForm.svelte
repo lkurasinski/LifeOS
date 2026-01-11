@@ -12,21 +12,12 @@
 	import { Input } from '../../../lib/components/input';
 	import { Label } from '../../../lib/components/label';
 	import Step2 from './Step2.svelte';
-	import Step3 from './Step3.svelte';
 	import { fly, slide, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { useSearchParams } from 'runed/kit';
 	import { browser } from '$app/environment';
 	import { z } from 'zod';
 	import { API_ROUTES } from '$lib/api/api-routes';
-	import type { Food } from '$domains/cookbook/foods';
-
-	type FoodOption = {
-		id: string;
-		name_pl?: string;
-		name_en: string;
-		category?: string;
-	};
 
 	let { open = $bindable(false), onSuccess }: { open?: boolean; onSuccess?: () => void } = $props();
 
@@ -62,7 +53,6 @@
 
 	let currentStepErrors = $state<string[]>([]);
 	let namePlValue = $state('');
-	let selectedFood = $state<Food | null>(null);
 	let ingredients = $state<RecipeIngredient[]>([]);
 
 	const currentStep = $derived.by(() => {
@@ -75,9 +65,7 @@
 			case 1:
 				return 'Recipe Title';
 			case 2:
-				return 'Select Ingredient';
-			case 3:
-				return 'Add Ingredient Details';
+				return `${namePlValue}: Add Ingredients`;
 			default:
 				return 'Recipe Form';
 		}
@@ -89,8 +77,8 @@
 			: ''
 	);
 
-	const showBackButton = $derived(currentStep > 1 && currentStep < 3);
-	const showNextButton = $derived(currentStep < 3);
+	const showBackButton = $derived(currentStep > 1 && currentStep < 2);
+	const showNextButton = $derived(currentStep < 2);
 
 	function setStep(step: number) {
 		if (!searchParams) return;
@@ -115,12 +103,7 @@
 				}
 				break;
 			case 2:
-				if (!selectedFood) {
-					errors.push('Please select an ingredient');
-				}
-				break;
-			case 3:
-				// Validation happens in Step3
+				// Validation happens in Step2
 				break;
 		}
 
@@ -133,10 +116,7 @@
 				$form.namePl = namePlValue;
 				break;
 			case 2:
-				// Data saved via binding
-				break;
-			case 3:
-				// Data saved via binding in Step3
+				// Data saved via binding in Step2
 				break;
 		}
 	}
@@ -159,12 +139,6 @@
 
 		currentStepErrors = [];
 		history.back();
-	}
-
-	function addAnotherIngredient() {
-		selectedFood = null;
-		currentStepErrors = [];
-		setStep(2);
 	}
 
 	function finishAddingIngredients() {
@@ -206,7 +180,6 @@
 	function resetForm() {
 		currentStepErrors = [];
 		namePlValue = '';
-		selectedFood = null;
 		ingredients = [];
 		$form = initialData;
 		clearStepFromUrl();
@@ -250,7 +223,7 @@
 					</Drawer.Title>
 					<Drawer.Description>
 						{#key currentStep}
-							Step {currentStep} of 3
+							Step {currentStep} of 2
 							{ingredientCountText}
 						{/key}
 					</Drawer.Description>
@@ -291,6 +264,7 @@
 									}}
 									placeholder="Nazwa przepisu"
 									autofocus
+									forceAutofocus
 								/>
 							</div>
 						{/if}
@@ -301,23 +275,7 @@
 								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
 								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
 							>
-								<Step2 bind:selectedFood {ingredients} onSelect={goToNextStep} />
-							</div>
-						{/if}
-
-						{#if currentStep === 3}
-							<div
-								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
-								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
-							>
-								{#if selectedFood}
-									<Step3
-										{selectedFood}
-										bind:ingredients
-										onAddAnother={addAnotherIngredient}
-										onFinish={finishAddingIngredients}
-									/>
-								{/if}
+								<Step2 bind:ingredients onFinish={finishAddingIngredients} />
 							</div>
 						{/if}
 					{/key}

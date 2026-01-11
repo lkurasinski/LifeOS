@@ -8,17 +8,14 @@
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
 	import IngredientsList from './IngredientsList.svelte';
 	import AddProductDialog from '$lib/components/add-product/AddProductDialog.svelte';
-
 	import type { Food } from '$domains/cookbook/foods';
 
 	let {
-		selectedFood = $bindable<Food | null>(null),
-		ingredients = [],
-		onSelect
+		ingredients = $bindable<RecipeIngredient[]>([]),
+		onFinish
 	}: {
-		selectedFood?: Food | null;
 		ingredients?: RecipeIngredient[];
-		onSelect?: () => void;
+		onFinish?: () => void;
 	} = $props();
 
 	let query = $state('');
@@ -40,72 +37,95 @@
 	}));
 
 	function selectOption(option: Food) {
-		selectedFood = option;
-		query = option.name_pl ?? option.name_en;
-		onSelect?.();
+		if (!option.id) return;
+
+		const newIngredient: RecipeIngredient = {
+			foodName: option.name_en,
+			foodId: option.id,
+			amount: null,
+			unit: 'gram',
+			notes: undefined
+		};
+
+		ingredients = [...ingredients, newIngredient];
+		query = '';
 	}
 
 	function handleProductCreated(event: CustomEvent<Food>) {
 		selectOption(event.detail);
 		showAddProductDialog = false;
 	}
+
+	function removeIngredient(index: number) {
+		ingredients = ingredients.filter((_, i) => i !== index);
+	}
+
+	function finishAdding() {
+		onFinish?.();
+	}
 </script>
 
-<div class="space-y-2">
-	<Label>Search for ingredident</Label>
-	<Command.Root shouldFilter={false} class="rounded-lg border">
-		<Command.Input bind:value={query} placeholder="Type to search ingredients..." />
-		<Command.List>
-			{#if searchQuery.isPending}
-				<!--				<Command.Loading>Searching...</Command.Loading>-->
-			{:else if query.length >= minChars && (searchQuery.data?.items ?? []).length === 0}
-				<div class="py-6 px-4 text-center space-y-3">
-					<Command.Empty>No results found for "{query}"</Command.Empty>
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						onclick={() => (showAddProductDialog = true)}
-					>
-						+ Add Product from External Source
-					</Button>
-				</div>
-			{/if}
-			{#if (searchQuery.data?.items ?? []).length > 0}
-				<Command.Group heading="Select ingredient">
-					{#each searchQuery.data?.items ?? [] as option}
-						<Command.Item
-							value={option.id?.toString() || option.name_en}
-							onSelect={() => selectOption(option)}
-						>
-							<div class="flex flex-col">
-								<span class="font-medium">{option.name_pl ?? option.name_en}</span>
-								<div class="text-xs text-muted-foreground">
-									{#if option.name_pl || option.name_en}
-										{option.name_en}
-									{/if}
-									{#if option.category}
-										· {option.category}
-									{/if}
+<div class="space-y-4">
+	<!-- Search Section -->
+	<div class="space-y-2">
+		<Label>Search and add ingredients</Label>
+		<Command.Root shouldFilter={false} class="rounded-lg border">
+			<Command.Input bind:value={query} autofocus placeholder="Type to search ingredients..." />
+			<Command.List>
+				{#if searchQuery.isPending}
+					<!--<Command.Loading>Searching...</Command.Loading>-->
+				{:else if query.length >= minChars && (searchQuery.data?.items ?? []).length === 0}
+					<div class="py-6 px-4 text-center space-y-3">
+						<Command.Empty>No results found for "{query}"</Command.Empty>
+					</div>
+				{/if}
+				{#if query.length >= minChars && (searchQuery.data?.items ?? []).length > 0}
+					<Command.Group heading="Click to add ingredient">
+						{#each searchQuery.data?.items ?? [] as option}
+							<Command.Item
+								value={option.id?.toString() || option.name_en}
+								onSelect={() => selectOption(option)}
+							>
+								<div class="flex flex-col">
+									<span class="font-medium">{option.name_pl ?? option.name_en}</span>
+									<div class="text-xs text-muted-foreground">
+										{#if option.name_pl || option.name_en}
+											{option.name_en}
+										{/if}
+										{#if option.category}
+											· {option.category}
+										{/if}
+									</div>
 								</div>
-							</div>
-						</Command.Item>
-					{/each}
-				</Command.Group>
-			{/if}
-		</Command.List>
-	</Command.Root>
+							</Command.Item>
+						{/each}
+					</Command.Group>
+				{/if}
+				{#if query.length >= minChars}
+					<div class="py-6 px-4 text-center space-y-3">
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							onclick={() => (showAddProductDialog = true)}
+						>
+							+ Add Product from External Source
+						</Button>
+					</div>
+				{/if}
+			</Command.List>
+		</Command.Root>
+	</div>
 
-	{#if selectedFood}
-		<p class="text-sm text-muted-foreground mt-2">
-			Selected: {selectedFood.name_pl ?? selectedFood.name_en}
-		</p>
-	{/if}
-
-	<!-- Display already added ingredients -->
+	<!-- Added Ingredients List with Inline Editing -->
 	{#if ingredients.length > 0}
-		<div class="mt-4">
-			<IngredientsList {ingredients} showTitle={true} />
+		<div class="space-y-4">
+			<IngredientsList bind:ingredients onRemove={removeIngredient} editable={true} />
+			<Button type="button" onclick={finishAdding} class="w-full">
+				Finish & Create Recipe ({ingredients.length} ingredient{ingredients.length > 1
+					? 's'
+					: ''})
+			</Button>
 		</div>
 	{/if}
 </div>

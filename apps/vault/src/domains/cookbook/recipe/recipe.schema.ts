@@ -16,7 +16,7 @@ export const mealTypeSchema = z.enum([
 export const recipeIngredientSchema = z.object({
 	foodId: z.coerce.number(),
 	foodName: z.string().min(1, 'Food name is required'),
-	amount: z.number().positive('Amount must be positive').optional(),
+	amount: z.number().positive('Amount must be positive').optional().nullable(),
 	unit: z.enum(['gram', 'ml']).default('gram'),
 	notes: z.string().optional()
 });
