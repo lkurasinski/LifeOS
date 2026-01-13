@@ -1,6 +1,7 @@
 import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
 import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.schema';
 import type { Food, NutrientValue } from '$domains/cookbook/foods';
+import { SKIPPED_NUTRIENTS, sortNutrientsByValue } from '$domains/cookbook/foods/utils';
 
 export function mapTypesenseFoodToFood(doc: Typesense_FoodDocument): Food {
 	return {
@@ -36,6 +37,10 @@ function mapTypesenseNutrientsToNutrientsValue(
 						return null;
 					}
 
+					if (SKIPPED_NUTRIENTS.includes(nutrientDef.code)) {
+						return null;
+					}
+
 					return {
 						nutrient: {
 							code: key,
@@ -48,5 +53,6 @@ function mapTypesenseNutrientsToNutrientsValue(
 					};
 				})
 				.filter((n: NutrientValue | null): n is NonNullable<typeof n> => n !== null)
+				.sort(sortNutrientsByValue)
 		: [];
 }

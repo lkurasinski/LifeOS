@@ -19,6 +19,7 @@ export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 		const sourceParam = url.searchParams.get('source');
 		const sortByParam = url.searchParams.get('sortBy');
 		const sortOrderParam = url.searchParams.get('sortOrder');
+		const dataType = url.searchParams.get('dataType') || undefined;
 
 		const searchParams: FoodSearchParams = {
 			query,
@@ -32,11 +33,12 @@ export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 			sortBy:
 				sortByParam && ['name', 'category', 'created_at'].includes(sortByParam)
 					? (sortByParam as 'name' | 'category' | 'created_at')
-					: 'name',
+					: 'created_at',
 			sortOrder:
 				sortOrderParam && ['asc', 'desc'].includes(sortOrderParam)
 					? (sortOrderParam as 'asc' | 'desc')
-					: 'asc'
+					: 'asc',
+			dataType: dataType
 		};
 
 		// Execute search using the strategy

@@ -43,7 +43,7 @@ const fdcClient = createClient(
  */
 export async function searchFoods(params: {
 	query: string;
-	dataType?: string[];
+	dataType?: string;
 	pageSize?: number;
 	pageNumber?: number;
 	sortBy?: 'dataType.keyword' | 'lowercaseDescription.keyword' | 'fdcId' | 'publishedDate';
@@ -57,7 +57,7 @@ export async function searchFoods(params: {
 		},
 		body: {
 			query: params.query,
-			dataType: params.dataType as GetFoodsSearchData['query']['dataType']
+			dataType: [params.dataType] as GetFoodsSearchData['query']['dataType']
 		}
 	});
 

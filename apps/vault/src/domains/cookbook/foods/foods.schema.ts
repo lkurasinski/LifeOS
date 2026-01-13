@@ -79,6 +79,7 @@ export const foodSearchParamsSchema = z.object({
 	query: z.string().min(1),
 	category: z.string().optional(),
 	source: dataSourceProviders.optional(),
+	dataType: z.string().optional(),
 	pageSize: z.number().int().positive().default(25),
 	pageNumber: z.number().int().positive().default(1),
 	sortBy: z.enum(['name', 'category', 'created_at']).default('name'),

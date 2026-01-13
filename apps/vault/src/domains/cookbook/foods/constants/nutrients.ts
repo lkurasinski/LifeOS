@@ -1169,7 +1169,7 @@ export const NUTRIENTS: Record<string, Nutrient> = {
 		unit: 'mg',
 		category: 'other'
 	}
-};
+} as const;
 
 /**
  * Get nutrient info by INFOODS code

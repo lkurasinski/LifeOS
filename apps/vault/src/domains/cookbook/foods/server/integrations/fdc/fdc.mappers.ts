@@ -6,50 +6,14 @@
  */
 
 import type {
-	SearchResultFood as FDC_SearchResultFood,
 	FDCFoodDetail as FDC_FDCFoodDetail,
-	FoodNutrient as FDC_FoodNutrient
+	FoodNutrient as FDC_FoodNutrient,
+	SearchResultFood as FDC_SearchResultFood
 } from './client';
 import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
 import { FDC_TO_INFOODS } from '$domains/cookbook/foods/server/integrations/fdc/fdc-nutrient-mapping';
 import type { Food, NutrientValue } from '$domains/cookbook/foods';
-
-/**
- * Convert nutrient value to grams for comparison
- * This allows sorting nutrients with different units (g, mg, µg, etc.)
- */
-function convertToGrams(value: number, unit: string): number {
-	const unitLower = unit.toLowerCase().trim();
-
-	switch (unitLower) {
-		case 'g':
-			return value;
-		case 'mg':
-			return value / 1000;
-		case 'µg':
-		case 'mcg':
-		case 'ug':
-			return value / 1000000;
-		case 'kg':
-			return value * 1000;
-		case 'kcal':
-			return value / 1000;
-		case 'kj':
-			return value / 4184;
-		default:
-			return value;
-	}
-}
-
-/**
- * Sort nutrients by their normalized value (converted to common unit)
- * This ensures proper sorting across different units
- */
-function sortNutrientsByValue(a: NutrientValue, b: NutrientValue): number {
-	const aInGrams = convertToGrams(a.value, a.nutrient.unit);
-	const bInGrams = convertToGrams(b.value, b.nutrient.unit);
-	return bInGrams - aInGrams;
-}
+import { sortNutrientsByValue } from '$domains/cookbook/foods/utils';
 
 /**
  * Map FDC search result to domain Food model
@@ -68,7 +32,6 @@ export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
 				if (!infoodsCode) return undefined;
 				const nutrientDef = NUTRIENTS[infoodsCode];
 				if (!nutrientDef) return undefined;
-				console.log(nutrientDef);
 				return {
 					nutrient: {
 						code: infoodsCode,
@@ -82,7 +45,8 @@ export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
 						fdcNutrient && fdcNutrient.amount && fdcNutrient.value < 0 ? 0 : fdcNutrient.value || 0 //in some products amount of nutrient can be negative
 				};
 			})
-			.filter((el) => el !== undefined),
+			.filter((el) => el !== undefined)
+			.sort(sortNutrientsByValue),
 		source: {
 			provider: 'fdc',
 			externalId: fdcFood.fdcId

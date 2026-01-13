@@ -17,7 +17,6 @@ export class FDCStrategy implements FoodSourceStrategy {
 	readonly name = 'fdc' as const;
 
 	async search(params: FoodSearchParams): Promise<FoodSearchResults> {
-		const dataType = ['Survey (FNDDS)'];
 		const sortBy =
 			(params.sortBy as
 				| 'dataType.keyword'
@@ -26,9 +25,11 @@ export class FDCStrategy implements FoodSourceStrategy {
 				| 'publishedDate') || 'dataType.keyword';
 		const sortOrder = (params.sortOrder as 'asc' | 'desc') || 'asc';
 
+		console.log('arams', params);
+
 		const fdcResult = await searchFoods({
 			query: params.query,
-			dataType,
+			dataType: params.dataType,
 			pageSize: params.pageSize || 25,
 			pageNumber: params.pageNumber || 1,
 			sortBy,

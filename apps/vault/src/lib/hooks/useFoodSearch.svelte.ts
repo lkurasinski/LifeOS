@@ -19,6 +19,7 @@ import type { Food } from '$domains/cookbook/foods';
 
 interface UseFoodSearchOptions {
 	source?: 'internal' | 'fdc' | 'openfoodfacts';
+	dataType?: string;
 	pageSize?: number;
 	minChars?: number;
 	autoSearch?: boolean;
@@ -33,6 +34,7 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 	const searchQuery = createQuery(() => {
 		const {
 			source = 'internal',
+			dataType = undefined,
 			pageSize = SEARCH_CONFIG.DEFAULT_PAGE_SIZE,
 			minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH,
 			autoSearch = true,
@@ -45,6 +47,7 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 				fetchJson<{ items: Food[] }>(
 					buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
 						source: source !== 'internal' ? source : undefined,
+						dataType,
 						q: query,
 						pageSize
 					})
@@ -56,7 +59,8 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 
 	// Watch for fetching state changes and debounce loading indicator
 	$effect(() => {
-		const { minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH, loadingDelay = ANIMATION.DURATION.NORMAL } = getOptions();
+		const { minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH, loadingDelay = ANIMATION.DURATION.NORMAL } =
+			getOptions();
 		const isActuallyFetching = searchQuery.isFetching && query.length >= minChars;
 
 		if (isActuallyFetching) {

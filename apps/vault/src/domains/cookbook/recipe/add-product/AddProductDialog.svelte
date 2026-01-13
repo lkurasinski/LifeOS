@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import * as Dialog from '$lib/components/dialog';
+	import * as Select from '$lib/components/select';
 	import { useFoodSearch } from '$lib/hooks/useFoodSearch.svelte';
 	import { useFoodDetail } from '$lib/hooks/useFoodDetail.svelte';
 	import { SEARCH_CONFIG } from '$lib/constants/ui';
@@ -29,9 +30,12 @@
 
 	type Step = 'search' | 'results' | 'detail';
 
+	let dataType = $state('Foundation');
+
 	const queryClient = useQueryClient();
 	const search = useFoodSearch(() => ({
 		source,
+		dataType,
 		pageSize: SEARCH_CONFIG.EXTERNAL_PAGE_SIZE,
 		autoSearch: false
 	}));
@@ -55,7 +59,6 @@
 	// Watch for food detail loading completion
 	$effect(() => {
 		if (foodDetail.data && selectedFoodId) {
-			console.log('Food detail loaded successfully!');
 			selectedFood = foodDetail.data;
 			selectedFoodId = null;
 			step = 'detail';
@@ -152,11 +155,42 @@
 
 		{#if step === 'search'}
 			<div class="space-y-4">
-				<div class="space-y-2">
-					<Label>Data Source</Label>
-					<div class="px-3 py-2 border rounded-md bg-muted text-sm">
-						USDA FoodData Central (OpenFoodFacts coming soon)
+				<div class="space-y-2 flex gap-2">
+					<div>
+						<Label>Data Source</Label>
+						<Select.Root type="single" bind:value={source}>
+							<Select.Trigger class="w-full">
+								{source === 'fdc' ? 'USDA FoodData Central' : 'OpenFoodFacts'}
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Group>
+									<Select.Label>Data source</Select.Label>
+									<Select.Item value="fdc" label="Easy">USDA FoodData Central</Select.Item>
+									<Select.Item value="openfoodfacts" label="Medium">OpenFoodFacts</Select.Item>
+								</Select.Group>
+							</Select.Content>
+						</Select.Root>
 					</div>
+
+					{#if source === 'fdc'}
+						<div>
+							<Label>Data type</Label>
+							<Select.Root type="single" bind:value={dataType}>
+								<Select.Trigger class="w-full">
+									{dataType}
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Group>
+										<Select.Label>Data type</Select.Label>
+										<Select.Item value="Foundation" label="Foundation" />
+										<Select.Item value="Survey (FNDDS)" label="Survey (FNDDS)" />
+										<Select.Item value="Branded" label="Branded" />
+										<Select.Item value="SR Legacy" label="SR Legacy" />
+									</Select.Group>
+								</Select.Content>
+							</Select.Root>
+						</div>
+					{/if}
 				</div>
 
 				<div class="space-y-2">
