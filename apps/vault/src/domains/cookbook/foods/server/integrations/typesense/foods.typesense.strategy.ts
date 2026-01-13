@@ -8,8 +8,8 @@
 import type { Food, FoodSearchParams, FoodSearchResults } from '$domains/cookbook/foods';
 import { typesense } from '$lib/server/typesense';
 import { prisma } from '$lib/server/prisma';
-import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/typesense.schema';
-import { mapTypesenseFoodToFood } from '$domains/cookbook/foods/server/integrations/typesense/typesense.mappers';
+import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.schema';
+import { mapTypesenseFoodToFood } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.mappers';
 import type { FoodSourceStrategy } from '../../services/food-sources';
 
 export class TypesenseStrategy implements FoodSourceStrategy {

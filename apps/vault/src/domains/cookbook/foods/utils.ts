@@ -2,7 +2,8 @@
  * Domain utilities for Foods
  */
 
-import type { Food, NutrientValue } from './schemas';
+import type { Food, NutrientValue } from './foods.schema';
+import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
 
 /**
  * Build source URL based on provider and external ID
@@ -46,30 +47,21 @@ export function isFromExternalSource(
  * Check if food has a specific nutrient
  */
 export function hasNutrient(food: Food, nutrientCode: string): boolean {
-	return food.nutrients.some((nv) => nv.nutrient.code === nutrientCode);
+	return !food.nutrients ? false : food.nutrients.some((nv) => nv.nutrient.code === nutrientCode);
 }
 
 /**
  * Get nutrient value by code
  */
 export function getNutrientValue(food: Food, nutrientCode: string): number | undefined {
-	return food.nutrients.find((nv) => nv.nutrient.code === nutrientCode)?.value;
+	return food.nutrients?.find((nv) => nv.nutrient.code === nutrientCode)?.value;
 }
 
 /**
  * Get nutrient by code
  */
 export function getNutrient(food: Food, nutrientCode: string): NutrientValue | undefined {
-	return food.nutrients.find((nv) => nv.nutrient.code === nutrientCode);
-}
-
-/**
- * Get key macronutrients (Energy, Protein, Fat, Carbs)
- * Useful for displaying previews
- */
-export function getKeyNutrients(food: Food): NutrientValue[] {
-	const keyCodes = ['ENERC_kcal', 'ENERA_kcal', 'PROTCNT_g', 'FAT_g', 'CHOCDF_g'];
-	return food.nutrients.filter((nv) => keyCodes.includes(nv.nutrient.code));
+	return food.nutrients?.find((nv) => nv.nutrient.code === nutrientCode);
 }
 
 /**
@@ -90,3 +82,15 @@ export function groupNutrientsByCategory(
 		{} as Record<string, NutrientValue[]>
 	);
 }
+
+export const getBasicNutrientsString = (food: Food) => {
+	return `energy: ${
+		food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.ENERC_ASF_kcal.code)?.value ||
+		food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.ENERC_AGF_kcal.code)?.value ||
+		food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.ENERA_kcal.code)?.value
+	} kcal · carbs: ${
+		food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.CHOCDF_g.code)?.value
+	} g · prot ${
+		food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.PROTCNT_g.code)?.value
+	} g · fat ${food.nutrients?.find((el) => el.nutrient.code === NUTRIENTS.FAT_g.code)?.value} g`;
+};

@@ -1,5 +1,5 @@
 import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
-import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/typesense.schema';
+import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.schema';
 import type { Food, NutrientValue } from '$domains/cookbook/foods';
 
 export function mapTypesenseFoodToFood(doc: Typesense_FoodDocument): Food {
@@ -44,7 +44,7 @@ function mapTypesenseNutrientsToNutrientsValue(
 							unit: nutrientDef.unit,
 							category: nutrientDef.category
 						},
-						value: value || 0
+						value: value < 0 ? 0 : value || 0 //in some products amount of nutrient can be negative
 					};
 				})
 				.filter((n: NutrientValue | null): n is NonNullable<typeof n> => n !== null)

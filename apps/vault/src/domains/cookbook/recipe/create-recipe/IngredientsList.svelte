@@ -1,20 +1,23 @@
 <script lang="ts">
-	import { Button } from '$lib/components/button';
-	import { Input } from '$lib/components/input';
-	import { Label } from '$lib/components/label';
-	import * as Select from '$lib/components/select';
 	import { fly, scale, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { ANIMATION } from '$lib/constants/ui';
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
+	import { Label } from '$lib/components/label';
+	import { Input } from '$lib/components/input';
+	import * as Select from '$lib/components/select';
+	import { Button } from '$lib/components/button';
 
 	let {
 		ingredients = $bindable<RecipeIngredient[]>([]),
 		onRemove,
+		onClick,
 		showTitle = true,
 		editable = false
 	}: {
 		ingredients?: RecipeIngredient[];
 		onRemove?: (index: number) => void;
+		onClick?: (index: number) => void;
 		showTitle?: boolean;
 		editable?: boolean;
 	} = $props();
@@ -25,24 +28,42 @@
 </script>
 
 {#if ingredients.length > 0}
-	<div class="space-y-2" in:fade={{ duration: 300 }}>
+	<div class="space-y-2" in:fade={{ duration: ANIMATION.DURATION.NORMAL }}>
 		{#if showTitle}
 			<h4 class="text-sm font-semibold">Added Ingredients ({ingredients.length})</h4>
 		{/if}
-		<div class="space-y-3">
-			{#each ingredients as ingredient, index (ingredient.foodId + index)}
+		<div class="space-y-3 overflow-x-hidden">
+			<!-- 0 just for typesafety -->
+			{#each ingredients as ingredient, index (ingredient.food.id || 0 + index)}
 				<div
 					class="p-3 border rounded-lg bg-background space-y-3"
-					in:fly={{ x: -20, duration: 300, delay: index * 50, easing: cubicOut }}
-					out:scale={{ duration: 200, easing: cubicOut }}
+					in:fly={{
+						x: -20,
+						duration: ANIMATION.DURATION.NORMAL,
+						delay: index * ANIMATION.STAGGER_DELAY,
+						easing: cubicOut
+					}}
+					out:fly={{
+						x: 200,
+						duration: ANIMATION.DURATION.NORMAL,
+						delay: index * ANIMATION.STAGGER_DELAY,
+						easing: cubicOut
+					}}
 				>
 					<div class="flex items-center justify-between">
-						<p class="font-medium">{ingredient.foodName}</p>
-						{#if onRemove}
-							<Button type="button" variant="ghost" size="sm" onclick={() => onRemove(index)}>
-								Remove
+						<p class="font-medium">
+							{ingredient.food.name_pl}
+						</p>
+						<div>
+							<Button type="button" variant="ghost" size="sm" onclick={() => onClick?.(index)}>
+								Szczegóły
 							</Button>
-						{/if}
+							{#if onRemove}
+								<Button type="button" variant="ghost" size="sm" onclick={() => onRemove(index)}>
+									Remove
+								</Button>
+							{/if}
+						</div>
 					</div>
 
 					{#if editable}

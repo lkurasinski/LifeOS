@@ -5,13 +5,15 @@
 	import {
 		recipeFormSchema,
 		type RecipeFormSchema,
-		type RecipeIngredient
+		type RecipeIngredient,
+		type RecipeInstruction
 	} from '$domains/cookbook/recipe/recipe.schema';
 	import * as Drawer from '$lib/components/drawer';
 	import { Button } from '$lib/components/button';
 	import { Input } from '$lib/components/input';
 	import { Label } from '$lib/components/label';
 	import Step2 from './Step2.svelte';
+	import Step3 from './Step3.svelte';
 	import { fly, slide, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { useSearchParams } from 'runed/kit';
@@ -39,7 +41,7 @@
 	};
 
 	const { form, errors, enhance } = superForm(initialData, {
-		// validators: zod4(recipeFormSchema),
+		validators: zod4(recipeFormSchema),
 		dataType: 'json',
 		SPA: true,
 		validationMethod: 'submit-only'
@@ -54,6 +56,7 @@
 	let currentStepErrors = $state<string[]>([]);
 	let namePlValue = $state('');
 	let ingredients = $state<RecipeIngredient[]>([]);
+	let instructions = $state<RecipeInstruction[]>([]);
 
 	const currentStep = $derived.by(() => {
 		if (!open || !searchParams) return 1;
@@ -66,6 +69,8 @@
 				return 'Recipe Title';
 			case 2:
 				return `${namePlValue}: Add Ingredients`;
+			case 3:
+				return `${namePlValue}: Add Instructions`;
 			default:
 				return 'Recipe Form';
 		}
@@ -77,8 +82,8 @@
 			: ''
 	);
 
-	const showBackButton = $derived(currentStep > 1 && currentStep < 2);
-	const showNextButton = $derived(currentStep < 2);
+	const showBackButton = $derived(currentStep > 1);
+	const showNextButton = $derived(currentStep < 3);
 
 	function setStep(step: number) {
 		if (!searchParams) return;
@@ -104,6 +109,9 @@
 				break;
 			case 2:
 				// Validation happens in Step2
+				break;
+			case 3:
+				// Validation happens in Step3
 				break;
 		}
 
@@ -148,6 +156,7 @@
 		}
 
 		$form.ingredients = ingredients;
+		$form.instructions = instructions;
 
 		// Optimistic update - close drawer immediately
 		const formData = { ...$form };
@@ -181,6 +190,7 @@
 		currentStepErrors = [];
 		namePlValue = '';
 		ingredients = [];
+		instructions = [];
 		$form = initialData;
 		clearStepFromUrl();
 	}
@@ -223,7 +233,7 @@
 					</Drawer.Title>
 					<Drawer.Description>
 						{#key currentStep}
-							Step {currentStep} of 2
+							Step {currentStep} of 3
 							{ingredientCountText}
 						{/key}
 					</Drawer.Description>
@@ -275,7 +285,17 @@
 								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
 								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
 							>
-								<Step2 bind:ingredients onFinish={finishAddingIngredients} />
+								<Step2 bind:ingredients onNext={goToNextStep} onFinish={finishAddingIngredients} />
+							</div>
+						{/if}
+
+						{#if currentStep === 3}
+							<div
+								class="space-y-2"
+								in:fly={{ x: 20, duration: 400, easing: cubicOut }}
+								out:fly={{ x: -20, duration: 300, easing: cubicOut }}
+							>
+								<Step3 bind:instructions onFinish={finishAddingIngredients} />
 							</div>
 						{/if}
 					{/key}

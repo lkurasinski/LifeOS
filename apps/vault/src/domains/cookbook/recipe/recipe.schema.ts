@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { foodSchema } from '$domains/cookbook/foods';
 
 export const mealTypeSchema = z.enum([
 	'BREAKFAST',
@@ -14,8 +15,7 @@ export const mealTypeSchema = z.enum([
 ]);
 
 export const recipeIngredientSchema = z.object({
-	foodId: z.coerce.number(),
-	foodName: z.string().min(1, 'Food name is required'),
+	food: foodSchema,
 	amount: z.number().positive('Amount must be positive').optional().nullable(),
 	unit: z.enum(['gram', 'ml']).default('gram'),
 	notes: z.string().optional()
@@ -23,6 +23,8 @@ export const recipeIngredientSchema = z.object({
 
 export const recipeInstructionSchema = z.object({
 	stepNumber: z.number().int().positive(),
+	titlePl: z.string().optional(),
+	titleEn: z.string().optional(),
 	descriptionPl: z.string().min(1, 'Instruction text is required'),
 	descriptionEn: z.string().optional()
 });

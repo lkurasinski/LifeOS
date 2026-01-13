@@ -1,12 +1,10 @@
 <script lang="ts">
-	import Button from '../../../../lib/components/button/Button.svelte';
-	import Badge from '../../../../lib/components/badge/badge.svelte';
-	import Card from '../../../../lib/components/card/card.svelte';
-	import CardHeader from '../../../../lib/components/card/card-header.svelte';
-	import CardTitle from '../../../../lib/components/card/card-title.svelte';
-	import CardDescription from '../../../../lib/components/card/card-description.svelte';
-	import CardContent from '../../../../lib/components/card/card-content.svelte';
+	import * as Card from '$lib/components/card';
 	import type { Food } from '$domains/cookbook/foods';
+	import { Badge } from '$lib/components/badge';
+	import { Button } from '$lib/components/button';
+	import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
+	import { getBasicNutrientsString } from '$domains/cookbook/foods/utils';
 
 	let {
 		results = [],
@@ -18,20 +16,15 @@
 		results?: Food[];
 		loading?: boolean;
 		source: 'fdc' | 'openfoodfacts';
-		onselect?: (event: CustomEvent<{ sourceId: string | number }>) => void;
+		onselect?: (event: CustomEvent<{ food: Food }>) => void;
 		onback?: () => void;
 	} = $props();
 
 	function handleSelect(food: Food) {
-		// Extract sourceId from food.source
-		if (!food.source?.externalId) {
-			console.error('Food missing source information:', food);
-			return;
-		}
-
+		// Pass the full food object to reuse already fetched data
 		onselect?.(
 			new CustomEvent('select', {
-				detail: { sourceId: food.source.externalId }
+				detail: { food }
 			})
 		);
 	}
@@ -62,20 +55,20 @@
 	{:else}
 		<div class="space-y-2 max-h-[500px] overflow-y-auto pr-2">
 			{#each results as food}
-				<Card class="hover:bg-accent/50 transition-colors cursor-pointer">
+				<Card.Root class="hover:bg-accent/50 transition-colors cursor-pointer">
 					<button type="button" class="w-full text-left" onclick={() => handleSelect(food)}>
-						<CardHeader class="pb-2">
+						<Card.Header class="pb-2">
 							<div class="flex items-start justify-between gap-2">
-								<CardTitle class="text-base">{food.name_en}</CardTitle>
+								<Card.Title class="text-base">{food.name_en}</Card.Title>
 								<Badge variant="secondary" class="shrink-0 text-xs">
 									{getSourceLabel(food.source?.provider)}
 								</Badge>
 							</div>
-							<CardDescription class="text-xs">
+							<Card.Description class="text-xs">
 								{food.name_pl || food.name_en || food.source?.externalId}
-							</CardDescription>
-						</CardHeader>
-						<CardContent class="pb-3">
+							</Card.Description>
+						</Card.Header>
+						<Card.Content class="pb-3">
 							<div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
 								{#if food.category}
 									<span>{food.category}</span>
@@ -88,10 +81,13 @@
 									<span>·</span>
 									<span class="italic">{food.scientificName}</span>
 								{/if}
+								<div>
+									<span>{getBasicNutrientsString(food)}</span>
+								</div>
 							</div>
-						</CardContent>
+						</Card.Content>
 					</button>
-				</Card>
+				</Card.Root>
 			{/each}
 		</div>
 	{/if}

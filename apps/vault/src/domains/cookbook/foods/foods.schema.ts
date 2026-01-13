@@ -59,7 +59,7 @@ export const foodSchema = z.object({
 	category: z.string().nullable().optional(),
 	scientificName: z.string().nullable().optional(),
 	brand: z.string().nullable().optional(),
-	nutrients: z.array(nutrientValueSchema),
+	nutrients: z.array(nutrientValueSchema).optional(),
 	source: dataSourceSchema.nullable().optional(),
 	userId: z.string().nullable(),
 	createdAt: z.date().optional(), // when entry is not yet created

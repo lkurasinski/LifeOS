@@ -2,7 +2,6 @@
 	import { Button } from '../../../lib/components/button';
 	import RecipesCatalog from '$domains/cookbook/RecipesCatalog.svelte';
 	import MultiStepRecipeForm from '$domains/cookbook/recipe/create-recipe/MultiStepRecipeForm.svelte';
-	import TestDrawer from '$lib/components/TestDrawer.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -24,7 +23,6 @@
 			<p class="text-muted-foreground">Discover and manage your recipes</p>
 		</div>
 		<div class="flex gap-2">
-			<Button onclick={() => (isTestOpen = true)} variant="outline">Test Drawer</Button>
 			<Button onclick={() => (isMultiStepOpen = true)} variant="outline">Test Drawer2</Button>
 			<Button onclick={() => (isFormOpen = true)}>
 				<span class="mr-2">+</span>
@@ -36,5 +34,4 @@
 	<RecipesCatalog bind:this={catalogRef} />
 </div>
 
-<TestDrawer bind:open={isTestOpen} />
 <MultiStepRecipeForm bind:open={isMultiStepOpen} onSuccess={handleRecipeCreated} />

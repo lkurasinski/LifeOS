@@ -207,6 +207,8 @@ model RecipeIngredient {
 model Instruction {
   recipeId      Int     @map("recipe_id")
   stepNumber    Int     @map("step_number")
+  titlePl       String? @map("title_pl")
+  titleEn       String? @map("title_en")
   descriptionPl String  @map("description_pl") @db.Text
   descriptionEn String? @map("description_en") @db.Text
 

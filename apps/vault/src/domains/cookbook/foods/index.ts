@@ -6,7 +6,7 @@
  */
 
 // Export all schemas and types
-export * from './schemas';
+export * from './foods.schema';
 
 // Re-export commonly used schemas for validation
 export {
@@ -16,7 +16,7 @@ export {
 	createFoodCommandSchema,
 	updateFoodCommandSchema,
 	foodSearchParamsSchema
-} from './schemas';
+} from './foods.schema';
 
 // Type guards and utilities
 export { isSavedFood, isFromExternalSource, hasNutrient } from './utils';

@@ -1,91 +1,95 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import Dialog from '../../../../lib/components/dialog/dialog.svelte';
-	import DialogContent from '../../../../lib/components/dialog/dialog-content.svelte';
-	import DialogHeader from '../../../../lib/components/dialog/dialog-header.svelte';
-	import DialogTitle from '../../../../lib/components/dialog/dialog-title.svelte';
-	import DialogDescription from '../../../../lib/components/dialog/dialog-description.svelte';
-	import Input from '../../../../lib/components/input/Input.svelte';
-	import Label from '../../../../lib/components/label/Label.svelte';
-	import Button from '../../../../lib/components/button/Button.svelte';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import * as Dialog from '$lib/components/dialog';
+	import { useFoodSearch } from '$lib/hooks/useFoodSearch.svelte';
+	import { useFoodDetail } from '$lib/hooks/useFoodDetail.svelte';
+	import { SEARCH_CONFIG } from '$lib/constants/ui';
+	import { API_ROUTES } from '$lib/api/api-routes';
+	import { postJson } from '$lib/api/client';
+	import type { Food } from '$domains/cookbook/foods';
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
-	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
-	import { fetchJson, postJson } from '$lib/api/client';
-	import type { Food } from '$domains/cookbook/foods';
+	import { Label } from '$lib/components/label';
+	import { Input } from '$lib/components/input';
+	import { Button } from '$lib/components/button';
 
 	let {
 		open = $bindable(false),
 		initialQuery = '',
-		source = 'fdc'
+		source = 'fdc',
+		onClose,
+		onCreated
 	}: {
 		open?: boolean;
 		initialQuery?: string;
 		source?: 'fdc' | 'openfoodfacts';
+		onClose?: () => void;
+		onCreated?: (food: Food) => void;
 	} = $props();
-
-	const dispatch = createEventDispatcher<{
-		close: void;
-		created: Food;
-	}>();
 
 	type Step = 'search' | 'results' | 'detail';
 
 	const queryClient = useQueryClient();
+	const search = useFoodSearch(() => ({
+		source,
+		pageSize: SEARCH_CONFIG.EXTERNAL_PAGE_SIZE,
+		autoSearch: false
+	}));
 
 	let step = $state<Step>('search');
-	let searchQuery = $state('');
 	let selectedFood = $state<Food | null>(null);
+	let selectedFoodId = $state<number | string | null>(null);
+
+	const foodDetail = useFoodDetail(() => ({
+		foodId: selectedFoodId,
+		source,
+		enabled: !!selectedFoodId
+	}));
 
 	$effect(() => {
 		if (open && initialQuery) {
-			searchQuery = initialQuery;
+			search.setQuery(initialQuery);
 		}
 	});
 
-	const externalSearchQuery = createQuery(() => ({
-		queryKey: ['foods', 'external', source, searchQuery] as const,
-		queryFn: () =>
-			fetchJson<{ items: Food[] }>(
-				buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
-					source,
-					q: searchQuery,
-					pageSize: 25
-				})
-			),
-		enabled: false // Manual trigger only
-	}));
+	// Watch for food detail loading completion
+	$effect(() => {
+		if (foodDetail.data && selectedFoodId) {
+			console.log('Food detail loaded successfully!');
+			selectedFood = foodDetail.data;
+			selectedFoodId = null;
+			step = 'detail';
+		}
+	});
 
 	const createFoodMutation = createMutation(() => ({
 		mutationFn: (foodData: Food) => postJson<Food>(API_ROUTES.FOODS.CREATE, foodData),
 		onSuccess: (createdFood: Food) => {
-			// Invalidate food search queries to refetch with new data
-			queryClient.invalidateQueries({ queryKey: ['foods', 'search'] });
-			dispatch('created', createdFood);
+			queryClient.invalidateQueries({ queryKey: ['foods', 'search', 'internal'] });
+			onCreated?.(createdFood);
 			handleClose();
 		}
 	}));
 
 	async function handleSearch() {
-		if (!searchQuery.trim()) return;
+		if (search.query.trim().length < SEARCH_CONFIG.MIN_QUERY_LENGTH) return;
 
-		const result = await externalSearchQuery.refetch();
+		const result = await search.refetch();
 		if (result.data) {
 			step = 'results';
 		}
 	}
 
-	async function handleSelectFood(event: CustomEvent<{ sourceId: string | number }>) {
-		const { sourceId } = event.detail;
+	function handleSelectFood(event: CustomEvent<{ food: Food }>) {
+		const { food } = event.detail;
 
-		try {
-			const food = await fetchJson<Food>(API_ROUTES.FOODS.DETAILS(sourceId, source));
-			selectedFood = food;
-			step = 'detail';
-		} catch (e) {
-			console.error('Detail fetch error:', e);
-			// Error will be shown through UI
+		// Fetch complete food details from external source
+		const externalId = food.source?.externalId || food.id;
+
+		if (externalId) {
+			selectedFoodId = externalId;
+		} else {
+			console.error('No external ID or food ID found!');
 		}
 	}
 
@@ -97,9 +101,9 @@
 	function handleClose() {
 		open = false;
 		step = 'search';
-		searchQuery = '';
+		search.clearQuery();
 		selectedFood = null;
-		dispatch('close');
+		onClose?.();
 	}
 
 	function handleBack() {
@@ -112,31 +116,37 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter' && step === 'search' && !externalSearchQuery.isFetching) {
+		if (e.key === 'Enter' && step === 'search' && !search.isLoading) {
 			e.preventDefault();
 			handleSearch();
 		}
 	}
 </script>
 
-<Dialog bind:open>
-	<DialogContent class="max-w-3xl max-h-[90vh] overflow-y-auto">
-		<DialogHeader>
-			<DialogTitle>Add Product from External Source</DialogTitle>
-			<DialogDescription>
+<Dialog.Root bind:open>
+	<Dialog.Content class="max-w-3xl max-h-[90vh] overflow-y-auto">
+		<Dialog.Header>
+			<Dialog.Title>Add Product from External Source</Dialog.Title>
+			<Dialog.Description>
 				Search for a food product from external databases and add it to your collection.
-			</DialogDescription>
-		</DialogHeader>
+			</Dialog.Description>
+		</Dialog.Header>
 
-		{#if externalSearchQuery.isError}
+		{#if search.isError}
 			<div class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-				{externalSearchQuery.error?.message || 'An error occurred'}
+				{search.error?.message || 'An error occurred'}
 			</div>
 		{/if}
 
 		{#if createFoodMutation.isError}
 			<div class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
 				{createFoodMutation.error?.message || 'Failed to create food'}
+			</div>
+		{/if}
+
+		{#if foodDetail.isError}
+			<div class="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+				{foodDetail.error?.message || 'Failed to fetch food details'}
 			</div>
 		{/if}
 
@@ -153,7 +163,7 @@
 					<Label for="search-query">Search Query</Label>
 					<Input
 						id="search-query"
-						bind:value={searchQuery}
+						bind:value={search.query}
 						placeholder="Enter food name..."
 						onkeydown={handleKeydown}
 					/>
@@ -163,20 +173,25 @@
 					<Button variant="outline" onclick={handleClose}>Cancel</Button>
 					<Button
 						onclick={handleSearch}
-						disabled={externalSearchQuery.isFetching || !searchQuery.trim()}
+						disabled={search.isLoading ||
+							search.query.trim().length < SEARCH_CONFIG.MIN_QUERY_LENGTH}
 					>
-						{externalSearchQuery.isFetching ? 'Searching...' : 'Search'}
+						{search.isLoading ? 'Searching...' : 'Search'}
 					</Button>
 				</div>
 			</div>
 		{:else if step === 'results'}
-			<SearchResults
-				results={externalSearchQuery.data?.items || []}
-				{source}
-				loading={externalSearchQuery.isFetching}
-				onselect={handleSelectFood}
-				onback={handleBack}
-			/>
+			{#if foodDetail.isLoading}
+				<div class="text-center py-8 text-muted-foreground">Loading food details...</div>
+			{:else}
+				<SearchResults
+					results={search.results}
+					{source}
+					loading={search.isLoading}
+					onselect={handleSelectFood}
+					onback={handleBack}
+				/>
+			{/if}
 		{:else if step === 'detail' && selectedFood}
 			<FoodDetailForm
 				foodDetail={selectedFood}
@@ -185,5 +200,5 @@
 				onback={handleBack}
 			/>
 		{/if}
-	</DialogContent>
-</Dialog>
+	</Dialog.Content>
+</Dialog.Root>

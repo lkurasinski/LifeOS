@@ -60,6 +60,7 @@
 		"bits-ui": "^2.14.4",
 		"cookie": "^1.1.1",
 		"jsonwebtoken": "^9.0.3",
+		"marked": "^17.0.1",
 		"openapi-fetch": "^0.15.0",
 		"pino": "^10.1.0",
 		"runed": "^0.37.1",

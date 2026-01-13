@@ -1,58 +1,56 @@
 <script lang="ts">
 	import * as Command from '$lib/components/command';
-	import { Label } from '$lib/components/label';
-	import { Button } from '$lib/components/button';
-	import { createQuery } from '@tanstack/svelte-query';
-	import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
-	import { fetchJson } from '$lib/api/client';
+	import * as Dialog from '$lib/components/dialog';
+	import { useFoodSearch } from '$lib/hooks/useFoodSearch.svelte';
 	import type { RecipeIngredient } from '$domains/cookbook/recipe/recipe.schema';
+	import type { Food } from '$domains/cookbook/foods';
 	import IngredientsList from './IngredientsList.svelte';
 	import AddProductDialog from '../add-product/AddProductDialog.svelte';
-	import type { Food } from '$domains/cookbook/foods';
+	import FoodInfoDisplay from '../add-product/FoodInfoDisplay.svelte';
+	import NutritionDisplay from '../add-product/NutritionDisplay.svelte';
+	import { Label } from '$lib/components/label';
+	import { Button } from '$lib/components/button';
+	import { LAYOUT } from '$lib/constants/ui';
+	import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
+	import { getBasicNutrientsString } from '$domains/cookbook/foods/utils';
+
+	// Extended ingredient type with full Food data for UI purposes
+	type IngredientWithFood = RecipeIngredient & {
+		food?: Food;
+	};
 
 	let {
 		ingredients = $bindable<RecipeIngredient[]>([]),
+		onNext,
 		onFinish
 	}: {
 		ingredients?: RecipeIngredient[];
+		onNext?: () => void;
 		onFinish?: () => void;
 	} = $props();
 
-	let query = $state('');
-	let minChars = 2;
-	let perPage = 10;
+	const search = useFoodSearch(() => ({ source: 'internal' }));
 	let showAddProductDialog = $state(false);
-
-	const searchQuery = createQuery(() => ({
-		queryKey: ['foods', 'search', query, perPage] as const,
-		queryFn: () =>
-			fetchJson<{ items: Food[] }>(
-				buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
-					q: query,
-					pageSize: perPage
-				})
-			),
-		enabled: query.length >= minChars,
-		placeholderData: (previousData: { items: Food[] } | undefined) => previousData
-	}));
+	let showIngredientDetail = $state(false);
+	let selectedFoodDetail = $state<Food | null>(null);
 
 	function selectOption(option: Food) {
 		if (!option.id) return;
 
+		// Store full food data alongside ingredient
 		const newIngredient: RecipeIngredient = {
-			foodName: option.name_en,
-			foodId: option.id,
+			food: option,
 			amount: null,
 			unit: 'gram',
 			notes: undefined
 		};
 
 		ingredients = [...ingredients, newIngredient];
-		query = '';
+		search.clearQuery();
 	}
 
-	function handleProductCreated(event: CustomEvent<Food>) {
-		selectOption(event.detail);
+	function handleProductCreated(food: Food) {
+		selectOption(food);
 		showAddProductDialog = false;
 	}
 
@@ -63,6 +61,16 @@
 	function finishAdding() {
 		onFinish?.();
 	}
+
+	function handleIngredientClick(index: number) {
+		const ingredient = ingredients[index];
+
+		// Reuse food data stored with ingredient - no API call needed!
+		if (ingredient.food) {
+			selectedFoodDetail = ingredient.food;
+			showIngredientDetail = true;
+		}
+	}
 </script>
 
 <div class="space-y-4">
@@ -70,38 +78,47 @@
 	<div class="space-y-2">
 		<Label>Search and add ingredients</Label>
 		<Command.Root shouldFilter={false} class="rounded-lg border">
-			<Command.Input bind:value={query} autofocus placeholder="Type to search ingredients..." />
+			<Command.Input
+				bind:value={search.query}
+				autofocus
+				placeholder="Type to search ingredients..."
+			/>
+
 			<Command.List>
-				{#if searchQuery.isPending}
-					<!--<Command.Loading>Searching...</Command.Loading>-->
-				{:else if query.length >= minChars && (searchQuery.data?.items ?? []).length === 0}
+				{#if search.isLoading}
+					<Command.Loading>Searching...</Command.Loading>
+				{:else if search.query.length >= 2 && search.results.length === 0}
 					<div class="py-6 px-4 text-center space-y-3">
-						<Command.Empty>No results found for "{query}"</Command.Empty>
+						<Command.Empty>No results found for "{search.query}"</Command.Empty>
 					</div>
 				{/if}
-				{#if query.length >= minChars && (searchQuery.data?.items ?? []).length > 0}
+				{#if search.query.length >= 2 && search.results.length > 0}
 					<Command.Group heading="Click to add ingredient">
-						{#each searchQuery.data?.items ?? [] as option}
+						{#each search.results as option}
 							<Command.Item
 								value={option.id?.toString() || option.name_en}
 								onSelect={() => selectOption(option)}
 							>
-								<div class="flex flex-col">
-									<span class="font-medium">{option.name_pl ?? option.name_en}</span>
-									<div class="text-xs text-muted-foreground">
-										{#if option.name_pl || option.name_en}
-											{option.name_en}
-										{/if}
-										{#if option.category}
-											· {option.category}
-										{/if}
-									</div>
+								<div class="w-full">
+									<p class="font-medium">{option.name_pl ?? option.name_en}</p>
+									<p class="text-xs text-muted-foreground flex justify-between">
+										<span>
+											{#if option.name_pl || option.name_en}
+												{option.name_en}
+											{/if}
+											{#if option.category}
+												· {option.category}
+											{/if}
+										</span>
+
+										<span>{getBasicNutrientsString(option)}</span>
+									</p>
 								</div>
 							</Command.Item>
 						{/each}
 					</Command.Group>
 				{/if}
-				{#if query.length >= minChars}
+				{#if search.query.length >= 2}
 					<div class="py-6 px-4 text-center space-y-3">
 						<Button
 							type="button"
@@ -120,16 +137,46 @@
 	<!-- Added Ingredients List with Inline Editing -->
 	{#if ingredients.length > 0}
 		<div class="space-y-4">
-			<IngredientsList bind:ingredients onRemove={removeIngredient} editable={true} />
-			<Button type="button" onclick={finishAdding} class="w-full">
-				Finish & Create Recipe ({ingredients.length} ingredient{ingredients.length > 1 ? 's' : ''})
-			</Button>
+			<IngredientsList
+				bind:ingredients
+				onRemove={removeIngredient}
+				onClick={handleIngredientClick}
+				editable={true}
+			/>
+
+			<div class="flex flex-col gap-2">
+				<Button type="button" onclick={() => onNext?.()} class="w-full">
+					Next: Add Instructions
+				</Button>
+				<Button type="button" variant="outline" onclick={finishAdding} class="w-full">
+					Skip Instructions & Create Recipe
+				</Button>
+			</div>
 		</div>
 	{/if}
 </div>
 
 <AddProductDialog
 	bind:open={showAddProductDialog}
-	on:created={handleProductCreated}
-	initialQuery={query}
+	onCreated={handleProductCreated}
+	initialQuery={search.query}
 />
+
+<Dialog.Root bind:open={showIngredientDetail}>
+	<Dialog.Content class="max-w-3xl max-h-[90vh] overflow-y-auto">
+		<Dialog.Header>
+			<Dialog.Title>Ingredient Details</Dialog.Title>
+			<Dialog.Description>View nutritional information for this ingredient</Dialog.Description>
+		</Dialog.Header>
+
+		{#if selectedFoodDetail}
+			<div class="space-y-4" style="max-height: {LAYOUT.MODAL_MAX_HEIGHT}; overflow-y: auto;">
+				<FoodInfoDisplay food={selectedFoodDetail} />
+				<NutritionDisplay food={selectedFoodDetail} />
+			</div>
+			<div class="flex justify-end">
+				<Button variant="outline" onclick={() => (showIngredientDetail = false)}>Close</Button>
+			</div>
+		{/if}
+	</Dialog.Content>
+</Dialog.Root>

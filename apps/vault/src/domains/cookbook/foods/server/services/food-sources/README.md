@@ -44,7 +44,7 @@ export interface FoodSourceStrategy {
 ### 1. Internal (TypesenseStrategy)
 - **Name**: `'internal'`
 - **Default**: Used when no source is specified
-- **Implementation**: `$domains/cookbook/foods/integrations/typesense/typesense.strategy.ts`
+- **Implementation**: `$domains/cookbook/foods/integrations/typesense/foods.typesense.strategy.ts`
 - **Data Source**: PostgreSQL database via Typesense search + Prisma
 - **Use Case**: Search foods already in the database
 

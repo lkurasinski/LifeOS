@@ -59,10 +59,30 @@ export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
 		// No id yet - not saved to DB
 		name_en: fdcFood.description,
 		name_pl: null,
-		category: null, // SearchResultFood doesn't include category
 		scientificName: fdcFood.scientificName || null,
 		brand: fdcFood.brandOwner || null,
-		nutrients: [], // Search results don't include full nutrients
+		nutrients: fdcFood.foodNutrients
+			?.map((fdcNutrient) => {
+				//@ts-ignore: fdcNutrient.nutrientId -> error in generation schema
+				const infoodsCode = FDC_TO_INFOODS[fdcNutrient.nutrientId || 0];
+				if (!infoodsCode) return undefined;
+				const nutrientDef = NUTRIENTS[infoodsCode];
+				if (!nutrientDef) return undefined;
+				console.log(nutrientDef);
+				return {
+					nutrient: {
+						code: infoodsCode,
+						name_pl: nutrientDef.name_pl,
+						name_en: nutrientDef.name_en,
+						unit: nutrientDef.unit,
+						category: nutrientDef.category
+					},
+					value:
+						//@ts-ignore: fdcNutrient.value -> error in generation schema
+						fdcNutrient && fdcNutrient.amount && fdcNutrient.value < 0 ? 0 : fdcNutrient.value || 0 //in some products amount of nutrient can be negative
+				};
+			})
+			.filter((el) => el !== undefined),
 		source: {
 			provider: 'fdc',
 			externalId: fdcFood.fdcId
@@ -92,7 +112,8 @@ export function mapFDCFoodDetailToFood(fdcFood: FDC_FDCFoodDetail): Food {
 					unit: nutrientDef.unit,
 					category: nutrientDef.category
 				},
-				value: fdcNutrient.amount || 0
+				value:
+					fdcNutrient && fdcNutrient.amount && fdcNutrient.amount < 0 ? 0 : fdcNutrient.amount || 0 //in some products amount of nutrient can be negative
 			};
 		})
 		.filter((n: NutrientValue | null): n is NonNullable<typeof n> => n !== null)

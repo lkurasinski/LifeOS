@@ -6,7 +6,7 @@
  */
 
 import type { FoodSourceStrategy } from './types';
-import { TypesenseStrategy } from '$domains/cookbook/foods/server/integrations/typesense/typesense.strategy';
+import { TypesenseStrategy } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.strategy';
 import { FDCStrategy } from '$domains/cookbook/foods/server/integrations/fdc/fdc-strategy';
 
 // Strategy registry
