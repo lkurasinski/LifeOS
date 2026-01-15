@@ -20,6 +20,7 @@ import type { Food } from '$domains/cookbook/foods';
 interface UseFoodSearchOptions {
 	source?: 'internal' | 'fdc' | 'openfoodfacts';
 	dataType?: string;
+	apiVersion?: string;
 	pageSize?: number;
 	minChars?: number;
 	autoSearch?: boolean;
@@ -35,6 +36,7 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 		const {
 			source = 'internal',
 			dataType = undefined,
+			apiVersion = undefined,
 			pageSize = SEARCH_CONFIG.DEFAULT_PAGE_SIZE,
 			minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH,
 			autoSearch = true,
@@ -42,12 +44,13 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 		} = getOptions();
 
 		return {
-			queryKey: ['foods', 'search', source, query, pageSize] as const,
+			queryKey: ['foods', 'search', source, query, pageSize, apiVersion] as const,
 			queryFn: () =>
 				fetchJson<{ items: Food[] }>(
 					buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
 						source: source !== 'internal' ? source : undefined,
 						dataType,
+						apiVersion,
 						q: query,
 						pageSize
 					})

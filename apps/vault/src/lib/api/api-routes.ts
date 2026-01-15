@@ -9,7 +9,8 @@
  */
 export const FOOD_SOURCES = {
 	INTERNAL: 'internal',
-	FDC: 'fdc'
+	FDC: 'fdc',
+	OPENFOODFACTS: 'openfoodfacts'
 };
 
 export type FoodSourceType = (typeof FOOD_SOURCES)[keyof typeof FOOD_SOURCES];

@@ -8,13 +8,13 @@
 import type { FoodSourceStrategy } from './types';
 import { TypesenseStrategy } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.strategy';
 import { FDCStrategy } from '$domains/cookbook/foods/server/integrations/fdc/fdc-strategy';
+import { OpenFoodFactsStrategy } from '$domains/cookbook/foods/server/integrations/openfoodfacts/openfoodfacts-strategy';
 
 // Strategy registry
 const strategies: Map<string, FoodSourceStrategy> = new Map<string, FoodSourceStrategy>([
 	['internal', new TypesenseStrategy()],
-	['fdc', new FDCStrategy()]
-	// Add more strategies here:
-	// ['openfoodfacts', new OpenFoodFactsStrategy()]
+	['fdc', new FDCStrategy()],
+	['openfoodfacts', new OpenFoodFactsStrategy()]
 ]);
 
 /**

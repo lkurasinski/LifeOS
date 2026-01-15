@@ -31,11 +31,13 @@
 	type Step = 'search' | 'results' | 'detail';
 
 	let dataType = $state('Foundation');
+	let apiVersion = $state('licious');
 
 	const queryClient = useQueryClient();
 	const search = useFoodSearch(() => ({
 		source,
 		dataType,
+		apiVersion,
 		pageSize: SEARCH_CONFIG.EXTERNAL_PAGE_SIZE,
 		autoSearch: false
 	}));
@@ -186,6 +188,24 @@
 										<Select.Item value="Survey (FNDDS)" label="Survey (FNDDS)" />
 										<Select.Item value="Branded" label="Branded" />
 										<Select.Item value="SR Legacy" label="SR Legacy" />
+									</Select.Group>
+								</Select.Content>
+							</Select.Root>
+						</div>
+					{/if}
+
+					{#if source === 'openfoodfacts'}
+						<div>
+							<Label>API Version</Label>
+							<Select.Root type="single" bind:value={apiVersion}>
+								<Select.Trigger class="w-full">
+									{apiVersion === 'v1' ? 'API V1' : 'Licious'}
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Group>
+										<Select.Label>API version</Select.Label>
+										<Select.Item value="licious" label="Licious" />
+										<Select.Item value="v1" label="API V1" />
 									</Select.Group>
 								</Select.Content>
 							</Select.Root>
