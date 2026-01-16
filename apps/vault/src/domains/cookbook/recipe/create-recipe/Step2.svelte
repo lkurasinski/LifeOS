@@ -29,13 +29,25 @@
 		onFinish?: () => void;
 	} = $props();
 
-	const search = useFoodSearch(() => ({ source: 'internal' }));
+	// Compute list of already-added ingredient IDs to exclude from search
+	const excludeIds = $derived(
+		ingredients.map((ing) => ing.food?.id).filter((id): id is number => !!id)
+	);
+
+	const search = useFoodSearch(() => ({ source: 'internal', exclude: excludeIds }));
 	let showAddProductDialog = $state(false);
 	let showIngredientDetail = $state(false);
 	let selectedFoodDetail = $state<Food | null>(null);
 
 	function selectOption(option: Food) {
 		if (!option.id) return;
+
+		// Safety check: Prevent adding duplicate ingredients
+		const isDuplicate = ingredients.some((ing) => ing.food?.id === option.id);
+		if (isDuplicate) {
+			console.warn(`Ingredient "${option.name_pl || option.name_en}" is already added`);
+			return;
+		}
 
 		// Store full food data alongside ingredient
 		const newIngredient: RecipeIngredient = {

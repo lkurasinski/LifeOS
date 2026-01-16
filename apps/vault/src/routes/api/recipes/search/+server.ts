@@ -1,7 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { typesense } from '$lib/server/typesense';
-import { typesenseRecipeDocumentSchema, type RecipeSearchResult } from '$domains/cookbook/recipe/recipe.schema';
+import {
+	typesenseRecipeDocumentSchema,
+	type RecipeSearchResult
+} from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const q = url.searchParams.get('q') ?? '*';

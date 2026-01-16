@@ -25,6 +25,7 @@ interface UseFoodSearchOptions {
 	minChars?: number;
 	autoSearch?: boolean;
 	loadingDelay?: number;
+	exclude?: number[];
 }
 
 export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({})) {
@@ -40,11 +41,12 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 			pageSize = SEARCH_CONFIG.DEFAULT_PAGE_SIZE,
 			minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH,
 			autoSearch = true,
-			loadingDelay = ANIMATION.DURATION.NORMAL
+			loadingDelay = ANIMATION.DURATION.NORMAL,
+			exclude = undefined
 		} = getOptions();
 
 		return {
-			queryKey: ['foods', 'search', source, query, pageSize, apiVersion] as const,
+			queryKey: ['foods', 'search', source, query, pageSize, apiVersion, exclude] as const,
 			queryFn: () =>
 				fetchJson<{ items: Food[] }>(
 					buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
@@ -52,7 +54,8 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 						dataType,
 						apiVersion,
 						q: query,
-						pageSize
+						pageSize,
+						exclude: exclude?.join(',')
 					})
 				),
 			enabled: autoSearch && query.length >= minChars,

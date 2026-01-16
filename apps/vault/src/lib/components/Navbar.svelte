@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Button } from './button';
+	import ThemeToggle from './ThemeToggle.svelte';
 	import { API_ROUTES } from '$lib/api/api-routes';
 
 	interface Props {
@@ -49,16 +50,17 @@
 				</div>
 			</div>
 
-			{#if user}
-				<div class="flex items-center gap-4">
+			<div class="flex items-center gap-2">
+				<ThemeToggle />
+				{#if user}
 					<span class="text-sm text-muted-foreground hidden sm:block">
 						{user.name || user.email}
 					</span>
 					<Button variant="outline" size="sm" onclick={handleLogout} disabled={loading}>
 						{loading ? 'Logging out...' : 'Logout'}
 					</Button>
-				</div>
-			{/if}
+				{/if}
+			</div>
 		</div>
 	</div>
 </nav>

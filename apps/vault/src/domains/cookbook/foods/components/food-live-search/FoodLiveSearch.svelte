@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import AddProductDialog from '$domains/cookbook/recipe/add-product/AddProductDialog.svelte';
-	import Button from '../button/Button.svelte';
+	import AddProductDialog from '../../../recipe/add-product/AddProductDialog.svelte';
+	import Button from '../../../../../lib/components/button/Button.svelte';
 
 	type FoodOption = {
 		id: string;
@@ -93,6 +93,7 @@
 </script>
 
 <div class="relative w-full">
+	asdasd
 	<input
 		class="w-full border px-3 py-2 rounded-md"
 		type="text"
@@ -127,14 +128,14 @@
 						on:mousedown|preventDefault={() => selectOption(option)}
 					>
 						<span>{option.name_pl ?? option.name_en}</span>
-						<div class="text-xs text-muted-foreground">
+						<span class="text-xs text-muted-foreground">
 							{#if option.name_pl && option.name_en}
 								{option.name_en}
 							{/if}
 							{#if option.category}
 								· {option.category}
 							{/if}
-						</div>
+						</span>
 					</button>
 				{/each}
 			{/if}

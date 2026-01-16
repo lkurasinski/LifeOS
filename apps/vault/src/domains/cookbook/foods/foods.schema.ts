@@ -59,6 +59,7 @@ export const foodSchema = z.object({
 	category: z.string().nullable().optional(),
 	scientificName: z.string().nullable().optional(),
 	brand: z.string().nullable().optional(),
+	imageUrl: z.string().url().nullable().optional(),
 	nutrients: z.array(nutrientValueSchema).optional(),
 	source: dataSourceSchema.nullable().optional(),
 	userId: z.string().nullable(),
@@ -84,7 +85,8 @@ export const foodSearchParamsSchema = z.object({
 	pageSize: z.number().int().positive().default(25),
 	pageNumber: z.number().int().positive().default(1),
 	sortBy: z.enum(['name', 'category', 'created_at']).default('name'),
-	sortOrder: z.enum(['asc', 'desc']).default('asc')
+	sortOrder: z.enum(['asc', 'desc']).default('asc'),
+	exclude: z.array(z.string()).optional()
 });
 
 export type FoodSearchParams = z.infer<typeof foodSearchParamsSchema>;
@@ -118,6 +120,7 @@ export const createFoodCommandSchema = z.object({
 	category: z.string().optional(),
 	scientificName: z.string().optional(),
 	brand: z.string().optional(),
+	imageUrl: z.string().url().optional(),
 	nutrients: z.array(
 		z.object({
 			code: z.string().min(1),

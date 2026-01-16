@@ -11,6 +11,7 @@ export function mapTypesenseFoodToFood(doc: Typesense_FoodDocument): Food {
 		category: doc.category ?? null,
 		scientificName: doc.scientific_name,
 		brand: doc.brand,
+		imageUrl: null,
 		nutrients: mapTypesenseNutrientsToNutrientsValue(doc.nutrients),
 		source: {
 			provider: doc.source_provider,

@@ -25,6 +25,7 @@ export function mapFDCSearchResultToFood(fdcFood: FDC_SearchResultFood): Food {
 		name_pl: null,
 		scientificName: fdcFood.scientificName || null,
 		brand: fdcFood.brandOwner || null,
+		imageUrl: null,
 		nutrients: fdcFood.foodNutrients
 			?.map((fdcNutrient) => {
 				//@ts-ignore: fdcNutrient.nutrientId -> error in generation schema
@@ -101,6 +102,7 @@ export function mapFDCFoodDetailToFood(fdcFood: FDC_FDCFoodDetail): Food {
 		category,
 		scientificName: ('scientificName' in fdcFood ? fdcFood.scientificName : null) || null,
 		brand: ('brandOwner' in fdcFood ? fdcFood.brandOwner : undefined) || null,
+		imageUrl: null,
 		nutrients,
 		source: {
 			provider: 'fdc',

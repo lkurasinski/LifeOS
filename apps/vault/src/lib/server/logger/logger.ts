@@ -45,7 +45,7 @@ export const defaultLoggerConfig: LoggerConfig = {
 	logCookies: false,
 	logRequestBody: true,
 	logResponseBody: true,
-	maxBodyLength: 1000
+	maxBodyLength: 10000
 };
 
 export function trimBody(body: any, maxLength: number = 1000): any {

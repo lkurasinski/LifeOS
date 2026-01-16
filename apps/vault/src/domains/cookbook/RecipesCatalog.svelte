@@ -12,7 +12,7 @@
 	} from '../../lib/components/card';
 	import RecipeCard from './RecipeCard.svelte';
 	import { Search, X } from '@lucide/svelte';
-	import type { RecipeSearchResult } from '$domains/cookbook/recipe/recipe.schema';
+	import type { RecipeSearchResult } from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 
 	let searchQuery = $state('');
 	let selectedDifficulty = $state<string | undefined>(undefined);

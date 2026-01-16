@@ -72,6 +72,7 @@ model Food {
   scientificName String? @map("scientific_name")
   category       String?
   brand          String?
+  imageUrl       String? @map("image_url")
   userId         Int?    @map("user_id")
 
   // Source tracking

@@ -62,6 +62,8 @@ export interface OFFProductV1 {
 	nutriscore_grade?: string;
 	nova_group?: number;
 	url?: string;
+	image_front_url?: string;
+	image_front_small_url?: string;
 }
 
 export interface OFFSearchResponseV1 {
@@ -85,6 +87,8 @@ export interface OFFProductLicious {
 	nutriments?: OFFNutriments;
 	nutriscore_grade?: string;
 	nova_groups?: string;
+	image_front_url?: string;
+	image_front_small_url?: string;
 }
 
 export interface OFFSearchResponseLicious {
@@ -114,6 +118,8 @@ export interface OFFProductDetail {
 	nutriscore_grade?: string;
 	nova_group?: number;
 	url?: string;
+	image_front_url?: string;
+	image_front_small_url?: string;
 }
 
 export interface OFFProductDetailResponse {

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Card from '../../lib/components/card';
 	import { Badge } from '../../lib/components/badge';
-	import type { RecipeSearchResult } from '$domains/cookbook/recipe/recipe.schema';
 	import { Clock, Users, ChefHat } from '@lucide/svelte';
+	import type { RecipeSearchResult } from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 
 	let { recipe }: { recipe: RecipeSearchResult } = $props();
 

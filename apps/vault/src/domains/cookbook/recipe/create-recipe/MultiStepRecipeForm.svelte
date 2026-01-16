@@ -155,11 +155,23 @@
 			return;
 		}
 
+		// Transform ingredients from UI format (with food object) to API format (with foodId)
+		const apiIngredients = ingredients.map((ing) => ({
+			foodId: ing.food.id!,
+			amount: ing.amount ?? undefined,
+			unit: ing.unit,
+			notes: ing.notes
+		}));
+
 		$form.ingredients = ingredients;
 		$form.instructions = instructions;
 
 		// Optimistic update - close drawer immediately
-		const formData = { ...$form };
+		const formData = {
+			...$form,
+			ingredients: apiIngredients
+		};
+		console.log('Submitting recipe with transformed ingredients:', formData);
 		resetForm();
 		open = false;
 

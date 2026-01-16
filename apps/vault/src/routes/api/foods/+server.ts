@@ -31,6 +31,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					category: command.category || null,
 					scientificName: command.scientificName || null,
 					brand: command.brand || null,
+					imageUrl: command.imageUrl || null,
 					userId: user.id || null,
 					// Source tracking columns
 					sourceProvider: command.source?.provider || null,
@@ -61,6 +62,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				name_pl: food.namePl,
 				scientificName: food.scientificName,
 				category: food.category,
+				imageUrl: food.imageUrl,
 				source: {
 					provider: food.sourceProvider,
 					externalId: food.sourceExternalId,

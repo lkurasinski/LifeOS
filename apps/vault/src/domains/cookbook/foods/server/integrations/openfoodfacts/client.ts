@@ -39,7 +39,7 @@ export async function searchFoodsV1(params: {
 	url.searchParams.set('json', '1');
 	url.searchParams.set(
 		'fields',
-		'code,product_name,product_name_en,generic_name,generic_name_en,brands,categories,nutriments,nutriscore_grade,nova_group,url'
+		'code,product_name,product_name_en,generic_name,generic_name_en,brands,categories,nutriments,nutriscore_grade,nova_group,url,image_front_url,image_front_small_url'
 	);
 
 	const response = await offFetch(url.toString(), {
@@ -73,7 +73,7 @@ export async function searchFoodsLicious(params: {
 	url.searchParams.set('page', pageNumber.toString());
 	url.searchParams.set(
 		'fields',
-		'code,product_name,product_name_en,brands,categories,nutriments,nutriscore_grade,nova_groups'
+		'code,product_name,product_name_en,brands,categories,nutriments,nutriscore_grade,nova_groups,image_front_url,image_front_small_url'
 	);
 
 	const response = await offFetch(url.toString(), {

@@ -36,7 +36,7 @@
 			<!-- 0 just for typesafety -->
 			{#each ingredients as ingredient, index (ingredient.food.id || 0 + index)}
 				<div
-					class="p-3 border rounded-lg bg-background space-y-3"
+					class="p-3 border rounded-lg bg-background space-y-3 text-card-foreground bg-card"
 					in:fly={{
 						x: -20,
 						duration: ANIMATION.DURATION.NORMAL,
@@ -72,13 +72,10 @@
 								<Label for="amount-{index}" class="text-xs">Amount *</Label>
 								<Input
 									id="amount-{index}"
-									type="number"
-									min="0"
-									step="0.1"
+									type="text"
 									value={ingredient.amount}
 									oninput={(e) =>
 										updateIngredient(index, 'amount', parseFloat(e.currentTarget.value) || null)}
-									placeholder="100"
 									class="h-9"
 								/>
 							</div>

@@ -4,6 +4,7 @@ import { getStrategy } from '$domains/cookbook/foods/server/services/food-source
 import { type FoodSearchParams } from '$domains/cookbook/foods';
 import { z } from 'zod';
 import { dataSourceProviders } from '$lib';
+import { logger } from '$lib/server/logger/logger';
 
 export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 	const query = url.searchParams.get('q') ?? '*';
@@ -21,6 +22,9 @@ export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 		const sortOrderParam = url.searchParams.get('sortOrder');
 		const dataType = url.searchParams.get('dataType') || undefined;
 		const apiVersion = url.searchParams.get('apiVersion') || undefined;
+
+		const excludeParam = url.searchParams.get('exclude');
+		const excludeIds = excludeParam ? excludeParam.split(',').filter((id) => id.trim()) : undefined;
 
 		const searchParams: FoodSearchParams = {
 			query,
@@ -40,7 +44,8 @@ export const GET: RequestHandler = async ({ url }): Promise<Response> => {
 					? (sortOrderParam as 'asc' | 'desc')
 					: 'asc',
 			dataType: dataType,
-			apiVersion: apiVersion
+			apiVersion: apiVersion,
+			exclude: excludeIds
 		};
 
 		// Execute search using the strategy

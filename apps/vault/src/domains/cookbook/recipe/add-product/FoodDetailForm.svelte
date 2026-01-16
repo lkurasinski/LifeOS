@@ -43,6 +43,7 @@
 						category: form.data.category || undefined,
 						scientificName: form.data.scientificName || undefined,
 						brand: foodDetail.brand || undefined,
+						imageUrl: foodDetail.imageUrl || undefined,
 						nutrients: foodDetail.nutrients?.map((nv) => ({
 							code: nv.nutrient.code,
 							value: nv.value
@@ -73,6 +74,16 @@
 					<Card.Title>Product Information</Card.Title>
 				</Card.Header>
 				<Card.Content class="space-y-4">
+					{#if foodDetail.imageUrl}
+						<div class="flex justify-center">
+							<img
+								src={foodDetail.imageUrl}
+								alt={foodDetail.name_en}
+								class="max-h-64 object-contain rounded-md"
+							/>
+						</div>
+					{/if}
+
 					<div class="grid grid-cols-2 gap-4">
 						<div class="space-y-2">
 							<Label for="name-en">Name (English)</Label>

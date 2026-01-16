@@ -21,17 +21,13 @@ function mapNutrimentsToNutrients(
 
 	const nutrients: NutrientValue[] = [];
 
-	// Iterate over source nutriments and look up mapping
 	for (const [offKey, value] of Object.entries(nutriments)) {
-		// Check if this nutrient key has a mapping
 		const infoodsCode = OFF_TO_INFOODS[offKey];
 		if (!infoodsCode) continue;
 
-		// Get nutrient definition
 		const nutrientDef = NUTRIENTS[infoodsCode];
 		if (!nutrientDef) continue;
 
-		// Validate value
 		if (typeof value !== 'number' || value < 0) continue;
 
 		nutrients.push({
@@ -49,9 +45,6 @@ function mapNutrimentsToNutrients(
 	return nutrients.sort(sortNutrientsByValue);
 }
 
-/**
- * Map OpenFoodFacts API v1 search result to domain Food model
- */
 export function mapOFFProductV1ToFood(offProduct: OFFProductV1): Food {
 	return {
 		name_en: offProduct.product_name_en || offProduct.product_name || offProduct.code || 'Unknown',
@@ -59,6 +52,7 @@ export function mapOFFProductV1ToFood(offProduct: OFFProductV1): Food {
 		category: offProduct.categories?.split(',')[0]?.trim() || null,
 		scientificName: offProduct.generic_name_en || offProduct.generic_name || null,
 		brand: offProduct.brands || null,
+		imageUrl: offProduct.image_front_url || null,
 		nutrients: mapNutrimentsToNutrients(offProduct.nutriments),
 		source: {
 			provider: 'openfoodfacts',
@@ -79,6 +73,7 @@ export function mapOFFProductLiciousToFood(offProduct: OFFProductLicious): Food 
 		category: offProduct.categories?.split(',')[0]?.trim() || null,
 		scientificName: null,
 		brand: offProduct.brands || null,
+		imageUrl: offProduct.image_front_url || null,
 		nutrients: mapNutrimentsToNutrients(offProduct.nutriments),
 		source: {
 			provider: 'openfoodfacts',
@@ -98,6 +93,7 @@ export function mapOFFProductDetailToFood(offProduct: OFFProductDetail): Food {
 		category: offProduct.categories?.split(',')[0]?.trim() || null,
 		scientificName: offProduct.generic_name_en || offProduct.generic_name || null,
 		brand: offProduct.brands || null,
+		imageUrl: offProduct.image_front_url || null,
 		nutrients: mapNutrimentsToNutrients(offProduct.nutriments),
 		source: {
 			provider: 'openfoodfacts',

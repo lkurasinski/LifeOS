@@ -22,13 +22,20 @@ export class TypesenseStrategy implements FoodSourceStrategy {
 		// const sortBy = (params.sortBy as string) || 'created_at:desc';
 		const sortBy = 'created_at:desc'; //@TODO fix sorting
 
-		const result = await typesense.collections('foods').documents().search({
+		const searchParams: Record<string, any> = {
 			q,
 			query_by: 'name_en,name_pl',
 			per_page: perPage,
 			page,
 			sort_by: sortBy
-		});
+		};
+
+		// Add filter to exclude specific food IDs if provided
+		if (params.exclude && params.exclude.length > 0) {
+			searchParams.filter_by = `id:!=[${params.exclude.join(',')}]`;
+		}
+
+		const result = await typesense.collections('foods').documents().search(searchParams);
 
 		const hits = result.hits ?? [];
 		const foods: Food[] = hits.map((hit) => {
