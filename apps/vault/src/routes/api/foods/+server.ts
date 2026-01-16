@@ -5,6 +5,7 @@ import { prisma } from '$lib/server/prisma';
 import { createFoodCommandSchema, type CreateFoodCommand } from '$domains/cookbook/foods';
 import { buildSourceUrl } from '$domains/cookbook/foods/utils';
 import { isUniqueConstraintError } from '$lib/server/slug';
+import { indexFood } from '$lib/server/typesense/index';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const user = locals.user;
@@ -53,6 +54,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 
 			return createdFood;
+		});
+
+		// Index to Typesense (non-blocking, don't fail request if indexing fails)
+		indexFood(food.id).catch((err) => {
+			console.error('Failed to index food to Typesense', { foodId: food.id, err });
 		});
 
 		return json(

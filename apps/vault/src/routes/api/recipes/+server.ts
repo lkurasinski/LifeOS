@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createRecipeInputSchema } from '$domains/cookbook/recipe/recipe.api.schema';
 import { createRecipe } from '$domains/cookbook/recipe/recipe.service';
 import { mapRecipeToResponse } from '$domains/cookbook/recipe/recipe.mappers';
+import { indexRecipe } from '$lib/server/typesense/index';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	try {
@@ -13,12 +14,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		const body = await request.json();
-		console.log('dduuaaappppaa', body);
 		const input = createRecipeInputSchema.parse(body);
-		console.log('dupa2');
 
 		const recipe = await createRecipe(input, userId);
 		const response = mapRecipeToResponse(recipe);
+
+		// Index to Typesense (non-blocking, don't fail request if indexing fails)
+		indexRecipe(recipe.id).catch((err) => {
+			console.error('Failed to index recipe to Typesense', { recipeId: recipe.id, err });
+		});
 
 		return json(response, { status: 201 });
 	} catch (error) {

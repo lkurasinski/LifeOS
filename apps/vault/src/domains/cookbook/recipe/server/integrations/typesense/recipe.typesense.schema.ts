@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { mealTypeSchema } from '../../../recipe.schema';
 
 export const typesenseRecipeIngredientSchema = z.object({
-	food_id: z.string(),
+	food_id: z.number(),
 	food_name_pl: z.string().nullable().optional(),
 	food_name_en: z.string(),
 	amount: z.number().nullable().optional(),
