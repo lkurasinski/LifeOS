@@ -6,6 +6,7 @@ import { prisma } from '$lib/server/prisma';
 import { typesense } from '$lib/server/typesense';
 import { logger } from '$lib/server/logger/logger';
 import type { RecipeDocument } from './types';
+import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
 
 const COLLECTION_NAME = 'recipes';
 
@@ -13,7 +14,7 @@ const COLLECTION_NAME = 'recipes';
  * Fetch recipe from database with all relations
  */
 async function fetchRecipeWithRelations(recipeId: number) {
-	return await prisma.recipe.findUnique({
+	return prisma.recipe.findUnique({
 		where: { id: recipeId },
 		include: {
 			user: {
@@ -25,7 +26,12 @@ async function fetchRecipeWithRelations(recipeId: number) {
 						select: {
 							id: true,
 							namePl: true,
-							nameEn: true
+							nameEn: true,
+							nutritions: {
+								include: {
+									nutrition: true
+								}
+							}
 						}
 					}
 				},
@@ -47,6 +53,71 @@ async function fetchRecipeWithRelations(recipeId: number) {
 			}
 		}
 	});
+}
+
+/**
+ * Calculate total nutrients for a recipe from all ingredients
+ */
+function calculateRecipeNutrients(
+	recipe: NonNullable<Awaited<ReturnType<typeof fetchRecipeWithRelations>>>
+) {
+	const nutrients: Record<string, number> = {};
+	let energyKcal = 0;
+	let protein = 0;
+	let fat = 0;
+	let carbs = 0;
+	let fiber = 0;
+
+	// Sum nutrients from all ingredients
+	for (const ingredient of recipe.ingredients) {
+		// Skip if no amount specified
+		if (!ingredient.amount) continue;
+
+		const amountGrams = ingredient.amount;
+
+		// Process each nutrient for this ingredient
+		for (const foodNutrition of ingredient.food.nutritions) {
+			const nutrientId = foodNutrition.nutritionId;
+			const valuePerc100g = foodNutrition.amount;
+
+			// Calculate actual amount: (value_per_100g * amount_grams) / 100
+			const actualAmount = Number(((valuePerc100g * amountGrams) / 100).toFixed(4));
+
+			// Add to total
+			if (!nutrients[nutrientId]) {
+				nutrients[nutrientId] = 0;
+			}
+			nutrients[nutrientId] += actualAmount;
+
+			// Also track common nutrients for fast filtering
+			switch (nutrientId) {
+				case 'ENERC_KCAL':
+					energyKcal += actualAmount;
+					break;
+				case NUTRIENTS.PROTCNT_g.code:
+					protein += actualAmount;
+					break;
+				case NUTRIENTS.FAT_g.code:
+					fat += actualAmount;
+					break;
+				case NUTRIENTS.CHOCDF_g.code:
+					carbs += actualAmount;
+					break;
+				case NUTRIENTS.FIBTG_g.code:
+					fiber += actualAmount;
+					break;
+			}
+		}
+	}
+
+	return {
+		nutrients,
+		energyKcal,
+		protein,
+		fat,
+		carbs,
+		fiber
+	};
 }
 
 /**
@@ -77,6 +148,9 @@ function transformRecipeToDocument(
 	// Extract component recipe slugs
 	const componentSlugs = recipe.includesRecipes.map((rc) => rc.component.slug);
 
+	// Calculate nutrients
+	const { nutrients, energyKcal, protein, fat, carbs, fiber } = calculateRecipeNutrients(recipe);
+
 	const doc: RecipeDocument = {
 		id: String(recipe.id),
 		slug: recipe.slug,
@@ -103,6 +177,33 @@ function transformRecipeToDocument(
 	if (ingredientNames.length > 0) doc.ingredient_names = ingredientNames;
 	if (tags.length > 0) doc.tags = tags;
 	if (componentSlugs.length > 0) doc.component_slugs = componentSlugs;
+
+	// Add nutrients (total for entire recipe)
+	if (Object.keys(nutrients).length > 0) {
+		doc.nutrients = nutrients;
+
+		// Add denormalized common nutrients for filtering/sorting
+		if (energyKcal > 0) {
+			doc.energy_kcal = energyKcal;
+			doc.energy_kcal_per_serving = energyKcal / recipe.servings;
+		}
+		if (protein > 0) {
+			doc.protein = protein;
+			doc.protein_per_serving = protein / recipe.servings;
+		}
+		if (fat > 0) {
+			doc.fat = fat;
+			doc.fat_per_serving = fat / recipe.servings;
+		}
+		if (carbs > 0) {
+			doc.carbs = carbs;
+			doc.carbs_per_serving = carbs / recipe.servings;
+		}
+		if (fiber > 0) {
+			doc.fiber = fiber;
+			doc.fiber_per_serving = fiber / recipe.servings;
+		}
+	}
 
 	return doc;
 }

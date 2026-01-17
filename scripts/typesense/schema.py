@@ -61,6 +61,24 @@ RECIPES_SCHEMA = {
         {"name": "ingredient_names", "type": "string[]", "optional": True},
         {"name": "component_slugs", "type": "string[]", "optional": True},
         {"name": "tags", "type": "string[]", "facet": True, "optional": True},
+
+        # Denormalized nutrients for fast filtering/sorting (total for entire recipe)
+        {"name": "energy_kcal", "type": "float", "optional": True, "facet": True},
+        {"name": "protein", "type": "float", "optional": True, "facet": True},
+        {"name": "fat", "type": "float", "optional": True, "facet": True},
+        {"name": "carbs", "type": "float", "optional": True, "facet": True},
+        {"name": "fiber", "type": "float", "optional": True, "facet": True},
+
+        # Complete nutrition data as object with INFOODS codes as keys (total for entire recipe)
+        {"name": "nutrients", "type": "object", "optional": True},
+
+        # Per-serving values for display convenience
+        {"name": "energy_kcal_per_serving", "type": "float", "optional": True},
+        {"name": "protein_per_serving", "type": "float", "optional": True},
+        {"name": "fat_per_serving", "type": "float", "optional": True},
+        {"name": "carbs_per_serving", "type": "float", "optional": True},
+        {"name": "fiber_per_serving", "type": "float", "optional": True},
+
         {"name": "created_at", "type": "int64"},
         {"name": "updated_at", "type": "int64"},
     ],

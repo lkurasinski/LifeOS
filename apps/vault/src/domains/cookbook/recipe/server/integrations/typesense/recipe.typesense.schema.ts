@@ -30,6 +30,17 @@ export const typesenseRecipeDocumentSchema = z.object({
 	ingredient_names: z.array(z.string()).optional(),
 	component_slugs: z.array(z.string()).optional(),
 	tags: z.array(z.string()).optional(),
+	energy_kcal: z.number().nullable().optional(),
+	protein: z.number().nullable().optional(),
+	fat: z.number().nullable().optional(),
+	carbs: z.number().nullable().optional(),
+	fiber: z.number().nullable().optional(),
+	nutrients: z.record(z.string(), z.number()).optional(),
+	energy_kcal_per_serving: z.number().nullable().optional(),
+	protein_per_serving: z.number().nullable().optional(),
+	fat_per_serving: z.number().nullable().optional(),
+	carbs_per_serving: z.number().nullable().optional(),
+	fiber_per_serving: z.number().nullable().optional(),
 	created_at: z.number(),
 	updated_at: z.number()
 });
@@ -53,6 +64,12 @@ export const recipeSearchResultSchema = z.object({
 	ingredientNames: z.array(z.string()).optional(),
 	componentSlugs: z.array(z.string()).optional(),
 	tags: z.array(z.string()).optional(),
+	energyKcalPerServing: z.number().nullable().optional(),
+	proteinPerServing: z.number().nullable().optional(),
+	fatPerServing: z.number().nullable().optional(),
+	carbsPerServing: z.number().nullable().optional(),
+	fiberPerServing: z.number().nullable().optional(),
+	nutrients: z.record(z.string(), z.number()).optional(),
 	createdAt: z.string(),
 	updatedAt: z.string()
 });

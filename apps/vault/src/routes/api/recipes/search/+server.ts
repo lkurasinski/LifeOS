@@ -71,6 +71,12 @@ export const GET: RequestHandler = async ({ url }) => {
 				ingredientNames: doc.ingredient_names,
 				componentSlugs: doc.component_slugs,
 				tags: doc.tags,
+				energyKcalPerServing: doc.energy_kcal_per_serving ?? null,
+				proteinPerServing: doc.protein_per_serving ?? null,
+				fatPerServing: doc.fat_per_serving ?? null,
+				carbsPerServing: doc.carbs_per_serving ?? null,
+				fiberPerServing: doc.fiber_per_serving ?? null,
+				nutrients: doc.nutrients,
 				createdAt: new Date(doc.created_at * 1000).toISOString(),
 				updatedAt: new Date(doc.updated_at * 1000).toISOString()
 			};

@@ -3,10 +3,13 @@
 	import { Badge } from '../../lib/components/badge';
 	import { Clock, Users, ChefHat } from '@lucide/svelte';
 	import type { RecipeSearchResult } from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
+	import { getBasicRecipeNutrientsString, hasNutritionData } from '$domains/cookbook/recipe/recipe.utils';
 
 	let { recipe }: { recipe: RecipeSearchResult } = $props();
 
 	const totalTime = $derived((recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0) || null);
+	const nutrientsString = $derived(getBasicRecipeNutrientsString(recipe));
+	const showNutrients = $derived(hasNutritionData(recipe));
 
 	const difficultyColor = $derived.by(() => {
 		switch (recipe.difficulty) {
@@ -74,6 +77,13 @@
 					</div>
 				{/if}
 			</div>
+
+			{#if showNutrients}
+				<div class="text-xs text-muted-foreground border-t pt-3">
+					<p class="font-medium mb-1">Per serving:</p>
+					<p>{nutrientsString}</p>
+				</div>
+			{/if}
 
 			{#if recipe.ingredients && recipe.ingredients.length > 0}
 				<div>

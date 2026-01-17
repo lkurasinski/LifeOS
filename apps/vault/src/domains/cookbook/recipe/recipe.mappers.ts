@@ -16,8 +16,6 @@ export function mapCreateInputToRecipeData(
 	userId: number,
 	slug: string
 ): Prisma.RecipeCreateInput {
-	console.log('*******************************************************************');
-	console.log(input);
 	return {
 		user: {
 			connect: { id: userId }

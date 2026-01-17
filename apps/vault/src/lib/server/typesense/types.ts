@@ -67,6 +67,23 @@ export interface RecipeDocument {
 	// Tags
 	tags?: string[];
 
+	// Denormalized nutrients for fast filtering/sorting (total for entire recipe)
+	energy_kcal?: number;
+	protein?: number;
+	fat?: number;
+	carbs?: number;
+	fiber?: number;
+
+	// Complete nutrition data with INFOODS codes as keys (total for entire recipe)
+	nutrients?: Record<string, number>;
+
+	// Per-serving values (for display convenience)
+	energy_kcal_per_serving?: number;
+	protein_per_serving?: number;
+	fat_per_serving?: number;
+	carbs_per_serving?: number;
+	fiber_per_serving?: number;
+
 	created_at: number; // Unix timestamp
 	updated_at: number; // Unix timestamp
 }
