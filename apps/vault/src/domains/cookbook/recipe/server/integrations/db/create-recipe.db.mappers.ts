@@ -4,14 +4,14 @@ import type {
 	CreateRecipeResponse,
 	CreateRecipeIngredientInput,
 	CreateRecipeInstructionInput
-} from './recipe.api.schema';
+} from '../../../recipe.api.schema';
 
 export type RecipeWithRelations = Recipe & {
 	ingredients: RecipeIngredient[];
 	instructions: Instruction[];
 };
 
-export function mapCreateInputToRecipeData(
+export function mapCreateInputToRecipeDb(
 	input: CreateRecipeInput,
 	userId: number,
 	slug: string
@@ -51,43 +51,5 @@ export function mapCreateInputToRecipeData(
 					}))
 				}
 			: undefined
-	};
-}
-
-export function mapRecipeToResponse(recipe: RecipeWithRelations): CreateRecipeResponse {
-	return {
-		id: recipe.id,
-		userId: recipe.userId,
-		namePl: recipe.namePl,
-		nameEn: recipe.nameEn,
-		descriptionPl: recipe.descriptionPl,
-		descriptionEn: recipe.descriptionEn,
-		servings: recipe.servings,
-		prepTimeMinutes: recipe.prepTimeMinutes,
-		cookTimeMinutes: recipe.cookTimeMinutes,
-		difficulty: recipe.difficulty,
-		isPublic: recipe.isPublic,
-		imageUrl: recipe.imageUrl,
-		slug: recipe.slug,
-		awesomeness: recipe.awesomeness,
-		mealType: recipe.mealType as string[],
-		createdAt: recipe.createdAt,
-		updatedAt: recipe.updatedAt,
-		ingredients: recipe.ingredients.map((ing) => ({
-			recipeId: ing.recipeId,
-			foodId: ing.foodId,
-			amount: ing.amount,
-			unit: ing.unit,
-			notes: ing.notes,
-			order: ing.order
-		})),
-		instructions: recipe.instructions.map((inst) => ({
-			recipeId: inst.recipeId,
-			stepNumber: inst.stepNumber,
-			titlePl: inst.titlePl,
-			titleEn: inst.titleEn,
-			descriptionPl: inst.descriptionPl,
-			descriptionEn: inst.descriptionEn
-		}))
 	};
 }

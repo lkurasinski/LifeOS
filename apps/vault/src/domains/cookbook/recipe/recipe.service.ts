@@ -1,18 +1,19 @@
 import { prisma } from '$lib/server/prisma';
 import { createSlugWithSuffix, isUniqueConstraintError } from '$lib/server/slug';
 import type { CreateRecipeInput } from './recipe.api.schema';
-import { mapCreateInputToRecipeData, type RecipeWithRelations } from './recipe.mappers';
+import {
+	mapCreateInputToRecipeDb,
+	type RecipeWithRelations
+} from './server/integrations/db/create-recipe.db.mappers';
 
 type PrismaTransaction = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
 
-export async function createRecipe(
+export async function createRecipeInDb(
 	input: CreateRecipeInput,
 	userId: number
 ): Promise<RecipeWithRelations> {
-	console.log('Creating Recipe... *****************');
-	console.log(input);
 	const slug = await generateUniqueSlug(input.namePl);
-	const recipeData = mapCreateInputToRecipeData(input, userId, slug);
+	const recipeData = mapCreateInputToRecipeDb(input, userId, slug);
 
 	const recipe = await prisma.$transaction(async (tx) => {
 		const created = await tx.recipe.create({

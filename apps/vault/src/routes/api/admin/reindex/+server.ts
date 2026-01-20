@@ -1,12 +1,14 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { logger } from '$lib/server/logger/logger';
 import {
 	findFoodsNeedingReindex,
-	indexFoodsBatch,
+	indexFoodsBatch
+} from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.indexation';
+import {
 	findRecipesNeedingReindex,
 	indexRecipesBatch
-} from '$lib/server/typesense/index';
-import { logger } from '$lib/server/logger/logger';
+} from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.indexation';
 
 /**
  * Reconciliation endpoint for Typesense indexing

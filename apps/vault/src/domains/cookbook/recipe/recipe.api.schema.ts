@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { mealTypeSchema } from './recipe.schema';
+import { mealTypes } from './recipe.schema';
 
 export const createRecipeIngredientInputSchema = z.object({
 	foodId: z.coerce.number(),
@@ -26,7 +26,7 @@ export const createRecipeInputSchema = z.object({
 	isPublic: z.boolean().optional().default(true),
 	imageUrl: z.union([z.string().url('Invalid URL'), z.literal('')]).optional(),
 	awesomeness: z.number().int().min(1).max(5).optional(),
-	mealType: z.array(mealTypeSchema).default([]),
+	mealType: z.array(mealTypes).default([]),
 	ingredients: z.array(createRecipeIngredientInputSchema).min(1),
 	instructions: z.array(createRecipeInstructionInputSchema).optional(),
 	tags: z.array(z.string()).optional()

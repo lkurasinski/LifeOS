@@ -5,10 +5,16 @@
 import { prisma } from '$lib/server/prisma';
 import { typesense } from '$lib/server/typesense';
 import { logger } from '$lib/server/logger/logger';
-import type { RecipeDocument } from './types';
+import type {
+	TypesenseRecipeDifficulty,
+	TypesenseRecipeDocument
+} from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 import { NUTRIENTS } from '$domains/cookbook/foods/constants/nutrients';
+import { Unit } from '$lib/schemas/unit.schema';
 
 const COLLECTION_NAME = 'recipes';
+
+const ENERGY_PRIORITY = ['ENERC_kcal', 'ENERC_ASF_kcal', 'ENERC_AGF_kcal', 'ENERA_kcal'] as const;
 
 /**
  * Fetch recipe from database with all relations
@@ -75,9 +81,33 @@ function calculateRecipeNutrients(
 
 		const amountGrams = ingredient.amount;
 
+		let energyForThisIngredient: number | null = null;
+
+		for (const code of ENERGY_PRIORITY) {
+			const match = ingredient.food.nutritions.find((n) => n.nutritionId === code);
+			if (match) {
+				energyForThisIngredient = (match.amount * amountGrams) / 100;
+				break;
+			}
+		}
+
+		console.log(energyForThisIngredient);
+
+		if (energyForThisIngredient != null) {
+			const actual = Number(energyForThisIngredient.toFixed(4));
+			energyKcal += actual;
+			nutrients['ENERC_KCAL'] ??= 0;
+			nutrients['ENERC_KCAL'] += actual;
+		}
+
 		// Process each nutrient for this ingredient
 		for (const foodNutrition of ingredient.food.nutritions) {
 			const nutrientId = foodNutrition.nutritionId;
+
+			if (ENERGY_PRIORITY.includes(nutrientId as any)) {
+				continue;
+			}
+
 			const valuePerc100g = foodNutrition.amount;
 
 			// Calculate actual amount: (value_per_100g * amount_grams) / 100
@@ -90,10 +120,8 @@ function calculateRecipeNutrients(
 			nutrients[nutrientId] += actualAmount;
 
 			// Also track common nutrients for fast filtering
+
 			switch (nutrientId) {
-				case 'ENERC_KCAL':
-					energyKcal += actualAmount;
-					break;
 				case NUTRIENTS.PROTCNT_g.code:
 					protein += actualAmount;
 					break;
@@ -125,14 +153,14 @@ function calculateRecipeNutrients(
  */
 function transformRecipeToDocument(
 	recipe: NonNullable<Awaited<ReturnType<typeof fetchRecipeWithRelations>>>
-): RecipeDocument {
+): TypesenseRecipeDocument {
 	// Map ingredients
 	const ingredients = recipe.ingredients.map((ing) => ({
 		food_id: ing.foodId,
 		food_name_pl: ing.food.namePl ?? undefined,
 		food_name_en: ing.food.nameEn,
 		amount: ing.amount ?? undefined,
-		unit: ing.unit,
+		unit: matchUnit(ing.unit),
 		notes: ing.notes ?? undefined
 	}));
 
@@ -151,7 +179,7 @@ function transformRecipeToDocument(
 	// Calculate nutrients
 	const { nutrients, energyKcal, protein, fat, carbs, fiber } = calculateRecipeNutrients(recipe);
 
-	const doc: RecipeDocument = {
+	const doc: TypesenseRecipeDocument = {
 		id: String(recipe.id),
 		slug: recipe.slug,
 		user_id: String(recipe.userId),
@@ -170,7 +198,7 @@ function transformRecipeToDocument(
 	if (recipe.descriptionEn) doc.description_en = recipe.descriptionEn;
 	if (recipe.prepTimeMinutes) doc.prep_time_minutes = recipe.prepTimeMinutes;
 	if (recipe.cookTimeMinutes) doc.cook_time_minutes = recipe.cookTimeMinutes;
-	if (recipe.difficulty) doc.difficulty = recipe.difficulty;
+	if (recipe.difficulty) doc.difficulty = matchRecipeDifficulty(recipe.difficulty);
 	if (recipe.imageUrl) doc.image_url = recipe.imageUrl;
 	if (recipe.awesomeness) doc.awesomeness = recipe.awesomeness;
 	if (ingredients.length > 0) doc.ingredients = ingredients;
@@ -319,3 +347,36 @@ export async function removeRecipeFromIndex(recipeId: number): Promise<boolean> 
 		return false;
 	}
 }
+
+const matchRecipeDifficulty = (difficulty: string | undefined): TypesenseRecipeDifficulty => {
+	switch (difficulty) {
+		case 'easy':
+		case 'medium':
+		case 'hard':
+			return difficulty;
+		default:
+			return undefined;
+	}
+};
+
+const matchUnit = (unit: string): Unit => {
+	switch (unit) {
+		case 'gram':
+		case 'ml':
+		case 'liter':
+		case 'kilogram':
+		case 'teaspoon':
+		case 'tablespoon':
+		case 'cup':
+		case 'piece':
+		case 'pinch':
+		case 'clove':
+		case 'slice':
+		case 'handful':
+		case 'can':
+		case 'package':
+			return unit;
+		default:
+			return 'gram';
+	}
+};

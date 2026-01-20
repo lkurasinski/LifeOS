@@ -5,7 +5,8 @@
 import { prisma } from '$lib/server/prisma';
 import { typesense } from '$lib/server/typesense';
 import { logger } from '$lib/server/logger/logger';
-import type { FoodDocument } from './types';
+import type { Typesense_FoodDocument } from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.schema';
+import type { DataSourceProviders } from '$lib/schemas/dataSource.schema';
 
 const COLLECTION_NAME = 'foods';
 
@@ -18,7 +19,7 @@ const NUTRIENT_MAPPING = {
 	FAT: 'fat',
 	CHOAVL: 'carbs',
 	FIBTG: 'fiber'
-} as const;
+} as const satisfies Record<string, keyof Typesense_FoodDocument>;
 
 /**
  * Fetch food from database with all nutrients
@@ -41,10 +42,10 @@ async function fetchFoodWithNutrients(foodId: number) {
  */
 function transformFoodToDocument(
 	food: NonNullable<Awaited<ReturnType<typeof fetchFoodWithNutrients>>>
-): FoodDocument {
+): Typesense_FoodDocument {
 	// Build nutrients object with INFOODS codes as keys
 	const nutrients: Record<string, number> = {};
-	const denormalized: Partial<FoodDocument> = {};
+	const denormalized: Partial<Typesense_FoodDocument> = {};
 
 	for (const fn of food.nutritions) {
 		const code = fn.nutrition.id;
@@ -57,11 +58,12 @@ function transformFoodToDocument(
 		}
 	}
 
-	const doc: FoodDocument = {
+	const doc: Typesense_FoodDocument = {
 		id: String(food.id),
 		name_en: food.nameEn,
 		created_at: Math.floor(food.createdAt.getTime() / 1000),
 		updated_at: Math.floor(food.updatedAt.getTime() / 1000),
+		source_provider: matchSourceProvider(food?.sourceProvider),
 		...denormalized
 	};
 
@@ -70,13 +72,23 @@ function transformFoodToDocument(
 	if (food.scientificName) doc.scientific_name = food.scientificName;
 	if (food.category) doc.category = food.category;
 	if (food.brand) doc.brand = food.brand;
-	if (food.sourceProvider) doc.source_provider = food.sourceProvider;
 	if (food.sourceExternalId) doc.source_external_id = food.sourceExternalId;
 	if (food.sourceUrl) doc.source_url = food.sourceUrl;
 	if (Object.keys(nutrients).length > 0) doc.nutrients = nutrients;
 
 	return doc;
 }
+
+const matchSourceProvider = (source: string | undefined | null): DataSourceProviders => {
+	switch (source) {
+		case 'fdc':
+		case 'openfoodfacts':
+		case 'home-baked':
+			return source;
+		default:
+			return 'home-baked';
+	}
+};
 
 /**
  * Index a single food to Typesense

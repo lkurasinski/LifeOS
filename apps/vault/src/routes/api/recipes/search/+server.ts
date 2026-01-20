@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { typesense } from '$lib/server/typesense';
 import {
 	typesenseRecipeDocumentSchema,
-	type RecipeSearchResult
+	type TypesenseRecipeDocument
 } from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -49,13 +49,12 @@ export const GET: RequestHandler = async ({ url }) => {
 				filter_by: filterBy.join(' && ')
 			});
 
-		const hits = (result.hits ?? []).map((hit: any): RecipeSearchResult => {
+		const hits = (result.hits ?? []).map((hit) => {
 			const doc = typesenseRecipeDocumentSchema.parse(hit.document);
 
 			return {
 				id: doc.id,
-				userId: doc.user_id,
-				userName: doc.user_name ?? null,
+				user_id: doc.user_id,
 				namePl: doc.name_pl,
 				nameEn: doc.name_en ?? null,
 				descriptionPl: doc.description_pl ?? null,

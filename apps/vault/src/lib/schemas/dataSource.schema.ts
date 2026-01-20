@@ -9,3 +9,4 @@ export const dataSourceSchema = z.object({
 });
 
 export type DataSource = z.infer<typeof dataSourceSchema>;
+export type DataSourceProviders = z.infer<typeof dataSourceProviders>;
