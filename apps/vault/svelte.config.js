@@ -14,7 +14,11 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			$domains: path.resolve('./src/domains')
+			$domains: path.resolve('./src/domain'),
+			$module: path.resolve('./src/module'),
+			$contracts: path.resolve('./src/contracts'),
+			$backend: path.resolve('./src/backend'),
+			$frontend: path.resolve('./src/frontend')
 		}
 	}
 };

@@ -1,14 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { logger } from '$lib/server/logger/logger';
-import {
-	findFoodsNeedingReindex,
-	indexFoodsBatch
-} from '$domains/cookbook/foods/server/integrations/typesense/foods.typesense.indexation';
-import {
-	findRecipesNeedingReindex,
-	indexRecipesBatch
-} from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.indexation';
+import { adminReindexController } from '$backend/cookbook/common/api/adminReindex.controller';
 
 /**
  * Reconciliation endpoint for Typesense indexing
@@ -23,61 +15,9 @@ import {
  *
  * Security: Add authentication if deploying to production!
  */
-export const POST: RequestHandler = async ({ request }) => {
-	const startTime = Date.now();
-
-	try {
-		// Optional: Add API key authentication
-		const authHeader = request.headers.get('authorization');
-		const expectedKey = process.env.ADMIN_API_KEY;
-
-		if (expectedKey && authHeader !== `Bearer ${expectedKey}`) {
-			logger.warn('Unauthorized reindex attempt');
-			return json({ error: 'Unauthorized' }, { status: 401 });
-		}
-
-		logger.info('Starting Typesense reconciliation');
-
-		// Find foods needing reindex
-		const foodIds = await findFoodsNeedingReindex();
-		logger.info({ count: foodIds.length }, 'Found foods needing reindex');
-
-		// Index foods in batch
-		const foodsIndexed = await indexFoodsBatch(foodIds);
-		logger.info({ indexed: foodsIndexed, total: foodIds.length }, 'Foods reindexed');
-
-		// Find recipes needing reindex
-		const recipeIds = await findRecipesNeedingReindex();
-		logger.info({ count: recipeIds.length }, 'Found recipes needing reindex');
-
-		// Index recipes in batch
-		const recipesIndexed = await indexRecipesBatch(recipeIds);
-		logger.info({ indexed: recipesIndexed, total: recipeIds.length }, 'Recipes reindexed');
-
-		const duration = Date.now() - startTime;
-
-		return json({
-			success: true,
-			duration_ms: duration,
-			foods: {
-				found: foodIds.length,
-				indexed: foodsIndexed,
-				failed: foodIds.length - foodsIndexed
-			},
-			recipes: {
-				found: recipeIds.length,
-				indexed: recipesIndexed,
-				failed: recipeIds.length - recipesIndexed
-			}
-		});
-	} catch (error) {
-		logger.error({ error }, 'Reconciliation failed');
-		return json(
-			{
-				success: false,
-				error: 'Reconciliation failed'
-			},
-			{ status: 500 }
-		);
+export const POST: RequestHandler = async ({ locals }) => {
+	if (!locals.user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
+	return adminReindexController(locals.user.id);
 };

@@ -9,10 +9,10 @@
  * 5. Generates a detailed report
  */
 
-import { PrismaClient } from '@prisma/client';
-import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { PrismaClient } from "@prisma/client";
+import { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 // Import the existing FDC mapping from the frontend integration
 // We need to read it as a file since we can't import TS from this location
@@ -48,20 +48,38 @@ interface FDCData {
 
 // Load FDC to INFOODS mapping from the existing file
 function loadFdcMapping(): Record<number, string> {
-  const mappingPath = join(__dirname, '..', '..', '..', '..', 'apps', 'vault', 'src', 'lib', 'domain', 'cookbook', 'foods', 'integrations', 'fdc', 'fdc-nutrient-mapping.ts');
-  const content = readFileSync(mappingPath, 'utf-8');
+  const mappingPath = join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "..",
+    "apps",
+    "vault",
+    "src",
+    "lib",
+    "domain",
+    "cookbook",
+    "foods",
+    "integrations",
+    "fdc",
+    "fdc-nutrient-mapping.ts",
+  );
+  const content = readFileSync(mappingPath, "utf-8");
 
   // Parse the FDC_TO_INFOODS object from the TypeScript file
-  const mapMatch = content.match(/export const FDC_TO_INFOODS: Record<number, string> = \{([^}]+)\}/s);
+  const mapMatch = content.match(
+    /export const FDC_TO_INFOODS: Record<number, string> = \{([^}]+)\}/s,
+  );
   if (!mapMatch) {
-    throw new Error('Could not parse FDC_TO_INFOODS mapping from file');
+    throw new Error("Could not parse FDC_TO_INFOODS mapping from file");
   }
 
   const mapContent = mapMatch[1];
   const mapping: Record<number, string> = {};
 
   // Parse each line like: 1008: 'ENERC_KCAL', // Energy (kcal)
-  const lines = mapContent.split('\n');
+  const lines = mapContent.split("\n");
   for (const line of lines) {
     const match = line.match(/^\s*(\d+):\s*['"]([^'"]+)['"]/);
     if (match) {
@@ -76,22 +94,24 @@ function loadFdcMapping(): Record<number, string> {
 
 async function verifyMapping() {
   try {
-    console.log('🔍 FDC Nutrient Mapping Verification\n');
-    console.log('=' .repeat(80));
+    console.log("🔍 FDC Nutrient Mapping Verification\n");
+    console.log("=".repeat(80));
 
     // Load FDC foundation foods
-    console.log('\n📁 Loading FDC foundation foods...');
-    const fdcPath = join(__dirname, 'fd-foundation.json');
-    const fdcData: FDCData = JSON.parse(readFileSync(fdcPath, 'utf-8'));
+    console.log("\n📁 Loading FDC foundation foods...");
+    const fdcPath = join(__dirname, "fd-foundation.json");
+    const fdcData: FDCData = JSON.parse(readFileSync(fdcPath, "utf-8"));
     console.log(`   ✓ Loaded ${fdcData.FoundationFoods.length} foods`);
 
     // Load FDC mapping
-    console.log('\n📋 Loading FDC → INFOODS mapping...');
+    console.log("\n📋 Loading FDC → INFOODS mapping...");
     const fdcMapping = loadFdcMapping();
-    console.log(`   ✓ Loaded ${Object.keys(fdcMapping).length} mapped nutrients`);
+    console.log(
+      `   ✓ Loaded ${Object.keys(fdcMapping).length} mapped nutrients`,
+    );
 
     // Extract all unique FDC nutrient IDs and their details
-    console.log('\n🔬 Analyzing nutrients in FDC foods...');
+    console.log("\n🔬 Analyzing nutrients in FDC foods...");
     const uniqueNutrients = new Map<number, FDCNutrient>();
     const nutrientOccurrences = new Map<number, number>();
 
@@ -105,7 +125,7 @@ async function verifyMapping() {
 
         nutrientOccurrences.set(
           nutrientId,
-          (nutrientOccurrences.get(nutrientId) || 0) + 1
+          (nutrientOccurrences.get(nutrientId) || 0) + 1,
         );
       }
     }
@@ -113,19 +133,31 @@ async function verifyMapping() {
     console.log(`   ✓ Found ${uniqueNutrients.size} unique nutrients`);
 
     // Load database nutrients
-    console.log('\n💾 Loading nutrients from database...');
+    console.log("\n💾 Loading nutrients from database...");
     await prisma.$connect();
     const dbNutrients = await prisma.nutrition.findMany({
-      select: { id: true }
+      select: { id: true },
     });
-    const dbNutrientIds = new Set(dbNutrients.map(n => n.id));
+    const dbNutrientIds = new Set(dbNutrients.map((n) => n.id));
     console.log(`   ✓ Database has ${dbNutrients.length} nutrients`);
 
     // Verify each nutrient
-    console.log('\n✨ Verifying mapping...');
-    const mapped: Array<{fdcId: number, nutrient: FDCNutrient, infoodsCode: string}> = [];
-    const unmapped: Array<{fdcId: number, nutrient: FDCNutrient, occurrences: number}> = [];
-    const mappedButMissingInDb: Array<{fdcId: number, nutrient: FDCNutrient, infoodsCode: string}> = [];
+    console.log("\n✨ Verifying mapping...");
+    const mapped: Array<{
+      fdcId: number;
+      nutrient: FDCNutrient;
+      infoodsCode: string;
+    }> = [];
+    const unmapped: Array<{
+      fdcId: number;
+      nutrient: FDCNutrient;
+      occurrences: number;
+    }> = [];
+    const mappedButMissingInDb: Array<{
+      fdcId: number;
+      nutrient: FDCNutrient;
+      infoodsCode: string;
+    }> = [];
 
     for (const [fdcId, nutrient] of uniqueNutrients) {
       const infoodsCode = fdcMapping[fdcId];
@@ -134,7 +166,7 @@ async function verifyMapping() {
         unmapped.push({
           fdcId,
           nutrient,
-          occurrences: nutrientOccurrences.get(fdcId) || 0
+          occurrences: nutrientOccurrences.get(fdcId) || 0,
         });
       } else {
         if (dbNutrientIds.has(infoodsCode)) {
@@ -154,28 +186,32 @@ async function verifyMapping() {
     const coveragePercent = ((usableCount / totalNutrients) * 100).toFixed(1);
 
     // Print results
-    console.log('\n' + '='.repeat(80));
-    console.log('📊 VERIFICATION RESULTS');
-    console.log('='.repeat(80));
+    console.log("\n" + "=".repeat(80));
+    console.log("📊 VERIFICATION RESULTS");
+    console.log("=".repeat(80));
 
-    console.log(`\n✅ Mapped & Available: ${mappedCount} nutrients (${coveragePercent}% coverage)`);
+    console.log(
+      `\n✅ Mapped & Available: ${mappedCount} nutrients (${coveragePercent}% coverage)`,
+    );
     console.log(`⚠️  Unmapped: ${unmappedCount} nutrients`);
     console.log(`❌ Mapped but Missing in DB: ${missingInDbCount} nutrients`);
     console.log(`📈 Total unique nutrients: ${totalNutrients}`);
 
     // Show unmapped nutrients
     if (unmapped.length > 0) {
-      console.log('\n' + '='.repeat(80));
-      console.log('⚠️  UNMAPPED NUTRIENTS (missing from mapping)');
-      console.log('='.repeat(80));
-      console.log('\nFDC ID | Number | Name | Unit | Occurrences');
-      console.log('-'.repeat(80));
+      console.log("\n" + "=".repeat(80));
+      console.log("⚠️  UNMAPPED NUTRIENTS (missing from mapping)");
+      console.log("=".repeat(80));
+      console.log("\nFDC ID | Number | Name | Unit | Occurrences");
+      console.log("-".repeat(80));
 
       // Sort by occurrences (most common first)
       unmapped.sort((a, b) => b.occurrences - a.occurrences);
 
       for (const { fdcId, nutrient, occurrences } of unmapped) {
-        console.log(`${fdcId.toString().padEnd(7)}| ${nutrient.number.padEnd(7)}| ${nutrient.name.padEnd(40).substring(0, 40)}| ${nutrient.unitName.padEnd(5)}| ${occurrences}`);
+        console.log(
+          `${fdcId.toString().padEnd(7)}| ${nutrient.number.padEnd(7)}| ${nutrient.name.padEnd(40).substring(0, 40)}| ${nutrient.unitName.padEnd(5)}| ${occurrences}`,
+        );
       }
 
       console.log(`\nTotal: ${unmapped.length} unmapped nutrients`);
@@ -183,40 +219,52 @@ async function verifyMapping() {
 
     // Show mapped but missing in DB
     if (mappedButMissingInDb.length > 0) {
-      console.log('\n' + '='.repeat(80));
-      console.log('❌ MAPPED BUT MISSING IN DATABASE');
-      console.log('='.repeat(80));
-      console.log('\nFDC ID | Number | Name | INFOODS Code');
-      console.log('-'.repeat(80));
+      console.log("\n" + "=".repeat(80));
+      console.log("❌ MAPPED BUT MISSING IN DATABASE");
+      console.log("=".repeat(80));
+      console.log("\nFDC ID | Number | Name | INFOODS Code");
+      console.log("-".repeat(80));
 
       for (const { fdcId, nutrient, infoodsCode } of mappedButMissingInDb) {
-        console.log(`${fdcId.toString().padEnd(7)}| ${nutrient.number.padEnd(7)}| ${nutrient.name.padEnd(40).substring(0, 40)}| ${infoodsCode}`);
+        console.log(
+          `${fdcId.toString().padEnd(7)}| ${nutrient.number.padEnd(7)}| ${nutrient.name.padEnd(40).substring(0, 40)}| ${infoodsCode}`,
+        );
       }
 
       console.log(`\nTotal: ${mappedButMissingInDb.length} nutrients`);
     }
 
     // Summary recommendations
-    console.log('\n' + '='.repeat(80));
-    console.log('💡 RECOMMENDATIONS');
-    console.log('='.repeat(80));
+    console.log("\n" + "=".repeat(80));
+    console.log("💡 RECOMMENDATIONS");
+    console.log("=".repeat(80));
 
     if (unmapped.length > 0) {
-      console.log(`\n1. Add ${unmapped.length} missing nutrients to FDC_TO_INFOODS mapping`);
-      console.log('   Location: apps/vault/src/lib/domain/cookbook/foods/integrations/fdc/fdc-nutrient-mapping.ts');
+      console.log(
+        `\n1. Add ${unmapped.length} missing nutrients to FDC_TO_INFOODS mapping`,
+      );
+      console.log(
+        "   Location: apps/vault/src/lib/dto/cookbook/foods/integrations/fdc/fdc-nutrient-mapping.ts",
+      );
     }
 
     if (mappedButMissingInDb.length > 0) {
-      console.log(`\n2. Add ${mappedButMissingInDb.length} missing INFOODS nutrients to database`);
-      console.log('   Location: packages/db/seeds/nutrients/nutrients-definition.csv');
+      console.log(
+        `\n2. Add ${mappedButMissingInDb.length} missing INFOODS nutrients to database`,
+      );
+      console.log(
+        "   Location: packages/db/seeds/nutrients/nutrients-definition.csv",
+      );
     }
 
     if (unmapped.length === 0 && mappedButMissingInDb.length === 0) {
-      console.log('\n✅ All FDC nutrients are properly mapped and available in database!');
-      console.log('   You can proceed with seeding FDC foods.');
+      console.log(
+        "\n✅ All FDC nutrients are properly mapped and available in database!",
+      );
+      console.log("   You can proceed with seeding FDC foods.");
     }
 
-    console.log('\n' + '='.repeat(80));
+    console.log("\n" + "=".repeat(80));
 
     // Return status for programmatic use
     return {
@@ -227,16 +275,15 @@ async function verifyMapping() {
         unmapped: unmappedCount,
         missingInDb: missingInDbCount,
         usable: usableCount,
-        coverage: parseFloat(coveragePercent)
+        coverage: parseFloat(coveragePercent),
       },
       unmappedNutrients: unmapped,
-      missingInDbNutrients: mappedButMissingInDb
+      missingInDbNutrients: mappedButMissingInDb,
     };
-
   } catch (error) {
-    console.error('❌ Error during verification:', error);
+    console.error("❌ Error during verification:", error);
     if (error instanceof Error) {
-      console.error('Stack trace:', error.stack);
+      console.error("Stack trace:", error.stack);
     }
     throw error;
   } finally {
@@ -245,23 +292,23 @@ async function verifyMapping() {
 }
 
 // Run if called directly
-const scriptPath = fileURLToPath(import.meta.url).replace(/\\/g, '/');
-const entryPath = process.argv[1]?.replace(/\\/g, '/') || '';
+const scriptPath = fileURLToPath(import.meta.url).replace(/\\/g, "/");
+const entryPath = process.argv[1]?.replace(/\\/g, "/") || "";
 const isMainModule = scriptPath === entryPath;
 
 if (isMainModule) {
   verifyMapping()
     .then((result) => {
       if (result.success) {
-        console.log('\n✅ Verification passed!');
+        console.log("\n✅ Verification passed!");
         process.exit(0);
       } else {
-        console.log('\n⚠️  Verification completed with issues.');
+        console.log("\n⚠️  Verification completed with issues.");
         process.exit(1);
       }
     })
     .catch((error) => {
-      console.error('💥 Verification failed:', error);
+      console.error("💥 Verification failed:", error);
       process.exit(1);
     });
 }

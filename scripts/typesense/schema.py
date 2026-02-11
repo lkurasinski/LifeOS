@@ -1,31 +1,22 @@
-#!/usr/bin/env python3
-"""
-Typesense collection schema definitions.
-"""
-
-# Foods collection schema
 FOODS_SCHEMA = {
     "name": "foods",
     "enable_nested_fields": True,
     "fields": [
-        {"name": "id", "type": "string"},  # Typesense requires document ID as string
+        {"name": "id", "type": "string"},
         {"name": "name_en", "type": "string"},
         {"name": "name_pl", "type": "string", "optional": True},
         {"name": "scientific_name", "type": "string", "optional": True},
         {"name": "category", "type": "string", "facet": True, "optional": True},
         {"name": "brand", "type": "string", "facet": True, "optional": True},
 
-        # Denormalized common nutrients for fast sorting/filtering (per 100g)
         {"name": "energy_kcal", "type": "float", "optional": True, "facet": True},
         {"name": "protein", "type": "float", "optional": True, "facet": True},
         {"name": "fat", "type": "float", "optional": True, "facet": True},
         {"name": "carbs", "type": "float", "optional": True, "facet": True},
         {"name": "fiber", "type": "float", "optional": True, "facet": True},
 
-        # Complete nutrition data as object with INFOODS codes as keys
         {"name": "nutrients", "type": "object", "optional": True},
 
-        # Source tracking
         {"name": "source_provider", "type": "string", "facet": True, "optional": True},
         {"name": "source_external_id", "type": "string", "optional": True},
         {"name": "source_url", "type": "string", "optional": True},

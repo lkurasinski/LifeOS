@@ -2,18 +2,7 @@
  * Central definition of all internal API routes.
  * Use these constants instead of hardcoding paths throughout the app.
  */
-
-/**
- * Available food sources for API queries
- * These correspond to the strategy registry in food-sources service
- */
-export const FOOD_SOURCES = {
-	INTERNAL: 'internal',
-	FDC: 'fdc',
-	OPENFOODFACTS: 'openfoodfacts'
-};
-
-export type FoodSourceType = (typeof FOOD_SOURCES)[keyof typeof FOOD_SOURCES];
+import type { FoodSourceProviders } from '$contracts/cookbook/food/FoodDataSource.dto';
 
 const AUTH_ROUTES = {
 	LOGIN: '/api/auth/login',
@@ -24,9 +13,9 @@ const AUTH_ROUTES = {
 const FOOD_ROUTES = {
 	CREATE: '/api/foods',
 	SEARCH: '/api/foods/search',
-	DETAILS: (id: string | number, source?: FoodSourceType) => {
+	DETAILS: (id: string | number, provider?: FoodSourceProviders) => {
 		const path = `/api/foods/${id}`;
-		return source ? `${path}?source=${source}` : path;
+		return provider ? `${path}?provider=${provider}` : path;
 	}
 };
 

@@ -1,23 +1,22 @@
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getStrategy } from '../../../../domains/cookbook/foods/server/services/food-sources';
+import { getFoodByIdController } from '$backend/cookbook/food/api/getFoodById.controller';
+import { ApiError } from '$backend/common/utils/api.utils';
+import { json } from '@sveltejs/kit';
+import { z } from 'zod';
 
 export const GET: RequestHandler = async ({ params, url }) => {
-	const { id } = params;
-	const source = url.searchParams.get('source') || 'internal';
-
-	if (!id) {
-		return json({ error: 'ID parameter is required' }, { status: 400 });
-	}
-
 	try {
-		const strategy = getStrategy(source);
-		const food = await strategy.getById(Number(id));
-
-		return json(food);
+		return getFoodByIdController(params, url.searchParams);
 	} catch (error) {
-		console.error('Food detail error:', error);
-		const message = error instanceof Error ? error.message : 'Failed to fetch food details';
-		return json({ error: message }, { status: 500 });
+		if (error instanceof z.ZodError) {
+			return json({ error: 'Invalid food data', details: error.issues }, { status: 500 });
+		}
+
+		if (error instanceof ApiError) {
+			return json({ error: error.message }, { status: 502 });
+		}
+
+		console.error('Unexpected error:', error);
+		return json({ error: 'Internal server error' }, { status: 500 });
 	}
 };

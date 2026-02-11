@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const CONFIG_FILE = path.join(__dirname, '..', 'openapi.config.json');
-const ENV_FILE = path.join(__dirname, '..', '..', '..', '.env');
+const ENV_FILE = path.join(__dirname, '..', '.env');
 
 // Load configuration
 const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));

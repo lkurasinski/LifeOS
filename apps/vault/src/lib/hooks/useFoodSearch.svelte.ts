@@ -15,13 +15,14 @@ import { createQuery } from '@tanstack/svelte-query';
 import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
 import { fetchJson } from '$lib/api/client';
 import { SEARCH_CONFIG, ANIMATION } from '$lib/constants/ui';
-import type { Food } from '$domains/cookbook/foods';
+import type { FoodSourceProviders } from '$contracts/cookbook/food/FoodDataSource.dto';
+import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
 
 interface UseFoodSearchOptions {
-	source?: 'internal' | 'fdc' | 'openfoodfacts';
+	provider?: FoodSourceProviders;
 	dataType?: string;
 	apiVersion?: string;
-	pageSize?: number;
+	page?: number;
 	minChars?: number;
 	autoSearch?: boolean;
 	loadingDelay?: number;
@@ -35,10 +36,10 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 
 	const searchQuery = createQuery(() => {
 		const {
-			source = 'internal',
+			provider = 'home-baked',
 			dataType = undefined,
 			apiVersion = undefined,
-			pageSize = SEARCH_CONFIG.DEFAULT_PAGE_SIZE,
+			page = SEARCH_CONFIG.DEFAULT_PAGE_SIZE,
 			minChars = SEARCH_CONFIG.MIN_QUERY_LENGTH,
 			autoSearch = true,
 			loadingDelay = ANIMATION.DURATION.NORMAL,
@@ -46,20 +47,20 @@ export function useFoodSearch(getOptions: () => UseFoodSearchOptions = () => ({}
 		} = getOptions();
 
 		return {
-			queryKey: ['foods', 'search', source, query, pageSize, apiVersion, exclude] as const,
+			queryKey: ['foods', 'search', provider, query, page, apiVersion, exclude] as const,
 			queryFn: () =>
-				fetchJson<{ items: Food[] }>(
+				fetchJson<{ items: FoodDto[] }>(
 					buildSearchUrl(API_ROUTES.FOODS.SEARCH, {
-						source: source !== 'internal' ? source : undefined,
+						provider,
 						dataType,
 						apiVersion,
-						q: query,
-						pageSize,
+						text: query,
+						page: page,
 						exclude: exclude?.join(',')
 					})
 				),
 			enabled: autoSearch && query.length >= minChars,
-			placeholderData: (previousData: { items: Food[] } | undefined) => previousData
+			placeholderData: (previousData: { items: FoodDto[] } | undefined) => previousData
 		};
 	});
 

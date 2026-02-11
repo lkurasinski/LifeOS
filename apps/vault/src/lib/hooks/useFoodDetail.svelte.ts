@@ -18,26 +18,26 @@
 import { createQuery } from '@tanstack/svelte-query';
 import { API_ROUTES } from '$lib/api/api-routes';
 import { fetchJson } from '$lib/api/client';
-import type { Food } from '$domains/cookbook/foods';
-import type { FoodSourceType } from '$lib/api/api-routes';
+import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
+import type { FoodSourceProviders } from '$contracts/cookbook/food/FoodDataSource.dto';
 
 interface UseFoodDetailOptions {
-	foodId: number | string | null;
-	source?: FoodSourceType | 'internal' | 'fdc';
+	foodId: number | string | undefined;
+	provider?: FoodSourceProviders;
 	enabled?: boolean;
 }
 
 export function useFoodDetail(getOptions: () => UseFoodDetailOptions) {
 	const detailQuery = createQuery(() => {
-		const { foodId, source, enabled = true } = getOptions();
+		const { foodId, provider, enabled = true } = getOptions();
 
 		return {
-			queryKey: ['foods', 'detail', foodId, source] as const,
+			queryKey: ['foods', 'detail', foodId, provider] as const,
 			queryFn: () => {
 				if (!foodId) {
 					throw new Error('Food ID is required');
 				}
-				return fetchJson<Food>(API_ROUTES.FOODS.DETAILS(foodId, source));
+				return fetchJson<FoodDto>(API_ROUTES.FOODS.DETAILS(foodId, provider));
 			},
 			enabled: enabled && !!foodId,
 			staleTime: 5 * 60 * 1000 // 5 minutes - food details don't change often

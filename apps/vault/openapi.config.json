@@ -9,7 +9,7 @@
 				"envVar": "FDC_API_KEY"
 			},
 			"output": {
-				"spec": "src/lib/integrations/fdc/fdc-api-spec.json"
+				"spec": "src/backend/cookbook/food/infrastructure/fdc/FoodCatalog/fdc-api-spec.json"
 			}
 		}
 	]

@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { z } from 'zod';
-import { createRecipeInputSchema } from '$domains/cookbook/recipe/recipe.api.schema';
-import { createRecipeInDb } from '$domains/cookbook/recipe/recipe.service';
-import { indexRecipe } from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.indexation';
+import { createRecipeInputSchema } from '$frontend/cookbook/recipe/recipe.api.schema';
+import { createRecipeInDb } from '$frontend/cookbook/recipe/recipe.service';
+import { indexRecipe } from '$frontend/cookbook/recipe/server/integrations/typesense/recipe.typesense.indexation';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	try {

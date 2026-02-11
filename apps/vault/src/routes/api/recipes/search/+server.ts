@@ -4,7 +4,14 @@ import { typesense } from '$lib/server/typesense';
 import {
 	typesenseRecipeDocumentSchema,
 	type TypesenseRecipeDocument
-} from '$domains/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
+} from '$frontend/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
+
+export type RecipeSearchResults = {
+	items: TypesenseRecipeDocument[];
+	total: number;
+	page: number;
+	perPage: number;
+};
 
 export const GET: RequestHandler = async ({ url }) => {
 	const q = url.searchParams.get('q') ?? '*';
@@ -55,26 +62,26 @@ export const GET: RequestHandler = async ({ url }) => {
 			return {
 				id: doc.id,
 				user_id: doc.user_id,
-				namePl: doc.name_pl,
-				nameEn: doc.name_en ?? null,
-				descriptionPl: doc.description_pl ?? null,
-				descriptionEn: doc.description_en ?? null,
+				name_pl: doc.name_pl,
+				name_en: doc.name_en ?? null,
+				description_pl: doc.description_pl ?? null,
+				description_en: doc.description_en ?? null,
 				servings: doc.servings,
-				prepTimeMinutes: doc.prep_time_minutes ?? null,
-				cookTimeMinutes: doc.cook_time_minutes ?? null,
+				prep_time_minutes: doc.prep_time_minutes ?? null,
+				cook_time_minutes: doc.cook_time_minutes ?? null,
 				difficulty: doc.difficulty ?? null,
-				imageUrl: doc.image_url ?? null,
+				image_url: doc.image_url ?? null,
 				awesomeness: doc.awesomeness ?? null,
-				mealType: doc.meal_type,
+				meal_type: doc.meal_type,
 				ingredients: doc.ingredients,
-				ingredientNames: doc.ingredient_names,
-				componentSlugs: doc.component_slugs,
+				ingredient_names: doc.ingredient_names,
+				component_slugs: doc.component_slugs,
 				tags: doc.tags,
-				energyKcalPerServing: doc.energy_kcal_per_serving ?? null,
-				proteinPerServing: doc.protein_per_serving ?? null,
-				fatPerServing: doc.fat_per_serving ?? null,
-				carbsPerServing: doc.carbs_per_serving ?? null,
-				fiberPerServing: doc.fiber_per_serving ?? null,
+				energy_kcal_per_serving: doc.energy_kcal_per_serving ?? null,
+				protein_per_serving: doc.protein_per_serving ?? null,
+				fat_per_serving: doc.fat_per_serving ?? null,
+				carbs_per_serving: doc.carbs_per_serving ?? null,
+				fiber_per_serving: doc.fiber_per_serving ?? null,
 				nutrients: doc.nutrients,
 				createdAt: new Date(doc.created_at * 1000).toISOString(),
 				updatedAt: new Date(doc.updated_at * 1000).toISOString()
