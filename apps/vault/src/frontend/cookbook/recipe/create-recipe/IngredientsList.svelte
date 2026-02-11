@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fly, scale, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
-	import { ANIMATION } from '$lib/constants/ui';
+	import { ANIMATION } from '$frontend/common/constants/ui';
 	import type { RecipeIngredient } from '$frontend/cookbook/recipe/recipe.schema';
-	import { Label } from '$lib/components/label';
-	import { Input } from '$lib/components/input';
-	import * as Select from '$lib/components/select';
-	import { Button } from '$lib/components/button';
+	import { Label } from '$frontend/common/components/label';
+	import { Input } from '$frontend/common/components/input';
+	import * as Select from '$frontend/common/components/select';
+	import { Button } from '$frontend/common/components/button';
 
 	let {
 		ingredients = $bindable<RecipeIngredient[]>([]),

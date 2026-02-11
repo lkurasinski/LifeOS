@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fly, scale } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
-	import { ANIMATION } from '$lib/constants/ui';
+	import { ANIMATION } from '$frontend/common/constants/ui';
 	import type { RecipeInstruction } from '$frontend/cookbook/recipe/recipe.schema';
-	import MarkdownEditor from '$lib/components/markdown-editor/MarkdownEditor.svelte';
-	import { Button } from '$lib/components/button';
-	import { Label } from '$lib/components/label';
-	import { Input } from '$lib/components/input';
+	import MarkdownEditor from '$frontend/common/components/markdown-editor/MarkdownEditor.svelte';
+	import { Button } from '$frontend/common/components/button';
+	import { Label } from '$frontend/common/components/label';
+	import { Input } from '$frontend/common/components/input';
 
 	let {
 		instructions = $bindable<RecipeInstruction[]>([]),

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { Button } from './button';
 	import ThemeToggle from './ThemeToggle.svelte';
-	import { API_ROUTES } from '$lib/api/api-routes';
+	import { API_ROUTES } from '$frontend/common/api/api-routes';
 
 	interface Props {
 		user?: {

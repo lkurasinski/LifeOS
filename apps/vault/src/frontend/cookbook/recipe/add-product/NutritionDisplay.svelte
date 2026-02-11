@@ -1,13 +1,12 @@
 <script lang="ts">
-	import * as Card from '$lib/components/card';
-	import { Separator } from '$lib/components/separator';
+	import * as Card from '$frontend/common/components/card';
+	import { Separator } from '$frontend/common/components/separator';
 	import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
 
 	let { food }: { food: FoodDto } = $props();
 	const nutrientsByCategory = $derived(
 		food.nutrients?.reduce(
 			(acc, n) => {
-				console.log(n);
 				const category = n.nutrient.categoryId || 'Other';
 
 				if (!acc[category]) acc[category] = [];

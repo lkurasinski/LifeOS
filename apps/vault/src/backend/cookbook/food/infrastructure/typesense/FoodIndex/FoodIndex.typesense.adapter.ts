@@ -1,7 +1,7 @@
 import type { Food, FoodId } from '$backend/cookbook/food/domain/food.types';
-import { typesense } from '$lib/server/typesense';
 import type { FoodIndexPort } from '$backend/cookbook/food/domain/ports/FoodIndex.port';
 import { mapFoodToTypesenseDoc } from '$backend/cookbook/food/infrastructure/typesense/FoodIndex/FoodIndex.typesense.mapper';
+import { typesense } from '$backend/cookbook/food/infrastructure/typesense/client.typesense';
 
 export class TypesenseFoodIndexAdapter implements FoodIndexPort {
 	readonly collectionName = 'foods' as const;

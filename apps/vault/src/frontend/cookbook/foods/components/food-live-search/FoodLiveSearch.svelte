@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import AddProductDialog from '$frontend/cookbook/recipe/add-product/AddProductDialog.svelte';
-	import Button from '../../../../../lib/components/button/Button.svelte';
+	import Button from '$frontend/common/components/button/Button.svelte';
 
 	type FoodOption = {
 		id: string;

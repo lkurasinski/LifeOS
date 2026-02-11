@@ -1,10 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { typesense } from '$lib/server/typesense';
 import {
 	typesenseRecipeDocumentSchema,
 	type TypesenseRecipeDocument
 } from '$frontend/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
+import { typesense } from '$backend/cookbook/food/infrastructure/typesense/client.typesense';
 
 export type RecipeSearchResults = {
 	items: TypesenseRecipeDocument[];

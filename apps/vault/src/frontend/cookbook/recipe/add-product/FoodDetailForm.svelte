@@ -2,13 +2,13 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zod4 } from 'sveltekit-superforms/adapters';
 	import { untrack } from 'svelte';
-	import * as Card from '$lib/components/card';
-	import { LAYOUT } from '$lib/constants/ui';
+	import * as Card from '$frontend/common/components/card';
+	import { LAYOUT } from '$frontend/common/constants/ui';
 	import { foodDetailFormSchema } from './food-detail-form.schema';
-	import { Button } from '$lib/components/button';
-	import { Label } from '$lib/components/label';
-	import { Input } from '$lib/components/input';
-	import { Badge } from '$lib/components/badge';
+	import { Button } from '$frontend/common/components/button';
+	import { Label } from '$frontend/common/components/label';
+	import { Input } from '$frontend/common/components/input';
+	import { Badge } from '$frontend/common/components/badge';
 	import NutritionDisplay from './NutritionDisplay.svelte';
 	import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
 

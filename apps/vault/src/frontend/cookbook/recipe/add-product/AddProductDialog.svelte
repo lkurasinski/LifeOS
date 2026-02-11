@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import * as Dialog from '$lib/components/dialog';
-	import * as Select from '$lib/components/select';
+	import * as Dialog from '$frontend/common/components/dialog';
+	import * as Select from '$frontend/common/components/select';
 	import { useFoodSearch } from '$lib/hooks/useFoodSearch.svelte.js';
 	import { useFoodDetail } from '$lib/hooks/useFoodDetail.svelte.js';
-	import { SEARCH_CONFIG } from '$lib/constants/ui';
-	import { API_ROUTES } from '$lib/api/api-routes';
-	import { postJson } from '$lib/api/client';
+	import { API_ROUTES } from '$frontend/common/api/api-routes';
+	import { postJson } from '$frontend/common/api/client';
 	import SearchResults from './SearchResults.svelte';
 	import FoodDetailForm from './FoodDetailForm.svelte';
-	import { Label } from '$lib/components/label';
-	import { Input } from '$lib/components/input';
-	import { Button } from '$lib/components/button';
+	import { Label } from '$frontend/common/components/label';
+	import { Input } from '$frontend/common/components/input';
+	import { Button } from '$frontend/common/components/button';
 	import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
+	import { SEARCH_CONFIG } from '$frontend/common/constants/ui';
 
 	let {
 		open = $bindable(false),

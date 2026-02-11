@@ -8,10 +8,10 @@
 		type RecipeIngredient,
 		type RecipeInstruction
 	} from '$frontend/cookbook/recipe/recipe.schema';
-	import * as Drawer from '$lib/components/drawer';
-	import { Button } from '$lib/components/button';
-	import { Input } from '$lib/components/input';
-	import { Label } from '$lib/components/label';
+	import * as Drawer from '$frontend/common/components/drawer';
+	import { Button } from '$frontend/common/components/button';
+	import { Input } from '$frontend/common/components/input';
+	import { Label } from '$frontend/common/components/label';
 	import Step2 from './Step2.svelte';
 	import Step3 from './Step3.svelte';
 	import { fly, slide, fade } from 'svelte/transition';
@@ -19,7 +19,7 @@
 	import { useSearchParams } from 'runed/kit';
 	import { browser } from '$app/environment';
 	import { z } from 'zod';
-	import { API_ROUTES } from '$lib/api/api-routes';
+	import { API_ROUTES } from '$frontend/common/api/api-routes';
 
 	let { open = $bindable(false), onSuccess }: { open?: boolean; onSuccess?: () => void } = $props();
 

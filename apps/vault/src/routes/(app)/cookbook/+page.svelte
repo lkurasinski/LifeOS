@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { Button } from '../../../lib/components/button';
-	import RecipesCatalog from '$domains/cookbook/RecipesCatalog.svelte';
+	import { Button } from '$frontend/common/components/button';
+	import RecipesCatalog from '$frontend/cookbook/recipe/RecipesCatalog.svelte';
 	import MultiStepRecipeForm from '$frontend/cookbook/recipe/create-recipe/MultiStepRecipeForm.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	let isFormOpen = $state(false);
-	let isTestOpen = $state(false);
 	let isMultiStepOpen = $state(false);
 	let catalogRef: RecipesCatalog;
 
@@ -23,11 +21,7 @@
 			<p class="text-muted-foreground">Discover and manage your recipes</p>
 		</div>
 		<div class="flex gap-2">
-			<Button onclick={() => (isMultiStepOpen = true)} variant="outline">Test Drawer2</Button>
-			<Button onclick={() => (isFormOpen = true)}>
-				<span class="mr-2">+</span>
-				New Recipe
-			</Button>
+			<Button onclick={() => (isMultiStepOpen = true)} variant="outline">Dodaj przepis</Button>
 		</div>
 	</div>
 

@@ -30,7 +30,7 @@ export type ReindexAllResult = {
 
 export const reindexAllUseCase = async (
 	deps: Dependencies,
-	userId: number | null
+	userId?: number
 ): Promise<ReindexAllResult> => {
 	const startTime = Date.now();
 

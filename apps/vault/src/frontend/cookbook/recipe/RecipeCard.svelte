@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Card from '../../lib/components/card';
-	import { Badge } from '../../lib/components/badge';
+	import * as Card from '$frontend/common/components/card';
+	import { Badge } from '$frontend/common/components/badge';
 	import { Clock, Users, ChefHat } from '@lucide/svelte';
 	import {
 		getBasicRecipeNutrientsString,

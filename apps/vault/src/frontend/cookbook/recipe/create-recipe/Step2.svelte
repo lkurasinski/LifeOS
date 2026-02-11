@@ -1,15 +1,15 @@
 <script lang="ts">
-	import * as Command from '$lib/components/command';
-	import * as Dialog from '$lib/components/dialog';
+	import * as Command from '$frontend/common/components/command';
+	import * as Dialog from '$frontend/common/components/dialog';
 	import { useFoodSearch } from '$lib/hooks/useFoodSearch.svelte.js';
 	import type { RecipeIngredient } from '$frontend/cookbook/recipe/recipe.schema';
 	import IngredientsList from './IngredientsList.svelte';
 	import AddProductDialog from '../add-product/AddProductDialog.svelte';
 	import FoodInfoDisplay from '../add-product/FoodInfoDisplay.svelte';
 	import NutritionDisplay from '../add-product/NutritionDisplay.svelte';
-	import { Label } from '$lib/components/label';
-	import { Button } from '$lib/components/button';
-	import { LAYOUT } from '$lib/constants/ui';
+	import { Label } from '$frontend/common/components/label';
+	import { Button } from '$frontend/common/components/button';
+	import { LAYOUT } from '$frontend/common/constants/ui';
 	import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
 	import { getBasicNutrientsString } from '$frontend/cookbook/foods/utils/food.utils';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import { Label } from '$lib/components/label';
-	import * as Tabs from '$lib/components/tabs';
+	import { Label } from '$frontend/common/components/label';
+	import * as Tabs from '$frontend/common/components/tabs';
 
 	let {
 		value = $bindable(''),

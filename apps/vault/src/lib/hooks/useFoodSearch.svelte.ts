@@ -12,11 +12,11 @@
  */
 
 import { createQuery } from '@tanstack/svelte-query';
-import { buildSearchUrl, API_ROUTES } from '$lib/api/api-routes';
-import { fetchJson } from '$lib/api/client';
-import { SEARCH_CONFIG, ANIMATION } from '$lib/constants/ui';
+import { buildSearchUrl, API_ROUTES } from '$frontend/common/api/api-routes';
+import { fetchJson } from '$frontend/common/api/client';
 import type { FoodSourceProviders } from '$contracts/cookbook/food/FoodDataSource.dto';
 import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
+import { ANIMATION, SEARCH_CONFIG } from '$frontend/common/constants/ui';
 
 interface UseFoodSearchOptions {
 	provider?: FoodSourceProviders;

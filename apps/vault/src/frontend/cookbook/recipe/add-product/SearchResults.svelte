@@ -1,20 +1,20 @@
 <script lang="ts">
-	import * as Card from '$lib/components/card';
-	import { Badge } from '$lib/components/badge';
-	import { Button } from '$lib/components/button';
+	import * as Card from '$frontend/common/components/card';
+	import { Badge } from '$frontend/common/components/badge';
+	import { Button } from '$frontend/common/components/button';
 	import type { FoodDto } from '$contracts/cookbook/food/Food.dto';
 	import { getBasicNutrientsString } from '../../foods/utils/food.utils';
 
 	let {
 		results = [],
 		loading = false,
-		source,
+		provider,
 		onselect,
 		onback
 	}: {
 		results?: FoodDto[];
 		loading?: boolean;
-		source: 'fdc' | 'openfoodfacts';
+		provider: 'fdc' | 'openfoodfacts';
 		onselect?: (event: CustomEvent<{ food: FoodDto }>) => void;
 		onback?: () => void;
 	} = $props();

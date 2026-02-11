@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Moon, Sun } from '@lucide/svelte';
 	import { Button } from './button';
-	import { useTheme } from '$lib/hooks/useTheme.svelte';
+	import { useTheme } from '$lib/hooks/useTheme.svelte.js';
 
 	const theme = useTheme();
 </script>

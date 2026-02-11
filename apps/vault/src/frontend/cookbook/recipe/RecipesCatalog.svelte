@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { Input } from '../../lib/components/input';
-	import { Button } from '../../lib/components/button';
-	import { Badge } from '../../lib/components/badge';
-	import * as Select from '../../lib/components/select';
+	import { Input } from '$frontend/common/components/input';
+	import { Button } from '$frontend/common/components/button';
+	import { Badge } from '$frontend/common/components/badge';
+	import * as Select from '$frontend/common/components/select';
 	import {
 		Card,
 		CardContent,
 		CardDescription,
 		CardHeader,
 		CardTitle
-	} from '../../lib/components/card';
+	} from '$frontend/common/components/card';
 	import RecipeCard from './RecipeCard.svelte';
 	import { Search, X } from '@lucide/svelte';
-	import type { RecipeSearchResults } from '../../routes/api/recipes/search/+server';
+	import type { RecipeSearchResults } from '../../../routes/api/recipes/search/+server';
 
 	let searchQuery = $state('');
 	let selectedDifficulty = $state<string | undefined>(undefined);

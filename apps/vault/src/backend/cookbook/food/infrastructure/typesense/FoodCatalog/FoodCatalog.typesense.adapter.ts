@@ -2,9 +2,9 @@ import type { FoodCatalogPort } from '$backend/cookbook/food/domain/ports/FoodCa
 import type { Food, FoodId, FoodSearchResults } from '$backend/cookbook/food/domain/food.types';
 import type { FoodSourceProviders } from '$contracts/cookbook/food/FoodDataSource.dto';
 import type { FoodSearchQuery } from '$backend/cookbook/food/application/handleSearchFood.query';
-import { typesense } from '$lib/server/typesense';
 import { mapTypesenseFoodToFood } from '$backend/cookbook/food/infrastructure/typesense/FoodCatalog/FoodCatalog.typesense.mapper';
 import type { Typesense_FoodDocument } from '$backend/cookbook/food/infrastructure/typesense/FoodCatalog/FoodCatalog.typesense.schema';
+import { typesense } from '$backend/cookbook/food/infrastructure/typesense/client.typesense';
 
 export class TypesenseFoodCatalogAdapter implements FoodCatalogPort {
 	readonly name = 'home-baked' as const;

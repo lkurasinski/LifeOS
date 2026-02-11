@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Navbar from '$lib/components/Navbar.svelte';
-	import { Toaster } from '../../lib/components/sonner';
+	import Navbar from '$frontend/common/components/Navbar.svelte';
+	import { Toaster } from '$frontend/common/components/sonner';
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData; children: any } = $props();

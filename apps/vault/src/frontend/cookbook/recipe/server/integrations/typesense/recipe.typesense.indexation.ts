@@ -3,7 +3,6 @@
  */
 
 import { prisma } from '$lib/server/prisma';
-import { typesense } from '$lib/server/typesense';
 import { logger } from '$lib/server/logger/logger';
 import type {
 	TypesenseRecipeDifficulty,
@@ -11,6 +10,7 @@ import type {
 } from '$frontend/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
 import { NUTRIENTS } from '$backend/cookbook/common/nutrient/nutrient';
 import type { Unit } from '$contracts/shared/Unit.dto';
+import { typesense } from '$backend/cookbook/food/infrastructure/typesense/client.typesense';
 
 const COLLECTION_NAME = 'recipes';
 
