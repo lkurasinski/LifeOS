@@ -12,16 +12,16 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 	return bcrypt.compare(password, hash);
 }
 
-export function signJWT(userId: string): string {
+export function signJWT(userId: number): string {
 	if (!JWT_SECRET) {
 		throw new Error('JWT_SECRET is not set');
 	}
 	return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
-export function verifyJWT(token: string): { userId: string } | null {
+export function verifyJWT(token: string): { userId: number } | null {
 	try {
-		return jwt.verify(token, JWT_SECRET) as { userId: string };
+		return jwt.verify(token, JWT_SECRET) as { userId: number };
 	} catch {
 		return null;
 	}

@@ -1,0 +1,543 @@
+id,name,unit,comment,category
+EDIBLE,edible portion coefficient,,"The ‘edible portion’ is defined as (100 – refuse), where refuse is the inedible weight as a percent taken away from the “as purchased” or “as acquired” food before analysing the 100g edible part",general
+PH,pH,none,hydrogen ion concentration,
+ENERC(kJ),"energy, total metabolizable; calculated from the energy-producing food components (original as from source)",kJ,as in source,macronutrients:energy
+ENERC(kcal),"energy, total metabolizable; calculated from the energy-producing food components (original as from source)",kcal,as in source,macronutrients:energy
+ENERA(kJ),"energy, gross; determined by direct analysis using bomb calorimetry",g,,macronutrients:energy
+ENERA(kcal),"energy, gross; determined by direct analysis using bomb calorimetry",kcal,,macronutrients:energy
+ALC(g),alcohol; assumed to be ethyl alcohol,g,,macronutrients:alkohol
+AAE8(mg),"amino acids, total essential (8)",mg,"Includes the eight basic essential amino acids: isoleucine, leucine, lysine, methionine, phenylalanine, threonine, tryptophan, and valine. These eight amino acids are included in all definitions of the essential amino acids for man.",macronutrients:protein:amino_acids
+AAE-(mg),"amino acids, total essential; unknown or variable which AS are included in total",mg,,macronutrients:protein:amino_acids
+AANE(mg),"amino acids, total non-essential",mg,"sum of 11 non-essential amino acids: alanine, asparagine, aspartic acid, cysteine, glutamic acid, glycine, hydroxyproline and hydroxylysine, proline, serine, tyrosine",macronutrients:protein:amino_acids
+AAA(mg),"amino acids, total aromatic",,"The total value is the sum of phenylalanine plus tyrosine only, in spite of the fact that tryptophan is also chemically aromatic.",macronutrients:protein:amino_acids
+AAS(mg),"amino acids, total sulphur-containing",,The sum of cystine plus methionine,macronutrients:protein:amino_acids
+AAT-(mg),"amino acids, total; precise definition not specified",mg,,macronutrients:protein:amino_acids
+AAT19(mg),sum of 19 amino acids (excluding tryptophan),mg,"Sum of 19 amino acids (excluding tryptophan): alanine, arginine, asparagine, aspartic acid, cysteine, glutamic acid, glutamine, glycine, histidine, isoleucine, leucine, lysine, methionine, phenylalanine, proline, serine, threonine, tyrosine and valine.",macronutrients:protein:amino_acids
+AAT24(mg),"amino acids, total",mg,"Sum of all 24 amino acids: alanine, arginine, asparagine, aspartic acid, cysteine, glutamic acid, glutamine, glycine, histidine, hydroxylysine, hydroxyproline, isoleucine, leucine, lysine, methionine, ornithine, phenylalanine, proline, serine, taurine, threonine, tryptophan, tyrosine and valine",macronutrients:protein:amino_acids
+ALA(mg),alanine,mg,Includes only L-alanine,macronutrients:protein:amino_acids
+ARG(mg),arginine,mg,Includes only L-arginine,macronutrients:protein:amino_acids
+ASN(mg),asparagine,mg,Includes only L-asparagine,macronutrients:protein:amino_acids
+ASP(mg),aspartic acid,mg,Includes only L-aspartic acid,macronutrients:protein:amino_acids
+CYS(mg),cystine,mg,"Cysteine is often the natural form, which is converted to cystine during chromatography; includes only the L-amino acid",macronutrients:protein:amino_acids
+CYSTE(mg),cysteine,mg,includes only for L-cysteine,macronutrients:protein:amino_acids
+GLN(mg),glutamine,mg,Includes only L-glutamine,macronutrients:protein:amino_acids
+GLU(mg),glutamic acid,mg,Includes only L-glutamic acid,macronutrients:protein:amino_acids
+GLY(mg),glycine,mg,Includes only L-glycine,macronutrients:protein:amino_acids
+HIS(mg),histidine,mg,Includes only L-histidine,macronutrients:protein:amino_acids
+HYP(mg),hydroxyproline,mg,Includes only L-hydroxyproline,macronutrients:protein:amino_acids
+ILE(mg),isoleucine,mg,Includes only L-isoleucine,macronutrients:protein:amino_acids
+LEU(mg),leucine,mg,Includes only L-leucine,macronutrients:protein:amino_acids
+LYS(mg),lysine,mg,Includes only L-lysine,macronutrients:protein:amino_acids
+MET(mg),methionine,mg,Includes only L-methionine,macronutrients:protein:amino_acids
+ORN(mg),ornithine,mg,,macronutrients:protein:amino_acids
+PHE(mg),phenylalanine,mg,Includes only L-phenylalanine,macronutrients:protein:amino_acids
+PRO(mg),proline,mg,Includes only L-proline,macronutrients:protein:amino_acids
+SER(mg),serine,mg,Includes only L-serine,macronutrients:protein:amino_acids
+TAU(mg),taurine,mg,Non-protein amino acid with sulfonic acid group,macronutrients:protein:amino_acids
+THR(mg),threonine,mg,Includes only L-threonine,macronutrients:protein:amino_acids
+TRP(mg),tryptophan,mg,Includes only L-tryptophan,macronutrients:protein:amino_acids
+TYR(mg),tyrosine,mg,Includes only L-tyrosine,macronutrients:protein:amino_acids
+VAL(mg),valine,mg,Includes only L-valine,macronutrients:protein:amino_acids
+GLU_A_HIS(mg),glutamine + histidine,mg,,macronutrients:protein:amino_acid_mixtures
+ALA_A_ARG(mg),alanine + arginine,mg,,macronutrients:protein:amino_acid_mixtures
+PHE_A_TYR(mg),phenylalanine + tyrosine,mg,,macronutrients:protein:amino_acid_mixtures
+CYS_A_MET(mg),cysteine + methionine,mg,,macronutrients:protein:amino_acid_mixtures
+GLY_A_SER(mg),glycine + serine,mg,,macronutrients:protein:amino_acid_mixtures
+NPRO(g),"nitrogen, protein",g,,macronutrients:protein:nitrogen
+NNP(mg),"nitrogen, non-protein",mg,,macronutrients:protein:nitrogen
+NWHEY(g),"nitrogen, whey protein",g,,macronutrients:protein:nitrogen
+NNC(g),"nitrogen, non-casein",g,,macronutrients:protein:nitrogen
+NT(g),"nitrogen, total",g,Determined by Kjeldahl and similar methods,macronutrients:protein:nitrogen
+NFIBAD(g),acid detergent fibre nitrogen,g,,macronutrients:protein:nitrogen
+PROTCNT(g),"protein, total; calculated from total nitrogen",g,,macronutrients:protein:total
+PROTCNA(g),"protein, total; calculated from amino nitrogen",g,Calculated by multiplying the amino nitrogen value (NAM) by the nitrogen conversion factor (XN),macronutrients:protein:total
+PROTCNP(g),"protein, total; calculated from protein nitrogen",g,Calculated by multiplying the protein nitrogen value (NPRO) by the nitrogen conversion factor (XN),macronutrients:protein:total
+PROTA(g),"protein, total; determined by direct analysis",g,,macronutrients:protein:total
+PROT-(g),"protein, total; method of determination unknown or variable",g,,macronutrients:protein:total
+XN,conversion factor to calculate total protein from nitrogen,,Generic factor equals 6.25,methods:conversion_factors
+ALBU(mg),albumin,mg,,macronutrients:protein:fractions
+CASN(mg),casein,mg,,macronutrients:protein:fractions
+LACFE(mg),lactoferrin,mg,,macronutrients:protein:fractions
+GLOB(mg),globulin,mg,,macronutrients:protein:fractions
+AMMON(mg),ammonia,mg,,non-nutrients:nitrogenous
+CYAN(mcg),cyanide,mcg,,non-nutrients:nitrogenous
+FAT(g),"fat, total",g,"Sum of triglycerides, phospholipids, sterols and related compounds; the analytical method is a mixed solvent extraction",macronutrients:fat:total
+FATCE(g),"fat, total; derived by analysis using continuous extraction",g,The Soxhlet method has often been used to analyze for total fat using continuous extraction. This method tends to underestimate the total fat value of a food,macronutrients:fat:total
+FAT-(g),fat; method of determination unknown or mixed methods,g,,macronutrients:fat:total
+TGLY(g),"triglycerides, total",g,,macronutrients:fat:total
+XFA (internal use),fatty acid conversion factor for internal use,,,methods:conversion_factors
+F4D0(g),fatty acid 4:0,g,Tetranoic acid. Saturated fatty acid with 4 carbons.,macronutrients:fat:fatty_acids
+F6D0(g),fatty acid 6:0,g,Hexanoic acid. Saturated fatty acid with 6 carbons.,macronutrients:fat:fatty_acids
+F8D0(g),fatty acid 8:0,g,Octanoic acid. Saturated fatty acid with 8 carbons.,macronutrients:fat:fatty_acids
+F10D0(g),fatty acid 10:0,g,Decanoic acid. Saturated fatty acid with 10 carbons,macronutrients:fat:fatty_acids
+F11D0(g),fatty acid 11:0,g,Saturated fatty acid with 11 carbons,macronutrients:fat:fatty_acids
+F12D0(g),fatty acid 12:0,g,Dodecanoic acid. Saturated fatty acid with 12 carbons. Lauric Acid,macronutrients:fat:fatty_acids
+F13D0(g),fatty acid 13:0,g,Tridecanoic Acid. Saturated fatty acid with 13 carbons,macronutrients:fat:fatty_acids
+F13D0i(g),fatty acid 13:0 iso,g,Iso-tridecanoic Acid. Saturated fatty acid with 13 carbons in iso isomer,macronutrients:fat:fatty_acids
+F14D0(g),fatty acid 14:0,g,Tetradecanoic acid. A saturated fatty acids with 14 carbons,macronutrients:fat:fatty_acids
+F14D0I(g),fatty acid 14:0 iso,g,,macronutrients:fat:fatty_acids
+F15D0(g),fatty acid 15:0,g,Pentadecanoic Acid. Saturated fatty acid with 15 carbons,macronutrients:fat:fatty_acids
+F15D0I(g),fatty acid 15:0 iso,g,,macronutrients:fat:fatty_acids
+F15D0AI(g),fatty acid 15:0 anteiso,g,,macronutrients:fat:fatty_acids
+F16D0(g),fatty acid 16:0,g,Hexadecanoic acid. Saturated fatty acid with 16 carbons,macronutrients:fat:fatty_acids
+F16D0I(g),fatty acid 16:0 iso,g,,macronutrients:fat:fatty_acids
+F16D0AI(g),fatty acid 16:0 anteiso,g,,macronutrients:fat:fatty_acids
+F17D0(g),fatty acid 17:0,g,Heptadecanoic Acid. Saturated fatty acid with 17 carbons,macronutrients:fat:fatty_acids
+F17D0I(g),fatty acid 17:0 iso,g,,macronutrients:fat:fatty_acids
+F17D0AI(g),fatty acid 17:0 anteiso,g,,macronutrients:fat:fatty_acids
+F18D0(g),fatty acid 18:0,g,Octadecanoic Acid. Saturated fatty acid with 18 carbons,macronutrients:fat:fatty_acids
+F18D0I(g),fatty acid 18:0 iso,g,,macronutrients:fat:fatty_acids
+F18D0AI(g),fatty acid 18:0 anteiso,g,,macronutrients:fat:fatty_acids
+F19D0(g),fatty acid 19:0,g,Nonadecanoic Acid. Saturated fatty acid with 19 carbons,macronutrients:fat:fatty_acids
+F20D0(g),fatty acid 20:0,g,Icosanoic acid. Saturated fatty acid with 20 carbons,macronutrients:fat:fatty_acids
+F21D0(g),fatty acid 21:0,g,,macronutrients:fat:fatty_acids
+F22D0(g),fatty acid 22:0,g,Docosanoic acid,macronutrients:fat:fatty_acids
+F23D0(g),fatty acid 23:0,g,Tricosanoic acid,macronutrients:fat:fatty_acids
+F24D0(g),fatty acid 24:0,g,Tetracosanoic acid. Saturated fatty acid with 24 carbons,macronutrients:fat:fatty_acids
+F26D0(g),fatty acid 26:0,g,,macronutrients:fat:fatty_acids
+F30D0(g),fatty acid 30:0,g,,macronutrients:fat:fatty_acids
+F10D1(g),fatty acid 10:1,g,Decenoic Acid. A monounsaturated fatty acids with 10 carbons,macronutrients:fat:fatty_acids
+F12D1(g),fatty acid 12:1,g,Dodecenoic Acid. A monounsaturated fatty acids with 12 carbons,macronutrients:fat:fatty_acids
+F14D1N9(g),fatty acid 14:1 n-9,g,5-Tetradecenoic Acid. Monounsaturated fatty acid with 14 carbons and 1 double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F14D1N7(g),fatty acid 14:1 n-7,g,7-Tetradecenoic Acid. Monounsaturated fatty acid with 14 carbons and 1 double bond at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F14D1C(g),fatty acid 14:1 cis,g,,macronutrients:fat:fatty_acids
+F14D1CN5(g),fatty acid 14:1 cis n-5,g,cis-9-Tetradecenoic Acid. Monounsaturated fatty acid with 14 carbons and 1 cis double bond at the 5th carbon from the methyl end,macronutrients:fat:fatty_acids
+F14D1N5(g),fatty acid 14:1 n-5,g,9-Tetradecenoic Acid. Monounsaturated fatty acid with 14 carbons and 1 double bond at the 5th carbon from the methyl end,macronutrients:fat:fatty_acids
+F14D1T(g),fatty acid 14:1 trans,g,trans-Tetradecenoic Acid. A monounsaturated fatty acids with 14 carbons in trans,macronutrients:fat:fatty_acids
+F14D1(g),fatty acid 14:1,g,Tetradecenoic Acid. A monounsaturated fatty acids with 14 carbons,macronutrients:fat:fatty_acids
+F15D1C(g),fatty acid 15:1 cis,g,,macronutrients:fat:fatty_acids
+F15D1N10(g),fatty acid 15:1 n-10,g,,macronutrients:fat:fatty_acids
+F15D1N9(g),fatty acid 15:1 n-9,g,Pentadecenoic Acid n-9. Monounsaturated fatty acid with 15 carbons and the double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F15D1N8(g),fatty acid 15:1 n-8,g,,macronutrients:fat:fatty_acids
+F15D1N7(g),fatty acid 15:1 n-7,g,,macronutrients:fat:fatty_acids
+F15D1N6(g),fatty acid 15:1 n-6,g,cis-Pentadecenoic Acid n-6. A monounsaturated fatty acids with 15 carbons in cis at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F15D1(g),fatty acid 15:1,g,Pentadecenoic Acid. A monounsaturated fatty acids with 15 carbons,macronutrients:fat:fatty_acids
+F16D1N11(g),fatty acid 16:1 n-11,g,,macronutrients:fat:fatty_acids
+F16D1CN9(g),fatty acid 16:1 cis n-9,g,cis-7-hexadecenoic acid. Monounsaturated fatty acid with 16 carbons and the double bond in the cis formation at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F16D1N9(g),fatty acid 16:1 n-9,g,7-cis-Hexadecenoic Acid. Monounsaturated fatty acid with 16 carbons and the double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F16D1N8(g),fatty acid 16:1 n-8,g,,macronutrients:fat:fatty_acids
+F16D1CN7(g),fatty acid 16:1 cis n-7,g,cis-9-hexadecenoic acid. Monounsaturated fatty acid with 16 carbons and the double bond in the cis formation at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F16D1TN7(g),fatty acid 16:1 trans n-7,g,trans-9-hexadecenoic acid. Monounsaturated fatty acid with 16 carbons and a trans double bond at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F17D1C(g),fatty acid 17:1 cis,g,,macronutrients:fat:fatty_acids
+F16D1N7(g),fatty acid 16:1 n-7,g,9-Hexadecenoic Acid. Monounsaturated fatty acid with 16 carbons and the double bond at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F16D1N5(g),fatty acid 16:1 n-5,g,,macronutrients:fat:fatty_acids
+F16D1C(g),fatty acid 16:1 cis,g,cis-Hexadecenoic acid. A monounsaturated fatty acids with 16 carbons and the double bond in the cis formation,macronutrients:fat:fatty_acids
+F16D1T(g),fatty acid 16:1 trans,g,Hexadecenoic Acid trans. A monounsaturated fatty acids with 16 carbons and the double bond in the trans formation,macronutrients:fat:fatty_acids
+F16D1(g),fatty acid 16: 1,g,Hexadecenoic Acid. A monounsaturated fatty acids with 16 carbons with unknown isomer,macronutrients:fat:fatty_acids
+F17D1N10(g),fatty acid 17:1 n-10,g,,macronutrients:fat:fatty_acids
+F17D1N9(g),fatty acid 17:1 n-9,g,,macronutrients:fat:fatty_acids
+F17D1CN8(g),fatty acid 17:1 cis n-8,g,cis-9-Heptadecenoic acid,macronutrients:fat:fatty_acids
+F17D1N8(g),fatty acid 17:1 n-8,g,,macronutrients:fat:fatty_acids
+F17D1CN7(g),fatty acid 17:1 cis n-7,g,,macronutrients:fat:fatty_acids
+F17D1N7(g),fatty acid 17:1 n-7,g,,macronutrients:fat:fatty_acids
+F17D1N5(g),fatty acid 17:1 n-5,g,,macronutrients:fat:fatty_acids
+F17D1(g),fatty acid 17:1,g,Heptadecenoic Acid. A class of monounsaturated fatty acids with 17 carbons,macronutrients:fat:fatty_acids
+F18D1CN11(g),fatty acid 18:1 cis n-11,g,,macronutrients:fat:fatty_acids
+F18D1TN11(g),fatty acid 18:1 trans n-11,g,trans-7-Octadecenoic acid,macronutrients:fat:fatty_acids
+F18D1N11(g),fatty acid 18:1 n-11,g,,macronutrients:fat:fatty_acids
+F18D1CN9(g),fatty acid 18:1 cis n-9,g,cis-9-Octadecenoic acid. Monounsaturated fatty acid with 18 carbons and cis double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F18D1TN9(g),fatty acid 18:1 trans n-9,g,trans-9-Octadecenoic acid. Monounsaturated fatty acid with 18 carbons and the double bond in the trans formation at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F18D1N9(g),fatty acid 18:1 n-9,g,Monounsaturated fatty acid with 18 carbons and double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F18D1TN8(g),fatty acid 18:1 trans n-8,g,trans-12-Octadecenoic acid. Monounsaturated fatty acid with 18 carbons and the double bond in the trans formation at the 8th carbon from the methyl end,macronutrients:fat:fatty_acids
+F18D1CN7(g),fatty acid 18:1 cis n-7,g,,macronutrients:fat:fatty_acids
+F18D1TN7(g),fatty acid 18:1 trans n-7,g,trans-11-Octadecenoic acid. Monounsaturated fatty acid with 18 carbons and the double bond in the trans formation at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F18D1N7(g),fatty acid 18:1 n-7,g,,macronutrients:fat:fatty_acids
+F18D1CN6(g),fatty acid 18:1 cis n-6,g,,macronutrients:fat:fatty_acids
+F18D1TN6(g),fatty acid 18:1 trans n-6,g,trans-12-Octadecenoic acid,macronutrients:fat:fatty_acids
+F18D1CN5(g),fatty acid 18:1 cis n-5,g,,macronutrients:fat:fatty_acids
+F18D1N5(g),fatty acid 18:1 n-5,g,,macronutrients:fat:fatty_acids
+F18D1CN4(g),fatty acid 18:1 cis n-4,g,,macronutrients:fat:fatty_acids
+F18D1CN3(g),fatty acid 18:1 cis n-3,g,,macronutrients:fat:fatty_acids
+F18D1TN3(g),fatty acid 18:1 trans n-3,g,,macronutrients:fat:fatty_acids
+F18D1TN2(g),fatty acid 18:1 trans n-2,g,trans-16-Octadecenoic acid,macronutrients:fat:fatty_acids
+F18D1C(g),fatty acid 18:1 cis,g,,macronutrients:fat:fatty_acids
+F18D1T(g),fatty acid 18:1 trans,g,trans-Octadecenoic acid. Monounsaturated fatty acid with 18 carbons and the double bond in the trans formation,macronutrients:fat:fatty_acids
+F18D1(g),fatty acid 18:1,g,Octadecenoic Acid. A class of monounsaturated fatty acids with 18 carbons,macronutrients:fat:fatty_acids
+F19D1N11(g),fatty acid 19:1 n-11,g,,macronutrients:fat:fatty_acids
+F19D1N10(g),fatty acid 19:1 n-10,g,,macronutrients:fat:fatty_acids
+F20D1N12(g),fatty acid 20:1 n-12,g,,macronutrients:fat:fatty_acids
+F20D1CN11(g),fatty acid 20:1 n-11,g,,macronutrients:fat:fatty_acids
+F20D1N11(g),fatty acid 20:1 n-11,g,(9Z)-icos-9-enoic acid or icosenoic Acid n-11. Monounsaturated fatty acid with 20 carbons and the double bond at the 11th carbon from the methyl end,macronutrients:fat:fatty_acids
+F20D1CN9(g),fatty acid 20:1 cis n-9,g,,macronutrients:fat:fatty_acids
+F20D1C(g),fatty acid 20:1 cis,g,,macronutrients:fat:fatty_acids
+F20D1N9(g),fatty acid 20:1 n-9,g,Icosenoic Acid n-9. Monounsaturated fatty acid with 20 carbons and the double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F20D1N8(g),fatty acid 20:1 n-8,g,,macronutrients:fat:fatty_acids
+F20D1N7(g),fatty acid 20:1 n-7,g,Icosenoic Acid n-7. Monounsaturated fatty acid with 20 carbons and the double bond at the 7th carbon from the methyl end,macronutrients:fat:fatty_acids
+F20D1T(g),fatty acid 20:1 trans,g,,macronutrients:fat:fatty_acids
+F20D1(g),fatty acid 20:1,g,Icosenoic Acid. A class of monounsaturated fatty acids with 20 carbons,macronutrients:fat:fatty_acids
+F22D1N11(g),fatty acid 22:1 n-11,g,,macronutrients:fat:fatty_acids
+F22D1N9(g),fatty acid 22:1 n-9,g,Docosenoic Acid n-9. A class of monounsaturated fatty acids with 22 carbons and the double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F22D1N7(g),fatty acid 22:1 n-7,g,,macronutrients:fat:fatty_acids
+F22D1T(g),fatty acid 22:1 trans,g,,macronutrients:fat:fatty_acids
+F22D1C(g),fatty acid 22:1 cis,g,,macronutrients:fat:fatty_acids
+F22D1(g),fatty acid 22:1,g,Docosenoic Acid. A class of monounsaturated fatty acids with 22 carbons,macronutrients:fat:fatty_acids
+F24D1N11(g),fatty acid 24:1 n-11,g,,macronutrients:fat:fatty_acids
+F24D1CN9(g),fatty acid 24:1 cis n-9,g,(15Z)-tetracos-15-enoic acid or Cis-15-Tetracosenoic Acid or cis-Tetracosenoic Acid n-9. Monounsaturated fatty acid with 24 carbons and the double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids
+F24D1N9(g),fatty acid 24:1 n-9,g,,macronutrients:fat:fatty_acids
+F24D1(g),fatty acid 24:1,g,Tetracosenoic acid. A class of monounsaturated fatty acids with 24 carbons,macronutrients:fat:fatty_acids
+F16D2N9(g),fatty acid 16:2 n-9,g,,macronutrients:fat:fatty_acids
+F16D2N7(g),fatty acid 16:2 n-7,g,Hexadecadienoic Acid n-7. Polyunsaturated fatty acid with 16 carbons and 2 double bonds at the 7th and 10th carbons from the methyl end,macronutrients:fat:fatty_acids
+F16D2N6(g),fatty acid 16:2 n-6,g,,macronutrients:fat:fatty_acids
+F16D2N4(g),fatty acid 16:2 n-4,g,Hexadecadienoic Acid n-4. Polyunsaturated fatty acid with 16 carbons and 2 double bonds at the 4th and 7th carbons from the methyl end,macronutrients:fat:fatty_acids
+F16D2(g),fatty acid 16:2,g,Hexadecadienoic Acid. A polyunsaturated fatty acids with 16 carbons and 2 double bonds,macronutrients:fat:fatty_acids
+F17D2(g),fatty acid 17:2,g,,macronutrients:fat:fatty_acids
+F18D2C9T11(g),"fatty acid 18:2 n-7 cis9, trans11, conjungated",g,"Octadeca-9,11-dienoic Acid. Polyunsaturated fatty acid with 18 carbons and 2 double bonds at the 7th and 9th carbons from the methyl end. The double bond at the 7th carbon is in the trans formation and the double bond at the 9th carbon is in the cis formation. Major isomer of Conjugated linoleic acids (CLA)",macronutrients:fat:fatty_acids
+F18D2T10C12(g),"fatty acid 18:2 n-6 trans10, cis12, conjugated",g,"Octadeca-10,12-dienoic Acid. Polyunsaturated fatty acid with 18 carbons and 2 double bonds at the 6th and 8th carbons from the methyl end. The double bond at the 6th carbon is in the cis formation and the double bond at the 8th carbon is in the trans formation. Major isomer of Conjugated linoleic acids (CLA)",macronutrients:fat:fatty_acids
+F18D2TCON(g),"fatty acid 18:2 conjugated cis, trans, position unknown",g,Octadecadienoic_Acid or trans Conjugated Linoleic Acid?? A class of polyunsaturated fatty acids with 18 carbons and 2 double bonds in which the two double bonds are separated by only one single bond. One double bond is in the cis formation and the other is in the trans formation. Unknown position (if n-7 or n-9),macronutrients:fat:fatty_acids
+F18D2TTN6(g),"fatty acid 18:2 trans, trans n-6",g,,macronutrients:fat:fatty_acids
+F18D2CN6(g),fatty acid 18:2 cis n-6,g,"cis,cis-9,12-Octadecadienoic Acid. Polyunsaturated fatty acid with 18 carbons and 2 double bonds at the 6th and 9th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D2TN6(g),fatty acid 18:2 trans n-6,g,"Octadecadienoic Acid n-6 trans. Polyunsaturated fatty acid with 18 carbons and 2 double bonds at the 6th and 9th carbons from the methyl end, with one in trans",macronutrients:fat:fatty_acids
+F18D2T(g),fatty acid 18:2 trans,g,,macronutrients:fat:fatty_acids
+F18D2N6(g),fatty acid 18:2 n-6,g,,macronutrients:fat:fatty_acids
+F18D2N5(g),fatty acid 18:2 n-5,g,,macronutrients:fat:fatty_acids
+F18D2N4(g),fatty acid 18:2 n-4,g,Octadecadienoic Acid n-4. Polyunsaturated fatty acid with 18 carbons and 2 double bonds at the 4th and 7th carbons from the methyl end,macronutrients:fat:fatty_acids
+F18D2(g),fatty acid 18:2,g,Octadecadienoic Acid. A class of polyunsaturated fatty acids with 18 carbons and 2 double bonds.,macronutrients:fat:fatty_acids
+F20D2N9(g),fatty acid 20:2 n-9,g,,macronutrients:fat:fatty_acids
+F20D2CN6(g),fatty acid 20:2 cis n-6,g,cis-Icosadienoic Acid n-6. Polyunsaturated fatty acid with 20 carbons and 2 double bonds at the 6th and 9th carbons from the methyl end,macronutrients:fat:fatty_acids
+F20D2N6(g),fatty acid 20:2 n-6,g,Icosadienoic Acid n-6. Polyunsaturated fatty acid with 20 carbons and 2 double bonds at the 6th and 9th carbons from the methyl end,macronutrients:fat:fatty_acids
+F20D2C(g),fatty acid 20:2 cis,g,,macronutrients:fat:fatty_acids
+F20D2(g),fatty acid 20:2,g,Icosadienoic Acid. A class of polyunsaturated fatty acids with 20 carbons and 2 double bonds,macronutrients:fat:fatty_acids
+F22D2N9(g),fatty acid 22:2 n-9,g,,macronutrients:fat:fatty_acids
+F22D2CN6(g),fatty acid 22:2 cis n-6,g,,macronutrients:fat:fatty_acids
+F22D2N6(g),fatty acid 22:2 n-6,g,,macronutrients:fat:fatty_acids
+F22D2C(g),fatty acid 22:2 cis,g,,macronutrients:fat:fatty_acids
+F22D2(g),fatty acid 22:2,g,Docosadienoic Acid. A class of polyunsaturated fatty acids with 22 carbons and 2 double bonds,macronutrients:fat:fatty_acids
+F16D3N6(g),fatty acid 16:3 n-6,g,,macronutrients:fat:fatty_acids
+F16D3N4(g),fatty acid 16:3 n-4,g,"Hexadecatrienoic Acid n-4. Polyunsaturated fatty acid with 16 carbons and 3 double bonds at the 4th, 7th, and 10th carbons from the methyl end",macronutrients:fat:fatty_acids
+F16D3N3(g),fatty acid 16:3 n-3,g,"Hexadecatrienoic Acid n-3. Polyunsaturated fatty acid with 16 carbons and 3 double bonds at the 3rd, 6th, and 9th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D3CN6(g),fatty acid 18:3 cis n-6,g,"cis,cis,cis-6,9,12-Octadecatrienoic Acid. Polyunsaturated fatty acid with 18 carbons and 3 cis double bonds at the 6th, 9th and 12th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D3N6(g),fatty acid 18:3 n-6,g,,macronutrients:fat:fatty_acids
+F18D3N4(g),fatty acid 18:3 n-4,g,,macronutrients:fat:fatty_acids
+F18D3CN3(g),fatty acid 18:3 cis n-3,g,"cis,cis,cis-9,12,15-Octadecatrienoic Acid. Polyunsaturated fatty acid with 18 carbons and 3 cis double bonds at the 3rd, 6th, and 9th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D3TN3(g),fatty acid 18:3 trans n-3,g,,macronutrients:fat:fatty_acids
+F18D3N3(g),fatty acid 18:3 n-3,g,"9,12,15-Octadecatrienoic Acid. Polyunsaturated fatty acid with 18 carbons and 3 double bonds at the 3rd, 6th, and 9th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D3(g),fatty acid 18:3,g,Octadecatrienoic Acid. A class of polyunsaturated fatty acids with 18 carbons and 3 double bonds,macronutrients:fat:fatty_acids
+F20D3N9(g),fatty acid 20:3 n-9,g,"5,8,11-icosatrienoic Acid or icosatrienoic Acid n-9. Polyunsaturated fatty acid with 20 carbons and 3 double bonds at the 9th, 12th, and 15th carbon from the methyl end",macronutrients:fat:fatty_acids
+F20D3N6(g),fatty acid 20:3 n-6,g,Eicosatrienoic Acid n-6 or homogammalinolenic acid,macronutrients:fat:fatty_acids
+F20D3N3(g),fatty acid 20:3 n-3,g,"Icosatrienoic Acid n-3. Polyunsaturated fatty acid with 20 carbons and 3 double bonds at the 3rd, 6th, and 9th carbons from the methyl end",macronutrients:fat:fatty_acids
+F20D3(g),fatty acid 20:3,g,Icosatrienoic Acid. A class of polyunsaturated fatty acids with 20 carbons and 3 double bonds,macronutrients:fat:fatty_acids
+F22D3N6(g),fatty acid 22:3 n-6,g,,macronutrients:fat:fatty_acids
+F22D3N3(g),fatty acid 22:3 n-3,g,,macronutrients:fat:fatty_acids
+F16D4N3(g),fatty acid 16:4 n-3,g,,macronutrients:fat:fatty_acids
+F16D4N1(g),fatty acid 16:4 n-1,g,"Hexadecatetraenoic Acid n-1. Polyunsaturated fatty acid with 16 carbons and 4 double bonds at the 1st, 4th, 7th and 10th carbons from the methyl end",macronutrients:fat:fatty_acids
+F16D4(g),fatty acid 16:4,g,Hexadecatetraenoic Acid. A class of polyunsaturated fatty acids with 16 carbons and 4 double bonds,macronutrients:fat:fatty_acids
+F18D4N6(g),fatty acid 18:4 n-6,g,,macronutrients:fat:fatty_acids
+F18D4CN3(g),fatty acid 18:4 cis n-3,g,,macronutrients:fat:fatty_acids
+F18D4N3(g),fatty acid 18:4 n-3,g,"Parinaric Acid n-3. Polyunsaturated fatty acid with 18 carbons and 4 double bonds at the 3rd, 6th, 9th, and 12th carbons from the methyl end",macronutrients:fat:fatty_acids
+F18D4N1(g),fatty acid 18:4 n-1,g,,macronutrients:fat:fatty_acids
+F18D4(g),fatty acid 18:4,g,Octadecatetraenoic Acid. A class of fatty acids with 18 carbons and 4 double bonds,macronutrients:fat:fatty_acids
+F20D4CN6(g),fatty acid 20:4 cis n-6,g,,macronutrients:fat:fatty_acids
+F20D4N6(g),fatty acid 20:4 n-6,g,"5,8,11,14-Icosatetraenoic Acid or icosatetraenoic Acid n-6. Polyunsaturated fatty acid with 20 carbons and 4 double bonds at the 5th, 8th, 11th and 14th carbons from the methyl end",macronutrients:fat:fatty_acids
+F20D4N3(g),fatty acid 20:4 n-3,g,"Icosatetraenoic Acid n-3. Polyunsaturated fatty acid with 20 carbons and 4 double bonds at the 3rd, 6th, 9th, and 12th carbons from the methyl end",macronutrients:fat:fatty_acids
+F20D4(g),fatty acid 20:4,g,Icosatetraenoic Acid. A class of polyunsaturated fatty acids with 20 carbons and 4 double bonds,macronutrients:fat:fatty_acids
+F22D4N9(g),fatty acid 22:4 n-9,g,,macronutrients:fat:fatty_acids
+F22D4N6(g),fatty acid 22:4 n-6,g,,macronutrients:fat:fatty_acids
+F22D4N3(g),fatty acid 22:4 n-3,g,"Docosatetraenoic Acid n-3. Polyunsaturated fatty acid with 22 carbons and 4 double bonds at the 3rd, 6th, 9th and 12th carbons from the methyl end",macronutrients:fat:fatty_acids
+F22D4(g),fatty acid 22:4,g,Docosatetraenoic Acid. A class of polyunsaturated fatty acids with 22 carbons and 4 double bonds,macronutrients:fat:fatty_acids
+F20D5CN3(g),fatty acid 20:5 cis n-3,g,,macronutrients:fat:fatty_acids
+F20D5N3(g),fatty acid 20:5 n-3,g,"Icosapentaenoic Acid n-3; EPA. Polyunsaturated fatty acid with 20 carbons and 5 double bonds at the 3rd, 6th, 9th, 12th and 15th carbons from the methyl end",macronutrients:fat:fatty_acids
+F20D5(g),fatty acid 20:5,g,,macronutrients:fat:fatty_acids
+F21D5N3(g),fatty acid 21:5 n-3,g,"Polyunsaturated fatty acid with 21 carbons and 5 double bonds at the 3rd, 6th, 9th, 12th and 15th carbons from the methyl end",macronutrients:fat:fatty_acids
+F22D5N6(g),fatty acid 22:5 n-6,g,"Docosapentaenoic Acid n-6. Polyunsaturated fatty acid with 22 carbons and 5 double bonds at the 6th, 9th, 12th, 15th and 18th carbons from the methyl end",macronutrients:fat:fatty_acids
+F22D5N3(g),fatty acid 22:5 n-3,g,"Docosapentaenoic Acid n-3. Polyunsaturated fatty acid with 22 carbons and 5 double bonds at the 3rd, 6th, 9th, 12th, and 15th carbon from the methyl end",macronutrients:fat:fatty_acids
+F22D5(g),fatty acid 22:5,g,Docosapentaenoic Acid. A class of polyunsaturated fatty acids with 22 carbons and 5 double bonds,macronutrients:fat:fatty_acids
+F22D6N6(g),fatty acid 22:6 n-6,g,,macronutrients:fat:fatty_acids
+F22D6CN3(g),fatty acid 22:6 cis n-3,g,,macronutrients:fat:fatty_acids
+F22D6N3(g),fatty acid 22:6 n-3,g,"Docosahexaenoic Acid n-3; DHA. Polyunsaturated fatty acid with 22 carbons and 6 double bonds at the 3rd, 6th, 9th, 12th, 15th and 18th carbons from the methyl end",macronutrients:fat:fatty_acids
+F22D6(g),fatty acid 22:6,g,Docosahexaenoic Acid. A class of polyunsaturated fatty acids with 22 carbons and 6 double bonds,macronutrients:fat:fatty_acids
+F24D6N3(g),fatty acid 24:6 n-3,g,"Tetracosahexaenoic Acid n-3. Polyunsaturated fatty acid with 24 carbons and 6 double bonds at the 3rd, 6th, 9th, 12th, 15th and 18th carbons from the methyl end",macronutrients:fat:fatty_acids
+F16D1N5_A_F16D1N7(g),fatty acid 16:1 n-5 + fatty acid 16:1 n-7,g,,macronutrients:fat:fatty_acids
+F16D1N7_A_F16D1N9(g),fatty acid 16:1 n-7 + fatty acid 16:1 n-9,g,,macronutrients:fat:fatty_acids
+F18D1N7_A_F18D1N9(g),fatty acid 18:1 n-7 + fatty acid 18:1 n-9,g,,macronutrients:fat:fatty_acids
+F20D1N7_A_F20D1N9(g),fatty acid 20:1 n-7 + fatty acid 20:1 n-9,g,,macronutrients:fat:fatty_acids
+F20D1N9_A_F20D1N11(g),fatty acid 20:1 n-9 + fatty acid 20:1 n-11,g,,macronutrients:fat:fatty_acids
+F20D4N6_A_F22D1(g),fatty acid 20:4 n-6 + fatty acid 22:1,g,,macronutrients:fat:fatty_acids
+F22D1N9_A_F22D1N11(g),fatty acid 22:1 n-9 + fatty acid 22:1 n-11,g,,macronutrients:fat:fatty_acids
+F18D1TN10_A_F18D1TN12(g),fatty acid 18:1 trans n-10 + fatty acid 18:1 trans n-12,g,,macronutrients:fat:fatty_acids
+F18D1TN4_A_F18D1TN5(g),fatty acid 18:1 trans n-4 + fatty acid 18:1 trans n-5,g,,macronutrients:fat:fatty_acids
+F20D3N3_A_F20D4N6(g),fatty acid 20:3 n-3 + fatty acid 20:4 n-6,g,,macronutrients:fat:fatty_acids
+F18D2C9T11_A_F18D2T10C12(g),"fatty acid 18:2 n-7, cis9, trans11, conjugated + fatty acid 18:2 n-6, trans10, cis12, conjugated",g,,macronutrients:fat:fatty_acids
+F20D1N11_A_F20D1N13(g),fatty acid 20:1 n-11 + fatty acid 20:1 n-13,g,,macronutrients:fat:fatty_acids
+F22D1N11_A_F22D1N13(g),fatty acid 22:1 n-11 + fatty acid 22:1 n-13,g,,macronutrients:fat:fatty_acids
+FACID(g),"fatty acids, total",g,,macronutrients:fat:fatty_acids:total
+FAR(g),"fatty acids, remainder",g,,macronutrients:fat:fatty_acids:total
+FASAT(g),"fatty acids, total saturated",g,,macronutrients:fat:fatty_acids:total
+FAMS(g),"fatty acids, total monounsaturated",g,,macronutrients:fat:fatty_acids:total
+FAPU(g),"fatty acids, total polyunsaturated",g,,macronutrients:fat:fatty_acids:total
+FATRN(g),"fatty acids, total trans",g,,macronutrients:fat:fatty_acids:total
+FAUN(g),"other fatty acids, not specified",g,,macronutrients:fat:fatty_acids:total
+FAPUN9(g),"fatty acids, total n-9 polyunsaturated",g,A class of polyunsaturated fatty acids with the first double bond at the 9th carbon from the methyl end,macronutrients:fat:fatty_acids:total
+FAPUCN9(g),"fatty acids, total n-9 polyunsaturated in cis configuration",g,,macronutrients:fat:fatty_acids:total
+FAPUN6(g),"fatty acids, total n-6 polyunsaturated",g,A class of polyunsaturated fatty acids with the first double bond at the 6th carbon from the methyl end,macronutrients:fat:fatty_acids:total
+FAPUCN6(g),"fatty acids, total n-6 polyunsaturated in cis configuration",g,,macronutrients:fat:fatty_acids:total
+FAPUN3(g),"fatty acids, total n-3 polyunsaturated",g,A class of polyunsaturated fatty acids with the first double bond at the 3rd carbon from the methyl end,macronutrients:fat:fatty_acids:total
+FAPUCN3(g),"fatty acids, total n-3 polyunsaturated in cis configuration",g,,macronutrients:fat:fatty_acids:total
+FAPULCCN3(g),"fatty acids, total n-3 long-chain polyunsaturated in cis configuration",g,,macronutrients:fat:fatty_acids:total
+FAN9(g),"fatty acid, total n-9",g,,macronutrients:fat:fatty_acids:total
+FAN6(g),"fatty acid, total n-6",g,A class of fatty acids with the first double bond (mono and polyunsaturated FA) at the 6th carbon from the methyl end,macronutrients:fat:fatty_acids:total
+FAN3(g),"fatty acid, total n-3",g,A class of fatty acids with the first double bond (mono and polyunsaturated FA) at the 3rd carbon from the methyl end,macronutrients:fat:fatty_acids:total
+FAFRE(g),"fatty acids, total free",g,,macronutrients:fat:fatty_acids:total
+DGLY(g),"diglycerides, total",g,,macronutrients:fat:components
+MGLY(g),"monoglycerides, total",g,,macronutrients:fat:components
+GLYLIP(g),"glycolipids, total",g,"glycolipids, total",macronutrients:fat:glycolipids
+PHOLIP(g),"phospholipids, total",g,,macronutrients:fat:phospholipids
+CHOAVLDF(g),"carbohydrate, available; calculated by difference",g,"This value is calculated: 100 g minus total grams of water, protein, fat, alcohol, ash and dietary fibre; or CHOCDF – dietary fibre",macronutrients:carbohydrate:total
+CHOAVL(g),"carbohydrate, available",g,"This value includes the sugars, starch and glycogen",macronutrients:carbohydrate:total
+CHOAVLM(g),"carbohydrate, available; expressed as monosaccharide equivalents",g,"This value includes the sugars, starch and glycogen",macronutrients:carbohydrate:total
+CHOAVLO(g),"carbohydrates, available by summation, including oligosaccharides",g,,macronutrients:carbohydrate:total
+CHOAVL-(g),"carbohydrate, available; method unknown or variable",g,,macronutrients:carbohydrate:total
+CHOCDF(g),"carbohydrate, total; calculated by difference",g,"This value is calculated: 100 g minus total grams of water, protein, fat, alcohol and ash",macronutrients:carbohydrate:total
+CHO-(g),carbohydrate; method of determination unknown or variable,g,,macronutrients:carbohydrate:total
+SUGAR(g),"sugars, total",g,Sum of free monosaccharides and disaccharides,macronutrients:carbohydrate:sugars:total
+SUGARM(g),"sugars, total; expressed as monosaccharide equivalents",g,Sum of free monosaccharides and disaccharides expressed in monosaccharide equivalents,macronutrients:carbohydrate:sugars:total
+SUGRD(g),"sugars, reducing",g,,macronutrients:carbohydrate:sugars:total
+SUGNRD(g),"sugars, non-reducing",g,,macronutrients:carbohydrate:sugars:total
+SUGAR-(g),"sugars, total; expression unknown",g,,macronutrients:carbohydrate:sugars:total
+ARAS(g),arabinose,,,macronutrients:carbohydrate:sugars:monosaccharides
+FRUS(g),fructose,g,D-fructose only; includes only the free monosaccharide,macronutrients:carbohydrate:sugars:monosaccharides
+FUCOS(g),fucose,g,,macronutrients:carbohydrate:sugars:monosaccharides
+GALS(g),galactose,g,,macronutrients:carbohydrate:sugars:monosaccharides
+GLUS(g),glucose,g,D-glucose only; includes only the free monosaccharide,macronutrients:carbohydrate:sugars:monosaccharides
+MANS(g),mannose,g,,macronutrients:carbohydrate:sugars:monosaccharides
+RHAS(g),rhamnose,g,,macronutrients:carbohydrate:sugars:monosaccharides
+RIBS(g),ribose,g,,macronutrients:carbohydrate:sugars:monosaccharides
+XYLS(g),xylose,g,D-xylose only; includes only the free monosaccharide,macronutrients:carbohydrate:sugars:monosaccharides
+SUCS(g),sucrose,g,,macronutrients:carbohydrate:sugars:disaccharides
+TRES(g),trehalose,g,,macronutrients:carbohydrate:sugars:disaccharides
+MALS(g),maltose,g,,macronutrients:carbohydrate:sugars:disaccharides
+LACS(g),lactose,g,,macronutrients:carbohydrate:sugars:disaccharides
+OLSAC(g),"oligosaccharides, total available",g,,macronutrients:carbohydrate:oligosaccharides
+RAFSM(g),raffinose; expressed as monosaccharide equivalents,g,Trisaccharide,macronutrients:carbohydrate:oligosaccharides
+RAFS(g),raffinose,g,,macronutrients:carbohydrate:oligosaccharides
+STAS(g),stachyose,g,,macronutrients:carbohydrate:oligosaccharides
+STASM(g),stachyose; expressed as monosaccharide equivalents,g,Tetrasacchride,macronutrients:carbohydrate:oligosaccharides
+VERS(g),verbascose,g,,macronutrients:carbohydrate:oligosaccharides
+GALSD(g),alpha galactosides,g,,macronutrients:carbohydrate:oligosaccharides
+AMYS(g),amylose,g,,macronutrients:carbohydrate:polysaccharides:starch_like
+GLYC(g),glycogen,g,,macronutrients:carbohydrate:polysaccharides:starch_like
+STARCH(g),"starch, available",g,"The sum of all polysaccharides yielding glucose after hydrolysis with suitable enzymes; includes amylose, amylopectin, glycogen, and dextrins",macronutrients:carbohydrate:polysaccharides:starch_like
+STARCHM(g),"starch, available; expressed as monosaccharide equivalents",g,"The sum of all polysaccharides yielding glucose after hydrolysis with suitable enzymes; includes amylose, amylopectin, glycogen, and dextrins",macronutrients:carbohydrate:polysaccharides:starch_like
+STARES(g),"starch, resistant",g,,macronutrients:carbohydrate:polysaccharides:starch_like
+STARES3(g),"starch, resistant RS3",g,"Resistant starch (RS3): Resistant starch that is formed when starch-containing foods are cooked and cooled such as in bread, cornflakes and cooked-and-chilled potatoes or retrograded high amylose corn",macronutrients:carbohydrate:polysaccharides:starch_like
+STARCH-(g),"starch, available; expression unknown",g,,macronutrients:carbohydrate:polysaccharides:starch_like
+FIBTG(g),"fibre, total dietary; determined gravimetrically by the AOAC total dietary fibre method (Prosky and similar methods)",g,"Sum of non-starch polysaccharides, lignin, part of resistant starch and resistant oligosaccharides. This is equivalent to the sum of <FIBSOL> and <FIBINS>",macronutrients:fibre:total
+FIBTS(g),"fibre, total dietary; sum of non-starch polysaccharide components and lignin (Southgate colorimetric procedure)",g,"Mixture of non-starch polysaccharides, lignin and some resistant starch",macronutrients:fibre:total
+FIBTGLCS(g),"fibre, total, insoluble and soluble dietary; determined by enzymatic- gravimetric method and liquid chromatography (AOAC 2011.25)",g,,macronutrients:fibre:total
+FIBND(g),fibre; determined by neutral detergent method,g,"Includes lignin, cellulose, and insoluble hemicellulose",macronutrients:fibre:total
+FIBAD(g),fibre; determined by acid detergent method,g,"Includes cellulose, lignin, and some hemicelluloses.",macronutrients:fibre:total
+FIBC(g),"fibre, crude",g,The crude fibre method of fibre analysis is obsolete,macronutrients:fibre:total
+FIB-(g),fibre; method of determination unknown or variable,g,,macronutrients:fibre:total
+NSP(g),"polysaccharides, non-starch (Englyst method)",g,"Includes non-starch polysaccharides and excludes lignin, resistant starch and resistant oligosaccharides",macronutrients:fibre:total
+FIBINS(g),"fibre, water-insoluble",g,"Sum of insoluble components from the AOAC total dietary fibre method; includes primarily lignin, cellulose, and most of the hemicellulose",macronutrients:fibre:fractions
+FIBGLCSINS(g),"fibre, water-insoluble (AOAC 2011.25)",g,,macronutrients:fibre:fractions
+FIBSOL(g),"fibre, water-soluble",g,"Sum of soluble components from the AOAC total dietary fibre method; includes algal polysaccharides, gums, pectins, and mucilages",macronutrients:fibre:fractions
+FIBGLCSSOL(g),"fibre, water-soluble (AOAC 2011.25)",g,,macronutrients:fibre:fractions
+PECT(g),pectin,g,Reflects AOAC or equivalent procedure; polymers of galacturonic acid unspecified,macronutrients:fibre:structural_components
+CELLU(g),cellulose,g,,macronutrients:fibre:structural_components
+LIGN(g),lignin,g,,macronutrients:fibre:structural_components
+HEMCEL(g),hemicellulose,g,Includes hexose and pentose,macronutrients:fibre:structural_components
+MUCIL(g),mucilage,g,,macronutrients:fibre:structural_components
+CHITIN(g),chitin,g,,macronutrients:fibre:structural_components
+FIBPEN(g),pentoses in fietary fibre,g,,macronutrients:fibre:structural_components
+GLUFB(g),glucose in dietary fibre,g,,macronutrients:fibre:structural_components
+GALF(b),galactose in dietary fibre,g,,macronutrients:fibre:structural_components
+GLUCNB(g),betaglucan,g,,macronutrients:fibre:structural_components
+PSACNC(g),"polysaccharides, non-cellulosic",g,"Includes hemicellulose, pectin, gums, algal polysaccharides, and mucilages",macronutrients:fibre:structural_components
+PSACNSI(g),"polysaccharides, non-starch, water-insoluble",g,,macronutrients:fibre:structural_components
+PSACNSS(g),"polysaccharides, non-starch, water-soluble",g,,macronutrients:fibre:structural_components
+WAX(mg),"wax, total",mg,,macronutrients:fibre:structural_components
+WATER(g),water,g,Includes all methods except freeze drying,macronutrients:water
+DM(g),dry matter,g,,macronutrients:water
+ASH(g),ash,g,,macronutrients:ash
+MANTL(mg),mannitol,mg,,macronutrients:carbohydrate:polyols
+SORTL(mg),sorbitol,mg,,macronutrients:carbohydrate:polyols
+ACEAC(mg),acetic acid,mg,,macronutrients:carbohydrate:organic_acids
+BENAC(mg),benzoic acid,mg,,macronutrients:carbohydrate:organic_acids
+FUMAC(mg),fumaric acid,mg,,macronutrients:carbohydrate:organic_acids
+MALAC(mg),malic acid,mg,,macronutrients:carbohydrate:organic_acids
+OXALAC(mg),oxalic acid,mg,,macronutrients:carbohydrate:organic_acids
+PHYTCPPI(mg),"phytic acid, determined by indirect preciptation",mg,"phytic acid, including all inositol phosphates based on phytate phosphorus estimated by indirect precipitation",macronutrients:carbohydrate:organic_acids
+PHYTCPPD(mg),"phytic acid, determined by direct preciptation",mg,"phytic acid, including all inositol phosphates based on phytate phosphorus estimated by direct precipitation",macronutrients:carbohydrate:organic_acids
+PHYTCPP(mg),"phytic acid, calc. from phytate phosphorus, anion exchange method.",mg,"phytic acid, including all inositol phosphates based on phytate phosphorus estimated by AOAC 986.11 method",macronutrients:carbohydrate:organic_acids
+PHYTC-(mg),"phytic acid, calc. from phytate phosphorus",mg,"phytic acid, including all inositol phosphates based on phytate phosphorus; precipitation method unknown",macronutrients:carbohydrate:organic_acids
+PPI(mg),"phytate phosphorus, determined by indirect preciptation",mg,,macronutrients:carbohydrate:organic_acids
+PPD(mg),"phytate phosphorus, determined by direct preciptation",mg,"phytate phosphorus, determined by direct preciptation",macronutrients:carbohydrate:organic_acids
+PP-(mg),"phytate phosphorus, method unk.",mg,"phytate phosphorus, method unknown or variable",macronutrients:carbohydrate:organic_acids
+XP,conv. fact. phosphorus,mg,conversion factor to calculate total phytic acid from phosphorus,macronutrients:carbohydrate:organic_acids
+IP3(mg),Inositol triphosphate,mg,Inositol triphosphate,macronutrients:carbohydrate:organic_acids
+IP4(mg),Inositol tetraphosphate,mg,Inositol tetraphosphate,macronutrients:carbohydrate:organic_acids
+IP5(mg),Inositol pentaphosphate,mg,Inositol pentaphosphate,macronutrients:carbohydrate:organic_acids
+IP6(mg),Inositol hexaphosphate,mg,Inositol hexaphosphate,macronutrients:carbohydrate:organic_acids
+IP5_A_IP6(mg),sum of IP5 and IP6,mg,sum of inositol penta and hexaphosphate,macronutrients:carbohydrate:organic_acids
+IP4_A_IP5_A_IP6(mg),"sum of IP4, IP5 and IP6",mg,"sum of inositol tetra, penta and hexaphosphate",macronutrients:carbohydrate:organic_acids
+IPSUM(mg),total inositol phosphates (sum of all fractions),mg,"total inositol phosphates, calculated by sum of inositol tri, tetra, penta and hexaphosphate",macronutrients:carbohydrate:organic_acids
+PHYT-(mg),"phytic acid, unk.",mg,"inositol phosphates, method unknown or variable; expressed as phytic acid",macronutrients:carbohydrate:organic_acids
+QUINAC(mg),quinic acid,mg,,macronutrients:carbohydrate:organic_acids
+SALAC(mg),salicylic acid,mg,,macronutrients:carbohydrate:organic_acids
+SHIKAC(mg),shikimic acid,mg,,macronutrients:carbohydrate:organic_acids
+SUCAC(mg),succinic acid,mg,,macronutrients:carbohydrate:organic_acids
+TARAC(mg),tartaric acid,mg,,macronutrients:carbohydrate:organic_acids
+OA(g),"organic acids, total",g,,macronutrients:carbohydrate:organic_acids
+AG(mcg),silver,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+B(mcg),boron,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+BRD(mcg),bromide,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+CA(mg),calcium,mg,Includes both elemental and ionic forms,micronutrients:mineral
+CLD(mg),chloride,mg,Includes both elemental and ionic forms,micronutrients:mineral
+CO(mcg),cobalt,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+CR(mcg),chromium,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+CS(mcg),cesium,mcg,,micronutrients:mineral
+CU(mg),copper,mg,,micronutrients:mineral
+FD(mcg),flouride,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+FE(mg),"iron, total",mg,Includes elemental and both ionic forms;,micronutrients:mineral
+ID(mcg),iodine,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+K(mg),potassium,mg,Includes both elemental and ionic forms,micronutrients:mineral
+MG(mg),magnesium,mg,Includes both elemental and ionic forms,micronutrients:mineral
+MN(mg),manganese,mg,Includes both elemental and ionic forms,micronutrients:mineral
+MO(mcg),molybdenum,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+NA(mg),sodium,mg,Includes both elemental and ionic forms,micronutrients:mineral
+NACL(mg),salt,mg,,micronutrients:mineral
+NI(mcg),nickel,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+P(mg),phosphorus,mg,Includes both elemental and ionic forms,micronutrients:mineral
+RB(mg),rubidium,mg,Includes both elemental and ionic forms,micronutrients:mineral
+S(mg),sulphur,mg,Includes both elemental and ionic forms,micronutrients:mineral
+SE(mcg),selenium,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+SI(mcg),silicon,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+SN(mcg),tin,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+TI(mcg),titanum,mcg,,micronutrients:mineral
+V(mcg),vanadium,mcg,Includes both elemental and ionic forms,micronutrients:mineral
+ZN(mg),zink,mg,Includes both elemental and ionic forms,micronutrients:mineral
+AL(mcg),aluminium,mcg,,contaminants:elemental
+AS(mcg),arsenic,mcg,,contaminants:elemental
+BA(mcg),barium,mcg,,contaminants:elemental
+CD(mcg),cadmium,mcg,,contaminants:elemental
+HG(mcg),mercury,mcg,,contaminants:elemental
+LI(mcg),lithium,mcg,,contaminants:elemental
+NITRA(mg),nitrates,mg,,contaminants:elemental
+NITRI(mg),nitrites,mg,,contaminants:elemental
+PB(mcg),lead,mcg,,contaminants:elemental
+SR(mcg),strontium,mcg,,contaminants:elemental
+VITA_RAE(mcg),vitamin A retinol activity equivalent (RAE); calculated by summation of the vitamin A activities of retinol and the active carotenoids,mcg,Total vitamin A in retinol activity equivalent (RAE) = mcg retinol + 1/12 mcg beta-carotene + 1/24 mcg a-carotene + 1/24 b-cryptoxanthin,vitamins:fat_soluble:vit_a
+VITA(mcg),vitamin A; calculated by summation of the vitamin A activities of retinol and the active carotenoids,mcg,Total vitamin A = mcg retinol + 1/6 mcg beta-carotene + 1/12 mcg a-carotene + 1/12 b-cryptoxanthin,vitamins:fat_soluble:vit_a
+RETOL(mcg),retinol,mcg,All-trans retinol only,vitamins:fat_soluble:vit_a
+RETOL(IU),retinol,IU,,vitamins:fat_soluble:vit_a
+RETOL13(mcg),13-cis retinol,mcg,,vitamins:fat_soluble:vit_a
+RETOLDH(mcg),dehydroretinol,mcg,,vitamins:fat_soluble:vit_a
+RETOLSUM(mcg),"summation, retinol = trans-retinol + cis-retinol",mcg,,vitamins:fat_soluble:vit_a
+VITA-(mcg),vitamin A; method of determination unknown,mcg,,vitamins:fat_soluble:vit_a
+VITA-(IU),vitamin A; method unknown or variable,IU,,vitamins:fat_soluble:vit_a
+ANTHX(mcg),antheraxanthin,mcg,,vitamins:fat_soluble:cartenoids
+ATX(mcg),astaxanthin,mcg,,vitamins:fat_soluble:cartenoids
+CAROT(mcg),"carotene, total trans",mcg,All-trans carotene only; determined by analysis or calculation,vitamins:fat_soluble:cartenoids
+CARTA(mcg),alpha-carotene,mcg,All-trans alpha-carotene only,vitamins:fat_soluble:cartenoids
+CARTB(mcg),beta-carotene,mcg,All-trans beta-carotene only,vitamins:fat_soluble:cartenoids
+CARTBCIS(mcg),beta-carotene cis,mcg,,vitamins:fat_soluble:cartenoids
+CARTBEQ(mcg),beta-carotene equivalents,mcg,This value is the sum of the beta-carotene plus ½ the quantity of the other carotenoids with vitamin A activity,vitamins:fat_soluble:cartenoids
+CARTG(mcg),gamma-carotene,mcg,All-trans gamma-carotene only,vitamins:fat_soluble:cartenoids
+CARTOID(mcg),"carotenoids, total",mcg,"Includes cis and trans carotenoids and non-provitamin Alpha-carotenoids (carotenes, xanthophylls); Retinoids are excluded",vitamins:fat_soluble:cartenoids
+CRYPX(mcg),"cryptoxanthin, total",mcg,,vitamins:fat_soluble:cartenoids
+CRYPXA(mcg),alpha-cryptoxanthin,mcg,,vitamins:fat_soluble:cartenoids
+CRYPXB(mcg),beta-cryptoxanthin,mcg,,vitamins:fat_soluble:cartenoids
+LUTN(mcg),lutein,mcg,,vitamins:fat_soluble:cartenoids
+LUTNZEA(mcg),lutein+zeaxanthin,mcg,,vitamins:fat_soluble:cartenoids
+LYCPN(mcg),lycopene,mcg,,vitamins:fat_soluble:cartenoids
+NEOX(mcg),neoxanthin,mcg,,vitamins:fat_soluble:cartenoids
+NEUROSP(mcg),neurosporene,mcg,,vitamins:fat_soluble:cartenoids
+VIOLX(mcg),violaxanthin,mcg,,vitamins:fat_soluble:cartenoids
+ZEA(mcg),zeaxanthin,mcg,,vitamins:fat_soluble:cartenoids
+CHOCAL(mcg),cholecalciferol (D3),mcg,Naturally occurring form,vitamins:fat_soluble:vit_d
+CHOCAL(IU),cholecalciferol (D3),IU,,vitamins:fat_soluble:vit_d
+CHOCALOH(mcg),25-hydroxycholecalciferol,mcg,,vitamins:fat_soluble:vit_d
+ERGCAL(mcg),ergocalciferol (D2),mcg,,vitamins:fat_soluble:vit_d
+VITD(mcg),vitamin D (D2+D3); sum of ergocalciferol and cholecalciferol,mcg,,vitamins:fat_soluble:vit_d
+VITD-(mcg),vitamin D; method unknown or variable,mcg,,vitamins:fat_soluble:vit_d
+VITE(mg),vitamin E; calculated by summation of the vitamin E activities of the active tocopherols and tocotrienols; expressed as alpha-tocopherol equivalents,mg,VITE = a-tocopherol + 0.4 b-tocopherol + 0.1 g-tocopherol + 0.01 d-tocopherol + 0.3 a-tocotrienol + 0.05 b-tocotrienol + 0.01 g-tocotrienol,vitamins:fat_soluble:vit_e
+TOCPHA(mg),alpha-tocopherol,mg,,vitamins:fat_soluble:vit_e
+TOCPHA(IU),alpha-tocopherol,IU,,vitamins:fat_soluble:vit_e
+TOCPHB(mg),beta-tocopherol,mg,,vitamins:fat_soluble:vit_e
+TOCPHG(mg),gamma-tocopherol,mg,,vitamins:fat_soluble:vit_e
+TOCPHD(mg),delta-tocopherol,mg,,vitamins:fat_soluble:vit_e
+TOCPHB_A_TOCPHG(mg),beta-tocopherol+gamma-tocopherol,mg,,vitamins:fat_soluble:vit_e
+TOCTRA(mg),alpha-tocotrienol,mg,,vitamins:fat_soluble:vit_e
+TOCTRB(mg),beta-tocotrienol,mg,,vitamins:fat_soluble:vit_e
+TOCTRD(mg),delta-tocotrienol,mg,,vitamins:fat_soluble:vit_e
+TOCTRG(mg),gamma-tocotrienol,mg,,vitamins:fat_soluble:vit_e
+VITE-(mg),vitamin E; method or determination unknown or variable,mg,,vitamins:fat_soluble:vit_e
+VITE-(IU),vitamin E; method or determination unknown or variable,IU,,vitamins:fat_soluble:vit_e
+VITK(mcg),"vitamin K, total",mcg,vitamin K-1 + vitamin K-2,vitamins:fat_soluble:vit_k
+VITK1(mcg),Vitamin K-1,mcg,,vitamins:fat_soluble:vit_k
+VITK2(mcg),Vitamin K-2,mcg,,vitamins:fat_soluble:vit_k
+THIA(mg),thiamin,mg,,vitamins:water_soluble:vit_b1
+THIA-(mg),"thiamin, unknown",mg,"thiamin, unk.",vitamins:water_soluble:vit_b1
+THIAHCL(mg),vit B1 analysed and expressed as thiamin hydrochloride,mg,,vitamins:water_soluble:vit_b1
+RIBF(mg),riboflavin,mg,,vitamins:water_soluble:vit_b2
+FOLSUM(mcg),sum of folate vitamers; determined by HPLC,mcg,"Includes mostly tetrahydrofolate, 5-methyltetrahydrofolate, 5-formyltetrahydrofolate, 10-formylfolic acid, 10-formyldihydrofolate and folic acid",vitamins:water_soluble:vit_b9
+FOL(mcg),"folate, total",mcg,Microbiological method; includes both conjugated and free folate,vitamins:water_soluble:vit_b9
+FOL-(mcg),folate; method unknown or variable,mcg,,vitamins:water_soluble:vit_b9
+FOLFRE(mcg),"folate, free",mcg,,vitamins:water_soluble:vit_b9
+FOLFM10(mcg),10- formylfolic acid,mcg,,vitamins:water_soluble:vit_b9
+FOLH4(mcg),tetrahydrofolate,mcg,,vitamins:water_soluble:vit_b9
+FOLH4ME5(mcg),5-Formyltetrahydrofolate,mcg,,vitamins:water_soluble:vit_b9
+FOLH4FM5(mcg),5-Methyltetrahydrofolate,mcg,,vitamins:water_soluble:vit_b9
+NIAEQ(mg),"niacin equivalents, total",mg,Preformed niacin plus niacin equivalents from tryptophan = niacin + 1/60 tryptophan,vitamins:water_soluble:vit_b3
+NIA(mg),"niacin, preformed",mg,Nicotinic acid + nicotinamide,vitamins:water_soluble:vit_b3
+NIATRP(mg),niacin equivalents from tryptophan,mg,,vitamins:water_soluble:vit_b3
+NIA-(mg),niacin; method or form unknown,mg,,vitamins:water_soluble:vit_b3
+PANTAC(mg),pantothenic acid,mg,,vitamins:water_soluble:vit_b5
+VITB6A(mg),"vitamin B-6, total; determined by analysis",mg,,vitamins:water_soluble:vit_b6
+VITB6-(mg),"vitamin B-6, method unknown or variable",mg,,vitamins:water_soluble:vit_b6
+VITB6C(mg),"vitamin B-6, calculated",mg,,vitamins:water_soluble:vit_b6
+PYRXN(mg),pyridoxine,mg,vitamin B-6 alcohol form,vitamins:water_soluble:vit_b6
+PYRXNHCL(mg),pyridoxine hydrochloride,mg,,vitamins:water_soluble:vit_b6
+VITB12(mcg),vitamin B-12,mcg,Includes all the active forms of vitamin B-12 in food,vitamins:water_soluble:vit_b12
+BIOT(mcg),biotin,mcg,,vitamins:water_soluble:biotin
+VITC(mg),vitamin C,mg,L-ascorbic acid + L-dehydroascorbic acid,vitamins:water_soluble:vit_c
+ASCL(mg),L-ascorbic acid,mg,,vitamins:water_soluble:vit_c
+ASCDL(mg),L-dehydroascorbic acid,mg,,vitamins:water_soluble:vit_c
+VITC-(mg),vitamin C; method unknown or variable,mg,,vitamins:water_soluble:vit_c
+STERT(mg),"sterols, total",mg,Non-specific colorimetric method or sum of cholesterol and phytosterols,bioactives:lipids:sterols:total
+BRASTR(mg),brassicasterol,mg,,bioactives:lipids:sterols:plant_sterols
+CAMT(mg),"campesterol, total",mg,,bioactives:lipids:sterols:plant_sterols
+SAPON(mg),saponins,mg,,bioactives:lipids:sterols:plant_sterols
+SITSTR(mg),sitosterol,mg,Beta-sitosterol only,bioactives:lipids:sterols:plant_sterols
+SQUAL(mg),squalene,mg,,bioactives:lipids:sterols:plant_sterols
+STGSTR(mg),"stigmasterol, unspecified",mg,,bioactives:lipids:sterols:plant_sterols
+CHOLE(mg),cholesterol; determined by enzymatic or chromatographic method,mg,,bioactives:lipids:sterols:cholesterol
+CHOL-(mg),cholesterol; method unknown or variable,mg,,bioactives:lipids:sterols:cholesterol
+CHOLEST(mg),"cholesteryl-ester, total",mg,,bioactives:lipids:sterols:cholesterol
+POLYPHENT(mg),total polyphenolics,mg,,bioactives:polyphenols:total
+ANTCYAN(mcg),"anthocyanidin, total",mcg,,bioactives:polyphenols:flavonoids
+FLAVD(mcg),"flavonoids, total",mcg,,bioactives:polyphenols:flavonoids
+PAPOLY(mg),proanthocyanidin polymers (>10mers),mg,,bioactives:polyphenols:flavonoids
+CATEC(mcg),catechin,mcg,,bioactives:polyphenols:flavonoids:flavanols
+CATECT(mcg),"catechins, total",mcg,,bioactives:polyphenols:flavonoids:flavanols
+EPICATEC(mcg),epicatechin,mcg,,bioactives:polyphenols:flavonoids:flavanols
+PROCYA(mcg),"procyanidins, total",mcg,A class of flavanols and essentially they are polymer chains of flavonoids as catechins or epigallocatechingallates,bioactives:polyphenols:flavonoids:flavanols
+HESPD(mcg),hesperidin,mcg,Comprised of the flavanone hesperetin and the disaccharide rutinose,bioactives:polyphenols:flavonoids:flavanones
+NARING(mcg),naringenin,mcg,,bioactives:polyphenols:flavonoids:flavanones
+LUTEOL(mcg),luteolin,mcg,,bioactives:polyphenols:flavonoids:flavones
+FLAVO(mg),"flavonols, total",mg,,bioactives:polyphenols:flavonoids:flavonols
+ISOHA(mcg),isohamnetin,mcg,,bioactives:polyphenols:flavonoids:flavonols
+KAEMF(mcg),kaempferol,mcg,,bioactives:polyphenols:flavonoids:flavonols
+MYRIC(mcg),myricetin,mg,,bioactives:polyphenols:flavonoids:flavonols
+QUERCE(mcg),quercetin,mcg,,bioactives:polyphenols:flavonoids:flavonols
+RUTIN(mcg),rutin,mcg,,bioactives:polyphenols:flavonoids:flavonols
+TAN(mg),"tannins, total",mg,,bioactives:polyphenols:tannins
+PROANTCYA(mg),proanthocyanidins (condensed tannins),mg,,bioactives:polyphenols:tannins
+CAFFAC(mg),caffeic acid,mg,,bioactives:polyphenols:phenolic_acids
+CHLRAC(mg),chlorogenic acid,mg,,bioactives:polyphenols:phenolic_acids
+CINAC(mg),cinnamic acids,mg,,bioactives:polyphenols:phenolic_acids
+CITAC(mg),citric acid,mg,,bioactives:polyphenols:phenolic_acids
+ELLAC(mg),ellagic acid,mg,,bioactives:polyphenols:phenolic_acids
+FERAC(mg),ferulic acid,mg,,bioactives:polyphenols:phenolic_acids
+GALAAC(mg),galacturonic acid,mg,,bioactives:polyphenols:phenolic_acids
+GALLAC(mg),gallic acid,mg,,bioactives:polyphenols:phenolic_acids
+PCHOUAC(mg),p-coumaric acid,mg,,bioactives:polyphenols:phenolic_acids
+SINPAC(mg),sinapic acid,mg,,bioactives:polyphenols:phenolic_acids
+SYRAC(mg),syringic acid,mg,,bioactives:polyphenols:phenolic_acids
+VANAC(mg),vanillic acid,mg,,bioactives:polyphenols:phenolic_acids
+RESVTROL(mcg),resveratrol,mcg,,bioactives:polyphenols:stilbenes
+CHOLN(mg),"choline, total",mg,,micronutrients:other:choline
+DOPN,dopanime,mg,,bioactives:nitrogenous:neuroactive
+SOLAA(mg),alpha-solanine,mg,,bioactives:alkaloids
+GABA(mg),gamma-aminobutyric acid,mg,,bioactives:nitrogenous:neuroactive
+GLYALK(mg),glycoalkaloids,mg,,bioactives:alkaloids

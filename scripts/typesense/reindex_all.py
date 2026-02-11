@@ -34,12 +34,13 @@ def main():
     logger.info("Typesense Full Reindex")
     logger.info("=" * 60)
     logger.info("\nThis will:")
-    logger.info("  1. Drop existing foods collection")
-    logger.info("  2. Recreate collection with current schema")
-    logger.info("  3. Index all foods from PostgreSQL")
+    logger.info("  1. Drop existing collections (foods, recipes)")
+    logger.info("  2. Recreate collections with current schema")
+    logger.info("  3. Index all data from PostgreSQL")
 
-    # Run indexing script
+    # Run indexing scripts
     run_script("index_foods.py")
+    run_script("index_recipes.py")
 
     logger.info("\n" + "=" * 60)
     logger.info("✓ Full reindex completed successfully!")

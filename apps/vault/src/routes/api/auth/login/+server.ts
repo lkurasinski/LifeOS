@@ -48,7 +48,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		});
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return json({ error: 'Invalid data', details: error.errors }, { status: 400 });
+			return json({ error: 'Invalid data', details: error.issues }, { status: 400 });
 		}
 		console.error('Login error:', error);
 		return json({ error: 'Internal server error' }, { status: 500 });

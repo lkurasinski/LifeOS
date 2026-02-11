@@ -1,0 +1,101 @@
+import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
+import {
+	typesenseRecipeDocumentSchema,
+	type TypesenseRecipeDocument
+} from '$frontend/cookbook/recipe/server/integrations/typesense/recipe.typesense.schema';
+import { typesense } from '$backend/cookbook/food/infrastructure/typesense/client.typesense';
+
+export type RecipeSearchResults = {
+	items: TypesenseRecipeDocument[];
+	total: number;
+	page: number;
+	perPage: number;
+};
+
+export const GET: RequestHandler = async ({ url }) => {
+	const q = url.searchParams.get('q') ?? '*';
+	const perPage = Number(url.searchParams.get('per_page') ?? '12');
+	const page = Number(url.searchParams.get('page') ?? '1');
+	const difficulty = url.searchParams.get('difficulty');
+	const tags = url.searchParams.get('tags')?.split(',').filter(Boolean);
+	const mealTypes = url.searchParams.get('meal_types')?.split(',').filter(Boolean);
+
+	try {
+		const filterBy = [];
+
+		// Always show public recipes
+		filterBy.push('is_public:true');
+
+		// Filter by difficulty if provided
+		if (difficulty) {
+			filterBy.push(`difficulty:=${difficulty}`);
+		}
+
+		// Filter by tags if provided
+		if (tags && tags.length > 0) {
+			const tagFilters = tags.map((tag) => `tags:=${tag}`).join(' && ');
+			filterBy.push(tagFilters);
+		}
+
+		// Filter by meal types if provided
+		if (mealTypes && mealTypes.length > 0) {
+			const mealTypeFilters = mealTypes.map((type) => `meal_type:=${type}`).join(' || ');
+			filterBy.push(`(${mealTypeFilters})`);
+		}
+
+		const result = await typesense
+			.collections('recipes')
+			.documents()
+			.search({
+				q,
+				query_by: 'name_pl,name_en,description_pl,description_en,ingredient_names',
+				per_page: perPage,
+				page,
+				sort_by: 'created_at:desc',
+				filter_by: filterBy.join(' && ')
+			});
+
+		const hits = (result.hits ?? []).map((hit) => {
+			const doc = typesenseRecipeDocumentSchema.parse(hit.document);
+
+			return {
+				id: doc.id,
+				user_id: doc.user_id,
+				name_pl: doc.name_pl,
+				name_en: doc.name_en ?? null,
+				description_pl: doc.description_pl ?? null,
+				description_en: doc.description_en ?? null,
+				servings: doc.servings,
+				prep_time_minutes: doc.prep_time_minutes ?? null,
+				cook_time_minutes: doc.cook_time_minutes ?? null,
+				difficulty: doc.difficulty ?? null,
+				image_url: doc.image_url ?? null,
+				awesomeness: doc.awesomeness ?? null,
+				meal_type: doc.meal_type,
+				ingredients: doc.ingredients,
+				ingredient_names: doc.ingredient_names,
+				component_slugs: doc.component_slugs,
+				tags: doc.tags,
+				energy_kcal_per_serving: doc.energy_kcal_per_serving ?? null,
+				protein_per_serving: doc.protein_per_serving ?? null,
+				fat_per_serving: doc.fat_per_serving ?? null,
+				carbs_per_serving: doc.carbs_per_serving ?? null,
+				fiber_per_serving: doc.fiber_per_serving ?? null,
+				nutrients: doc.nutrients,
+				createdAt: new Date(doc.created_at * 1000).toISOString(),
+				updatedAt: new Date(doc.updated_at * 1000).toISOString()
+			};
+		});
+
+		return json({
+			items: hits,
+			total: result.found ?? 0,
+			page,
+			perPage
+		});
+	} catch (error) {
+		console.error('Typesense recipe search error:', error);
+		return json({ items: [], total: 0, page: 1, perPage }, { status: 500 });
+	}
+};

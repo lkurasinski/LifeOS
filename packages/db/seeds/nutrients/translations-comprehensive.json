@@ -1,0 +1,449 @@
+{
+  "comment": "Comprehensive nutrient name translations - complete phrase translations",
+  "metadata": {
+    "created": "2025-12-30",
+    "language_pair": "English -> Polish",
+    "approach": "Complete phrase translation, not word-by-word",
+    "confirmations": {
+      "mannitol_sorbitol": "Keep as is",
+      "fluoride": "fluorek",
+      "zinc": "cynk",
+      "titanium": "tytan",
+      "sitosterol": "β-sitosterol",
+      "stigmasterol": "Stygmasterol",
+      "dopamine": "dopamina"
+    }
+  },
+
+  "translations": {
+    "general": {
+      "edible portion coefficient": "współczynnik porcji jadalnej",
+      "pH": "pH"
+    },
+
+    "energy": {
+      "energy, total metabolizable; calculated from the energy-producing food components (original as from source)": "energia metaboliczna ogółem (oryginalna ze źródła)",
+      "energy, gross; determined by direct analysis using bomb calorimetry": "energia brutto; metoda kalorymetryczna"
+    },
+
+    "alcohol": {
+      "alcohol; assumed to be ethyl alcohol": "alkohol etylowy"
+    },
+
+    "amino_acids": {
+      "amino acids, total essential (8)": "aminokwasy ogółem niezbędne (8)",
+      "amino acids, total essential; unknown or variable which AS are included in total": "aminokwasy ogółem niezbędne; skład nieznany",
+      "amino acids, total non-essential": "aminokwasy ogółem nieniezbędne",
+      "amino acids, total aromatic": "aminokwasy ogółem aromatyczne",
+      "amino acids, total sulphur-containing": "aminokwasy ogółem siarkowe",
+      "amino acids, total; precise definition not specified": "aminokwasy ogółem; definicja nieokreślona",
+      "sum of 19 amino acids (excluding tryptophan)": "suma 19 aminokwasów (bez tryptofanu)",
+      "amino acids, total": "aminokwasy ogółem",
+      "alanine": "alanina",
+      "arginine": "arginina",
+      "asparagine": "asparagina",
+      "aspartic acid": "kwas asparaginowy",
+      "cystine": "cystyna",
+      "cysteine": "cysteina",
+      "glutamine": "glutamina",
+      "glutamic acid": "kwas glutaminowy",
+      "glycine": "glicyna",
+      "histidine": "histydyna",
+      "hydroxyproline": "hydroksyprolina",
+      "isoleucine": "izoleucyna",
+      "leucine": "leucyna",
+      "lysine": "lizyna",
+      "methionine": "metionina",
+      "ornithine": "ornityna",
+      "phenylalanine": "fenyloalanina",
+      "proline": "prolina",
+      "serine": "seryna",
+      "taurine": "tauryna",
+      "threonine": "treonina",
+      "tryptophan": "tryptofan",
+      "tyrosine": "tyrozyna",
+      "valine": "walina"
+    },
+
+    "amino_acid_mixtures": {
+      "glutamine + histidine": "glutamina + histydyna",
+      "alanine + arginine": "alanina + arginina",
+      "phenylalanine + tyrosine": "fenyloalanina + tyrozyna",
+      "cysteine + methionine": "cysteina + metionina",
+      "glycine + serine": "glicyna + seryna"
+    },
+
+    "nitrogen": {
+      "nitrogen, protein": "azot białkowy",
+      "nitrogen, non-protein": "azot niebiałkowy",
+      "nitrogen, whey protein": "azot białka serwatkowego",
+      "nitrogen, non-casein": "azot niekaseinowy",
+      "nitrogen, total": "azot ogółem",
+      "acid detergent fibre nitrogen": "azot błonnika kwaśno-detergentowego"
+    },
+
+    "protein": {
+      "protein, total; calculated from total nitrogen": "białko ogółem; obliczone z azotu całkowitego",
+      "protein, total; calculated from amino nitrogen": "białko ogółem; obliczone z azotu aminowego",
+      "protein, total; calculated from protein nitrogen": "białko ogółem; obliczone z azotu białkowego",
+      "protein, total; determined by direct analysis": "białko ogółem; metoda bezpośrednia",
+      "protein, total; method of determination unknown or variable": "białko ogółem; metoda nieznana",
+      "conversion factor to calculate total protein from nitrogen": "współczynnik przeliczeniowy białka z azotu",
+      "albumin": "albumina",
+      "casein": "kazeina",
+      "lactoferrin": "laktoferyna",
+      "globulin": "globulina"
+    },
+
+    "non_nutrients": {
+      "ammonia": "amoniak",
+      "cyanide": "cyjanek"
+    },
+
+    "fat": {
+      "fat, total": "tłuszcz ogółem",
+      "fat, total; derived by analysis using continuous extraction": "tłuszcz ogółem; ekstrakcja ciągła",
+      "fat; method of determination unknown or mixed methods": "tłuszcz; metoda nieznana",
+      "triglycerides, total": "trójglicerydy ogółem",
+      "fatty acid conversion factor for internal use": "współczynnik przeliczeniowy kwasów tłuszczowych",
+      "diglycerides, total": "diglicerydy ogółem",
+      "monoglycerides, total": "monoglicerydy ogółem",
+      "glycolipids, total": "glikolipidy ogółem",
+      "phospholipids, total": "fosfolipidy ogółem"
+    },
+
+    "fatty_acids_total": {
+      "fatty acids, total": "kwasy tłuszczowe ogółem",
+      "fatty acids, remainder": "kwasy tłuszczowe pozostałe",
+      "fatty acids, total saturated": "kwasy tłuszczowe nasycone ogółem",
+      "fatty acids, total monounsaturated": "kwasy tłuszczowe jednonienasycone ogółem",
+      "fatty acids, total polyunsaturated": "kwasy tłuszczowe wielonienasycone ogółem",
+      "fatty acids, total trans": "kwasy tłuszczowe trans ogółem",
+      "other fatty acids, not specified": "kwasy tłuszczowe inne, nieokreślone",
+      "fatty acids, total n-9 polyunsaturated": "kwasy tłuszczowe wielonienasycone n-9 ogółem",
+      "fatty acids, total n-9 polyunsaturated in cis configuration": "kwasy tłuszczowe wielonienasycone n-9 cis ogółem",
+      "fatty acids, total n-6 polyunsaturated": "kwasy tłuszczowe wielonienasycone n-6 ogółem",
+      "fatty acids, total n-6 polyunsaturated in cis configuration": "kwasy tłuszczowe wielonienasycone n-6 cis ogółem",
+      "fatty acids, total n-3 polyunsaturated": "kwasy tłuszczowe wielonienasycone n-3 ogółem",
+      "fatty acids, total n-3 polyunsaturated in cis configuration": "kwasy tłuszczowe wielonienasycone n-3 cis ogółem",
+      "fatty acids, total n-3 long-chain polyunsaturated in cis configuration": "kwasy tłuszczowe wielonienasycone n-3 długołańcuchowe cis ogółem",
+      "fatty acid, total n-9": "kwas tłuszczowy ogółem n-9",
+      "fatty acid, total n-6": "kwas tłuszczowy ogółem n-6",
+      "fatty acid, total n-3": "kwas tłuszczowy ogółem n-3",
+      "fatty acids, total free": "kwasy tłuszczowe wolne ogółem"
+    },
+
+    "carbohydrates": {
+      "carbohydrate, available; calculated by difference": "węglowodany przysw.; obliczone przez różnicę",
+      "carbohydrate, available": "węglowodany przyswajalne",
+      "carbohydrate, available; expressed as monosaccharide equivalents": "węglowodany przyswajalne; ekwiwalenty monosacharydów",
+      "carbohydrates, available by summation, including oligosaccharides": "węglowodany przyswajalne przez sumowanie z oligosacharydami",
+      "carbohydrate, available; method unknown or variable": "węglowodany przyswajalne; metoda nieznana",
+      "carbohydrate, total; calculated by difference": "węglowodany ogółem; obliczone przez różnicę",
+      "carbohydrate; method of determination unknown or variable": "węglowodany; metoda nieznana"
+    },
+
+    "sugars": {
+      "sugars, total": "cukry ogółem",
+      "sugars, total; expressed as monosaccharide equivalents": "cukry ogółem; ekwiwalenty monosacharydów",
+      "sugars, reducing": "cukry redukujące",
+      "sugars, non-reducing": "cukry nieredukujące",
+      "sugars, total; expression unknown": "cukry ogółem; wyrażenie nieznane",
+      "arabinose": "arabinoza",
+      "fructose": "fruktoza",
+      "fucose": "fukoza",
+      "galactose": "galaktoza",
+      "glucose": "glukoza",
+      "mannose": "mannoza",
+      "rhamnose": "ramnoza",
+      "ribose": "ryboza",
+      "xylose": "ksyloza",
+      "sucrose": "sacharoza",
+      "trehalose": "trehaloza",
+      "maltose": "maltoza",
+      "lactose": "laktoza"
+    },
+
+    "oligosaccharides": {
+      "oligosaccharides, total available": "oligosacharydy ogółem przyswajalne",
+      "raffinose; expressed as monosaccharide equivalents": "rafinoza; ekwiwalenty monosacharydów",
+      "raffinose": "rafinoza",
+      "stachyose": "stachioza",
+      "stachyose; expressed as monosaccharide equivalents": "stachioza; ekwiwalenty monosacharydów",
+      "verbascose": "werbaskoza",
+      "alpha galactosides": "alfa galaktozydy"
+    },
+
+    "polysaccharides": {
+      "amylose": "amyloza",
+      "glycogen": "glikogen",
+      "starch, available": "skrobia przyswajalna",
+      "starch, available; expressed as monosaccharide equivalents": "skrobia przyswajalna; ekwiwalenty monosacharydów",
+      "starch, resistant": "skrobia oporna",
+      "starch, resistant RS3": "skrobia oporna RS3",
+      "starch, available; expression unknown": "skrobia przyswajalna; wyrażenie nieznane",
+      "polysaccharides, non-starch (Englyst method)": "polisacharydy nieskrobiowe (metoda Englyst)",
+      "polysaccharides, non-cellulosic": "polisacharydy niecelulozowe",
+      "polysaccharides, non-starch, water-insoluble": "polisacharydy nieskrobiowe nierozpuszczalne",
+      "polysaccharides, non-starch, water-soluble": "polisacharydy nieskrobiowe rozpuszczalne"
+    },
+
+    "fibre": {
+      "fibre, total dietary; determined gravimetrically by the AOAC total dietary fibre method (Prosky and similar methods)": "błonnik pokarmowy ogółem; metoda AOAC",
+      "fibre, total dietary; sum of non-starch polysaccharide components and lignin (Southgate colorimetric procedure)": "błonnik pokarmowy ogółem; metoda Southgate",
+      "fibre, total, insoluble and soluble dietary; determined by enzymatic- gravimetric method and liquid chromatography (AOAC 2011.25)": "błonnik pokarmowy ogółem; metoda AOAC 2011.25",
+      "fibre; determined by neutral detergent method": "błonnik; metoda detergentowa obojętna",
+      "fibre; determined by acid detergent method": "błonnik; metoda detergentowa kwaśna",
+      "fibre, crude": "błonnik surowy",
+      "fibre; method of determination unknown or variable": "błonnik; metoda nieznana",
+      "fibre, water-insoluble": "błonnik nierozpuszczalny",
+      "fibre, water-insoluble (AOAC 2011.25)": "błonnik nierozpuszczalny (AOAC 2011.25)",
+      "fibre, water-soluble": "błonnik rozpuszczalny",
+      "fibre, water-soluble (AOAC 2011.25)": "błonnik rozpuszczalny (AOAC 2011.25)",
+      "pectin": "pektyna",
+      "cellulose": "celuloza",
+      "lignin": "lignina",
+      "hemicellulose": "hemiceluloza",
+      "mucilage": "śluz",
+      "chitin": "chityna",
+      "pentoses in fietary fibre": "pentozy w błonniku",
+      "glucose in dietary fibre": "glukoza w błonniku",
+      "galactose in dietary fibre": "galaktoza w błonniku",
+      "betaglucan": "beta-glukan"
+    },
+
+    "other_components": {
+      "wax, total": "woski ogółem",
+      "water": "woda",
+      "dry matter": "sucha masa",
+      "ash": "popiół"
+    },
+
+    "polyols": {
+      "mannitol": "mannitol",
+      "sorbitol": "sorbitol"
+    },
+
+    "organic_acids": {
+      "acetic acid": "kwas octowy",
+      "benzoic acid": "kwas benzoesowy",
+      "fumaric acid": "kwas fumarowy",
+      "malic acid": "kwas jabłkowy",
+      "oxalic acid": "kwas szczawiowy",
+      "phytic acid, determined by indirect preciptation": "kwas fitynowy; metoda pośrednia",
+      "phytic acid, determined by direct preciptation": "kwas fitynowy; metoda bezpośrednia",
+      "phytic acid, calc. from phytate phosphorus, anion exchange method.": "kwas fitynowy; obliczony z fosforu fitynianowego",
+      "phytic acid, calc. from phytate phosphorus": "kwas fitynowy; obliczony z fosforu",
+      "phytate phosphorus, determined by indirect preciptation": "fosfor fitynianowy; metoda pośrednia",
+      "phytate phosphorus, determined by direct preciptation": "fosfor fitynianowy; metoda bezpośrednia",
+      "phytate phosphorus, method unk.": "fosfor fitynianowy; metoda nieznana",
+      "conv. fact. phosphorus": "współczynnik przeliczeniowy fosforu",
+      "Inositol triphosphate": "trifosforan inozytolu (IP3)",
+      "Inositol tetraphosphate": "tetrafosforan inozytolu (IP4)",
+      "Inositol pentaphosphate": "pentafosforan inozytolu (IP5)",
+      "Inositol hexaphosphate": "heksafosforan inozytolu (IP6)",
+      "sum of IP5 and IP6": "suma IP5 i IP6",
+      "sum of IP4, IP5 and IP6": "suma IP4, IP5 i IP6",
+      "total inositol phosphates (sum of all fractions)": "fosforany inozytolu ogółem (suma wszystkich frakcji)",
+      "phytic acid, unk.": "kwas fitynowy; metoda nieznana",
+      "quinic acid": "kwas chinowy",
+      "salicylic acid": "kwas salicylowy",
+      "shikimic acid": "kwas szikimowy",
+      "succinic acid": "kwas bursztynowy",
+      "tartaric acid": "kwas winowy",
+      "organic acids, total": "kwasy organiczne ogółem"
+    },
+
+    "minerals": {
+      "silver": "srebro",
+      "boron": "bor",
+      "bromide": "bromek",
+      "calcium": "wapń",
+      "chloride": "chlorek",
+      "cobalt": "kobalt",
+      "chromium": "chrom",
+      "cesium": "cez",
+      "copper": "miedź",
+      "flouride": "fluorek",
+      "iron, total": "żelazo ogółem",
+      "iodine": "jod",
+      "potassium": "potas",
+      "magnesium": "magnez",
+      "manganese": "mangan",
+      "molybdenum": "molibden",
+      "sodium": "sód",
+      "salt": "sól",
+      "nickel": "nikiel",
+      "phosphorus": "fosfor",
+      "rubidium": "rubid",
+      "sulphur": "siarka",
+      "selenium": "selen",
+      "silicon": "krzem",
+      "tin": "cyna",
+      "titanum": "tytan",
+      "vanadium": "wanad",
+      "zink": "cynk"
+    },
+
+    "contaminants": {
+      "aluminium": "glin",
+      "arsenic": "arsen",
+      "barium": "bar",
+      "cadmium": "kadm",
+      "mercury": "rtęć",
+      "lithium": "lit",
+      "nitrates": "azotany",
+      "nitrites": "azotyny",
+      "lead": "ołów",
+      "strontium": "stront"
+    },
+
+    "vitamin_a": {
+      "vitamin A retinol activity equivalent (RAE); calculated by summation of the vitamin A activities of retinol and the active carotenoids": "witamina A równoważnik aktywności retinolu (RAE)",
+      "vitamin A; calculated by summation of the vitamin A activities of retinol and the active carotenoids": "witamina A; obliczona z sumy aktywności",
+      "retinol": "retinol",
+      "13-cis retinol": "13-cis retinol",
+      "dehydroretinol": "dehydroretinol",
+      "summation, retinol = trans-retinol + cis-retinol": "retinol ogółem = trans-retinol + cis-retinol",
+      "vitamin A; method of determination unknown": "witamina A; metoda nieznana",
+      "vitamin A; method unknown or variable": "witamina A; metoda nieznana"
+    },
+
+    "carotenoids": {
+      "antheraxanthin": "anteraksantyna",
+      "astaxanthin": "astaksantyna",
+      "carotene, total trans": "karoten ogółem trans",
+      "alpha-carotene": "alfa-karoten",
+      "beta-carotene": "beta-karoten",
+      "beta-carotene cis": "beta-karoten cis",
+      "beta-carotene equivalents": "beta-karoten równoważniki",
+      "gamma-carotene": "gamma-karoten",
+      "carotenoids, total": "karotenoidy ogółem",
+      "cryptoxanthin, total": "kryptoksantyna ogółem",
+      "alpha-cryptoxanthin": "alfa-kryptoksantyna",
+      "beta-cryptoxanthin": "beta-kryptoksantyna",
+      "lutein": "luteina",
+      "lutein+zeaxanthin": "luteina+zeaksantyna",
+      "lycopene": "likopen",
+      "neoxanthin": "neoksantyna",
+      "neurosporene": "neurosporen",
+      "violaxanthin": "violaksantyna",
+      "zeaxanthin": "zeaksantyna"
+    },
+
+    "vitamin_d": {
+      "cholecalciferol (D3)": "cholekalcyferol (D3)",
+      "25-hydroxycholecalciferol": "25-hydroksycholekalcyferol",
+      "ergocalciferol (D2)": "ergokalcyferol (D2)",
+      "vitamin D (D2+D3); sum of ergocalciferol and cholecalciferol": "witamina D (D2+D3); suma ergo- i cholekalcyferolu",
+      "vitamin D; method unknown or variable": "witamina D; metoda nieznana"
+    },
+
+    "vitamin_e": {
+      "vitamin E; calculated by summation of the vitamin E activities of the active tocopherols and tocotrienols; expressed as alpha-tocopherol equivalents": "witamina E; równoważniki alfa-tokoferolu",
+      "alpha-tocopherol": "alfa-tokoferol",
+      "beta-tocopherol": "beta-tokoferol",
+      "gamma-tocopherol": "gamma-tokoferol",
+      "delta-tocopherol": "delta-tokoferol",
+      "beta-tocopherol+gamma-tocopherol": "beta-tokoferol+gamma-tokoferol",
+      "alpha-tocotrienol": "alfa-tokotrienol",
+      "beta-tocotrienol": "beta-tokotrienol",
+      "delta-tocotrienol": "delta-tokotrienol",
+      "gamma-tocotrienol": "gamma-tokotrienol",
+      "vitamin E; method or determination unknown or variable": "witamina E; metoda nieznana"
+    },
+
+    "vitamin_k": {
+      "vitamin K, total": "witamina K ogółem",
+      "Vitamin K-1": "witamina K-1",
+      "Vitamin K-2": "witamina K-2"
+    },
+
+    "vitamin_b": {
+      "thiamin": "tiamina",
+      "thiamin, unknown": "tiamina; metoda nieznana",
+      "vit B1 analysed and expressed as thiamin hydrochloride": "witamina B1 jako chlorowodorek tiaminy",
+      "riboflavin": "ryboflawina",
+      "sum of folate vitamers; determined by HPLC": "suma witamerów folianów; metoda HPLC",
+      "folate, total": "foliany ogółem",
+      "folate; method unknown or variable": "foliany; metoda nieznana",
+      "folate, free": "foliany wolne",
+      "10- formylfolic acid": "kwas 10-formylofoliowy",
+      "tetrahydrofolate": "tetrahydrofolian",
+      "5-Formyltetrahydrofolate": "5-formylotetrahydrofolian",
+      "5-Methyltetrahydrofolate": "5-metylotetrahydrofolian",
+      "niacin equivalents, total": "niacyna równoważniki ogółem",
+      "niacin, preformed": "niacyna preformowana",
+      "niacin equivalents from tryptophan": "niacyna równoważniki z tryptofanu",
+      "niacin; method or form unknown": "niacyna; metoda nieznana",
+      "pantothenic acid": "kwas pantotenowy",
+      "vitamin B-6, total; determined by analysis": "witamina B-6 ogółem; metoda analityczna",
+      "vitamin B-6, method unknown or variable": "witamina B-6; metoda nieznana",
+      "vitamin B-6, calculated": "witamina B-6; obliczona",
+      "pyridoxine": "pirydoksyna",
+      "pyridoxine hydrochloride": "chlorowodorek pirydoksyny",
+      "vitamin B-12": "witamina B-12",
+      "biotin": "biotyna",
+      "vitamin C": "witamina C",
+      "L-ascorbic acid": "kwas L-askorbowy",
+      "L-dehydroascorbic acid": "kwas L-dehydroaskorbowy",
+      "vitamin C; method unknown or variable": "witamina C; metoda nieznana"
+    },
+
+    "sterols": {
+      "sterols, total": "sterole ogółem",
+      "brassicasterol": "brasykasterol",
+      "campesterol, total": "kampesterol ogółem",
+      "saponins": "saponiny",
+      "sitosterol": "β-sitosterol",
+      "squalene": "skwalen",
+      "stigmasterol, unspecified": "stygmasterol",
+      "cholesterol; determined by enzymatic or chromatographic method": "cholesterol; metoda enzymatyczna lub chromatograficzna",
+      "cholesterol; method unknown or variable": "cholesterol; metoda nieznana",
+      "cholesteryl-ester, total": "estry cholesterolu ogółem"
+    },
+
+    "polyphenols": {
+      "total polyphenolics": "polifenole ogółem",
+      "anthocyanidin, total": "antocyjanidyny ogółem",
+      "flavonoids, total": "flawonoidy ogółem",
+      "proanthocyanidin polymers (>10mers)": "polimery proantocyjanidyn (>10mers)",
+      "catechin": "katechina",
+      "catechins, total": "katechiny ogółem",
+      "epicatechin": "epikatechina",
+      "procyanidins, total": "procyjanidyny ogółem",
+      "hesperidin": "hesperydyna",
+      "naringenin": "naringenina",
+      "luteolin": "luteolina",
+      "flavonols, total": "flawonole ogółem",
+      "isohamnetin": "izohamnetyna",
+      "kaempferol": "kemferol",
+      "myricetin": "myrycetyna",
+      "quercetin": "kwercetyna",
+      "rutin": "rutyna",
+      "tannins, total": "garbniki ogółem",
+      "proanthocyanidins (condensed tannins)": "proantocyjanidyny (garbniki skondensowane)",
+      "caffeic acid": "kwas kawowy",
+      "chlorogenic acid": "kwas chlorogenowy",
+      "cinnamic acids": "kwasy cynamonowe",
+      "citric acid": "kwas cytrynowy",
+      "ellagic acid": "kwas elagowy",
+      "ferulic acid": "kwas ferulowy",
+      "galacturonic acid": "kwas galakturonowy",
+      "gallic acid": "kwas galusowy",
+      "p-coumaric acid": "kwas p-kumarowy",
+      "sinapic acid": "kwas synapowy",
+      "syringic acid": "kwas syryngowy",
+      "vanillic acid": "kwas wanilinowy",
+      "resveratrol": "resweratrol"
+    },
+
+    "other_bioactives": {
+      "choline, total": "cholina ogółem",
+      "dopanime": "dopamina",
+      "alpha-solanine": "alfa-solanina",
+      "gamma-aminobutyric acid": "kwas gamma-aminomasłowy (GABA)",
+      "glycoalkaloids": "glikoalkaloidy"
+    }
+  }
+}

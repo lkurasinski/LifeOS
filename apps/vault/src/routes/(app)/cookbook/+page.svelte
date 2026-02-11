@@ -1,43 +1,31 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
+	import { Button } from '$frontend/common/components/button';
+	import RecipesCatalog from '$frontend/cookbook/recipe/RecipesCatalog.svelte';
+	import MultiStepRecipeForm from '$frontend/cookbook/recipe/create-recipe/MultiStepRecipeForm.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+	let isMultiStepOpen = $state(false);
+	let catalogRef: RecipesCatalog;
+
+	function handleRecipeCreated() {
+		catalogRef?.refresh();
+	}
 </script>
 
 <div class="space-y-6">
 	<div class="flex items-center justify-between">
 		<div>
-			<h1 class="text-3xl font-bold tracking-tight">My Recipes</h1>
-			<p class="text-muted-foreground">
-				Manage your personal collection of recipes
-			</p>
+			<h1 class="text-3xl font-bold tracking-tight">Recipes</h1>
+			<p class="text-muted-foreground">Discover and manage your recipes</p>
 		</div>
-		<Button href="/cookbook/new">
-			<span class="mr-2">+</span>
-			New Recipe
-		</Button>
+		<div class="flex gap-2">
+			<Button onclick={() => (isMultiStepOpen = true)} variant="outline">Dodaj przepis</Button>
+		</div>
 	</div>
 
-	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-		<!-- Placeholder cards - will be replaced with actual recipes later -->
-		<Card>
-			<CardHeader>
-				<CardTitle>No recipes yet</CardTitle>
-				<CardDescription>Start by creating your first recipe</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<p class="text-sm text-muted-foreground">
-					Click the "New Recipe" button to add your favorite dishes to your cookbook.
-				</p>
-			</CardContent>
-		</Card>
-	</div>
+	<RecipesCatalog bind:this={catalogRef} />
 </div>
+
+<MultiStepRecipeForm bind:open={isMultiStepOpen} onSuccess={handleRecipeCreated} />

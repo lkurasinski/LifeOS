@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
-	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import { Button } from '$frontend/common/components/button';
+	import { Input } from '$frontend/common/components/input';
+	import { Label } from '$frontend/common/components/label';
+	import {
+		Card,
+		CardContent,
+		CardDescription,
+		CardHeader,
+		CardTitle
+	} from '$frontend/common/components/card';
+	import { API_ROUTES } from '$frontend/common/api/api-routes';
 
 	let email = $state('');
 	let password = $state('');
@@ -16,7 +23,7 @@
 		loading = true;
 
 		try {
-			const response = await fetch('/api/auth/register', {
+			const response = await fetch(API_ROUTES.AUTH.REGISTER, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

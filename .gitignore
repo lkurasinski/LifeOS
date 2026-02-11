@@ -55,6 +55,7 @@ db/openfoodfacts-products.jsonl.gz
 db/food-data/dist/*.jsonl
 scripts/*.jsonl
 scripts/*.ndjson
+oos
 
 # Python
 __pycache__/
@@ -67,3 +68,6 @@ venv/
 # Typesense data
 typesense-data/
 oss/
+
+
+PLAN.md
